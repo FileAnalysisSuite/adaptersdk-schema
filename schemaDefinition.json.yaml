@@ -1,0 +1,352 @@
+# Copyright 2022 Micro Focus or one of its affiliates.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+{
+    "types": {
+        "person": {
+            "DISPLAY_NAME": {
+                "ignoreCase": true,
+                "type": "FULLTEXT"
+            },
+            "HANDLES": {
+                "ignoreCase": true,
+                "type": "FULLTEXT[]"
+            },
+            "IDENTIFIER": {
+                "ignoreCase": true,
+                "type": "FULLTEXT"
+            },
+            "IDENTIFIER_TYPE": {
+                "ignoreCase": true,
+                "type": "FULLTEXT"
+            },
+            "SENDER": {
+                "type": "BOOLEAN"
+            }
+        },
+        "metadata_files": {
+            "CONTENT": {
+                "ignoreCase": true,
+                "mandatory": true,
+                "type": "FULLTEXT"
+            },
+            "EXTENSION": {
+                "ignoreCase": true,
+                "mandatory": true,
+                "type": "STRING"
+            }
+        },
+        "ocr": {
+            "CONFIDENCE": {
+                "mandatory": true,
+                "type": "INTEGER"
+            },
+            "NAME": {
+                "type": "STRING"
+            },
+            "TYPE": {
+                "type": "STRING"
+            },
+            "VALUE": {
+                "mandatory": true,
+                "type": "FULLTEXT"
+            }
+        }
+    },
+    "fields": {
+        "ACCOUNTS": {
+            "objectEncoding": "json",
+            "type": "person[]"
+        },
+        "ADDRESS_BCC": {
+            "type": "STRING[]"
+        },
+        "ADDRESS_CC": {
+            "type": "STRING[]"
+        },
+        "ADDRESS_DISPLAY_BCC": {
+            "ignoreCase": true,
+            "type": "FULLTEXT[]"
+        },
+        "ADDRESS_DISPLAY_CC": {
+            "ignoreCase": true,
+            "type": "FULLTEXT[]"
+        },
+        "ADDRESS_DISPLAY_FROM": {
+            "ignoreCase": true,
+            "type": "FULLTEXT"
+        },
+        "ADDRESS_DISPLAY_TO": {
+            "ignoreCase": true,
+            "type": "FULLTEXT[]"
+        },
+        "ADDRESS_FROM": {
+            "type": "STRING"
+        },
+        "ADDRESS_TO": {
+            "type": "STRING[]"
+        },
+        "CC": {
+            "type": "STRING"
+        },
+        "COLLECTION_STATUS": {
+            "infrastructure": true,
+            "type": "STRING"
+        },
+        "CONTENT_PRIMARY": {
+            "ignoreCase": true,
+            "type": "FULLTEXT"
+        },
+        "DATE_ARCHIVED": {
+            "type": "DATETIME"
+        },
+        "DATE_CREATED": {
+            "type": "DATETIME"
+        },
+        "DATE_MODIFIED": {
+            "type": "DATETIME"
+        },
+        "DATE_POSTED": {
+            "type": "DATETIME"
+        },
+        "DATE_PROCESSED": {
+            "type": "DATETIME"
+        },
+        "DIRECTION": {
+            "type": "STRING"
+        },
+        "EXTRACTION_INDEX": {
+            "type": "STRING"
+        },
+        "EXTRACTION_TYPE": {
+            "type": "STRING"
+        },
+        "FAMILY_ADDRESS_BCC": {
+            "type": "STRING[]"
+        },
+        "FAMILY_ADDRESS_CC": {
+            "type": "STRING[]"
+        },
+        "FAMILY_ADDRESS_DISPLAY_BCC": {
+            "ignoreCase": true,
+            "type": "FULLTEXT[]"
+        },
+        "FAMILY_ADDRESS_DISPLAY_CC": {
+            "ignoreCase": true,
+            "type": "FULLTEXT[]"
+        },
+        "FAMILY_ADDRESS_DISPLAY_FROM": {
+            "ignoreCase": true,
+            "type": "FULLTEXT"
+        },
+        "FAMILY_ADDRESS_DISPLAY_TO": {
+            "ignoreCase": true,
+            "type": "FULLTEXT[]"
+        },
+        "FAMILY_ADDRESS_FROM": {
+            "type": "STRING"
+        },
+        "FAMILY_ADDRESS_TO": {
+            "type": "STRING[]"
+        },
+        "FAMILY_DATE_POSTED": {
+            "type": "DATETIME"
+        },
+        "FAMILY_ID": {
+            "infrastructure": true,
+            "type": "LONG"
+        },
+        "FAMILY_THREAD_TOPIC": {
+            "type": "STRING"
+        },
+        "FAMILY_TITLE": {
+            "ignoreCase": true,
+            "type": "FULLTEXT"
+        },
+        "FILE_EXT": {
+            "ignoreCase": true,
+            "type": "STRING"
+        },
+        "FILE_NAME": {
+            "ignoreCase": true,
+            "mandatory": true,
+            "type": "STRING"
+        },
+        "FILE_SIZE": {
+            "type": "LONG"
+        },
+        "FILEPATH": {
+            "ignoreCase": true,
+            "tokenizedPath": true,
+            "type": "STRING"
+        },
+        "FROM": {
+            "type": "STRING"
+        },
+        "HAS_ATTACHMENTS": {
+            "type": "BOOLEAN"
+        },
+        "HASH": {
+            "mandatory": true,
+            "type": "STRING"
+        },
+        "ID": {
+            "infrastructure": true,
+            "mandatory": true,
+            "type": "LONG"
+        },
+        "ID_PATH": {
+            "ignoreCase": true,
+            "infrastructure": true,
+            "mandatory": true,
+            "tokenizedPath": true,
+            "type": "STRING"
+        },
+        "IS_HEAD_OF_FAMILY": {
+            "infrastructure": true,
+            "type": "BOOLEAN"
+        },
+        "IS_OLE": {
+            "type": "BOOLEAN"
+        },
+        "IS_ROOT_DOC": {
+            "infrastructure": true,
+            "mandatory": true,
+            "type": "BOOLEAN"
+        },
+        "JOB_RUN_ID": {
+            "infrastructure": true,
+            "mandatory": true,
+            "type": "INTEGER"
+        },
+        "MESSAGE_ID": {
+            "type": "STRING"
+        },
+        "METADATA_FILES": {
+            "objectEncoding": "flattened",
+            "type": "metadata_files[]"
+        },
+        "MIMETYPE": {
+            "ignoreCase": true,
+            "mandatory": true,
+            "type": "STRING"
+        },
+        "OCR_PERFORMED": {
+            "infrastructure": true,
+            "type": "BOOLEAN"
+        },
+        "OCR": {
+            "objectEncoding": "flattened",
+            "type": "ocr[][]"
+        },
+        "PARENT_REFERENCE": {
+            "type": "STRING"
+        },
+        "PRIORITY": {
+            "type": "LONG"
+        },
+        "REPO_CLASSIFICATION": {
+            "type": "STRING[]"
+        },
+        "REPO_FOLDER": {
+            "ignoreCase": true,
+            "type": "STRING"
+        },
+        "REPO_LABELS": {
+            "ignoreCase": true,
+            "type": "STRING[]"
+        },
+        "REPO_NOTES": {
+            "ignoreCase": true,
+            "type": "STRING"
+        },
+        "REPO_RECORDTYPE": {
+            "type": "STRING"
+        },
+        "REPO_TITLE": {
+            "ignoreCase": true,
+            "type": "FULLTEXT"
+        },
+        "REPO_URI": {
+            "type": "LONG"
+        },
+        "REPOSITORY_ID": {
+            "infrastructure": true,
+            "mandatory": true,
+            "type": "LONG[]"
+        },
+        "REPOSITORY_SUB_TYPE": {
+            "infrastructure": true,
+            "type": "STRING"
+        },
+        "REPOSITORY_TYPE": {
+            "infrastructure": true,
+            "mandatory": true,
+            "type": "STRING"
+        },
+        "ROOT_DATE_MODIFIED": {
+            "type": "DATETIME"
+        },
+        "ROOT_FILE_EXT": {
+            "ignoreCase": true,
+            "type": "STRING"
+        },
+        "ROOT_FILEPATH": {
+            "type": "FULLTEXT"
+        },
+        "ROOT_FILE_SIZE": {
+            "type": "LONG"
+        },
+        "ROOT_ID": {
+            "infrastructure": true,
+            "mandatory": true,
+            "type": "STRING"
+        },
+        "ROOT_REPO_CLASSIFICATION": {
+            "ignoreCase": true,
+            "type": "STRING[]"
+        },
+        "ROOT_REPO_RECORDTYPE": {
+            "ignoreCase": true,
+            "type": "STRING"
+        },
+        "SCAN_REFERENCE": {
+            "type": "STRING"
+        },
+        "SOURCE_REFERENCE": {
+            "type": "STRING"
+        },
+        "THREAD_INDEX": {
+            "type": "STRING"
+        },
+        "THREAD_REPLY_TO": {
+            "type": "STRING"
+        },
+        "THREAD_TOPIC": {
+            "type": "STRING"
+        },
+        "TITLE": {
+            "ignoreCase": true,
+            "mandatory": true,
+            "type": "FULLTEXT"
+        },
+        "TO": {
+            "type": "STRING"
+        },
+        "TYPE": {
+            "mandatory": true,
+            "type": "STRING"
+        }
+    }
+}
