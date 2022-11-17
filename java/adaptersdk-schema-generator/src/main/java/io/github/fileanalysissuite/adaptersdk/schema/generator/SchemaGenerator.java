@@ -68,7 +68,7 @@ public final class SchemaGenerator extends AbstractProcessor
 {
     private static final String PACKAGE_NAME = "io.github.fileanalysissuite.adaptersdk.schema";
     private static final String CLASS_NAME = "AdapterSdkSchema";
-    private final Set<String> PROPERTY_TYPES =
+    private static final Set<String> PROPERTY_TYPES =
         new HashSet<>(Arrays.asList(
             "STRING","FULLTEXT", "LONG", "DOUBLE", "INTEGER", "BOOLEAN", "DATETIME",
             "STRING[]","FULLTEXT[]", "LONG[]", "DOUBLE[]", "INTEGER[]", "BOOLEAN[]", "DATETIME[]"));
