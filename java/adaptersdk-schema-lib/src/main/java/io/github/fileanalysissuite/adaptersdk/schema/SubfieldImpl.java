@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.fileanalysissuite.adaptersdk.schema.generator;
+package io.github.fileanalysissuite.adaptersdk.schema;
 
 import io.github.fileanalysissuite.adaptersdk.schema.model.Field;
 import io.github.fileanalysissuite.adaptersdk.schema.model.Subfield;

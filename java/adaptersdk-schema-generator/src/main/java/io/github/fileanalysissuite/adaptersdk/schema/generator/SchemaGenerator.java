@@ -15,12 +15,8 @@
  */
 package io.github.fileanalysissuite.adaptersdk.schema.generator;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,7 +39,6 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
-import javax.tools.JavaFileObject;
 
 import org.apache.commons.io.IOUtils;
 import org.codehaus.plexus.util.StringUtils;
@@ -137,10 +132,6 @@ public final class SchemaGenerator extends AbstractProcessor
 
             try {
                 javaFile.writeTo(processingEnv.getFiler());
-
-                copySupportFile(PACKAGE_NAME, "FieldImpl");
-                copySupportFile(PACKAGE_NAME, "SubfieldImpl");
-                copySupportFile(PACKAGE_NAME, "FieldNotFoundException");
             } catch (final IOException e) {
                 throw new RuntimeException("Unable to write out generated schema file", e);
             }
@@ -327,30 +318,4 @@ public final class SchemaGenerator extends AbstractProcessor
         return newPath;
     }
 
-    private void copySupportFile(final String packageName, final String className)
-        throws IOException
-    {
-        final JavaFileObject jfo = processingEnv.getFiler().createSourceFile(PACKAGE_NAME + "." + className);
-        try (
-             final InputStream inputFileStream = SchemaGenerator.class.getClassLoader().getResourceAsStream(className + ".java");
-             final BufferedReader inputFileReader = new BufferedReader(new InputStreamReader(inputFileStream, StandardCharsets.UTF_8));
-             final OutputStream outputFileStream = jfo.openOutputStream();
-             final OutputStreamWriter outputFileWriter = new OutputStreamWriter(outputFileStream, StandardCharsets.UTF_8))
-        {
-
-            // Copy before package line
-            String currentLine;
-            while (!(currentLine = inputFileReader.readLine()).startsWith("package")) {
-                outputFileWriter.append(currentLine).append('\n');
-            }
-
-            // Write package line
-            outputFileWriter.append("package ").append(packageName).append(";\n");
-
-            // Write out the rest of the file
-            while ((currentLine = inputFileReader.readLine()) != null) {
-                outputFileWriter.append(currentLine).append('\n');
-            }
-        }
-    }
 }
