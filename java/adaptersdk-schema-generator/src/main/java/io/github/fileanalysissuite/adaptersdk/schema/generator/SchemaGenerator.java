@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -68,9 +69,9 @@ public final class SchemaGenerator extends AbstractProcessor
     private static final String PACKAGE_NAME = "io.github.fileanalysissuite.adaptersdk.schema";
     private static final String CLASS_NAME = "AdapterSdkSchema";
     private final Set<String> PROPERTY_TYPES =
-        Set.of(
+        new HashSet<>(Arrays.asList(
             "STRING","FULLTEXT", "LONG", "DOUBLE", "INTEGER", "BOOLEAN", "DATETIME",
-            "STRING[]","FULLTEXT[]", "LONG[]", "DOUBLE[]", "INTEGER[]", "BOOLEAN[]", "DATETIME[]");
+            "STRING[]","FULLTEXT[]", "LONG[]", "DOUBLE[]", "INTEGER[]", "BOOLEAN[]", "DATETIME[]"));
 
     private final List<PropertyNameHelper> propertyNames;
     private JsonNode typesNode;
