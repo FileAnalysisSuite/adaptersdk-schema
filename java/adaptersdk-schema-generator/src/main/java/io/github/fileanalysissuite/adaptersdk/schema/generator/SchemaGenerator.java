@@ -205,7 +205,7 @@ public final class SchemaGenerator extends AbstractProcessor
                 ? fieldAttributes.get("tokenizedPath").booleanValue()
                 : false;
 
-            if (!PROPERTY_TYPES.contains(fieldAttributes.get("type").textValue())) {
+            if (!PROPERTY_TYPES.contains(fieldType)) {
                 final String fieldName = toProperCase(propertyName) + "Field";
                 final String[] newPath = addExtraElement(path, fieldName);
                 final String fullName = isSubfield ? parentFieldName + "." + propertyName : propertyName;
