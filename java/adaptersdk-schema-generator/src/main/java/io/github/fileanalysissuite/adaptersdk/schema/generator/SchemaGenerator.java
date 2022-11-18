@@ -191,7 +191,7 @@ public final class SchemaGenerator extends AbstractProcessor
                 fieldAttributes.hasNonNull("objectEncoding")
                 ? fieldAttributes.get("objectEncoding").textValue()
                 : "json";
-            final boolean fldIsMultiValued = fieldAttributes.get("type").textValue().endsWith("[]");
+            final boolean fldIsMultiValued = fieldType.endsWith("[]");
             final boolean fldIsMandatory = 
                 fieldAttributes.hasNonNull("mandatory")
                 ? fieldAttributes.get("mandatory").booleanValue()
