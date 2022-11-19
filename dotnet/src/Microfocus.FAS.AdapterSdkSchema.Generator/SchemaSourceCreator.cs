@@ -62,7 +62,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                 "schemaDefinition.json.yaml");
             //Debug.WriteLine("schemaFile path : " + schemaFile);
             // TODO: Remove hardcoded path
-            schemaFile = @"C:\Projects\AspenGit\cSharp\adaptersdk-schema\schemaDefinition.json.yaml";
+            //schemaFile = @"C:\Projects\AspenGit\cSharp\adaptersdk-schema\schemaDefinition.json.yaml";
             var schemaReader = new StreamReader(schemaFile);
             var schemaDeserializer = new Deserializer();
             var yamlSchema = schemaDeserializer.Deserialize(schemaReader);
