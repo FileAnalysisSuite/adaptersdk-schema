@@ -19,22 +19,13 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <!--LangVersion>preview</LangVersion-->
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
     <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)\GeneratedFiles</CompilerGeneratedFilesOutputPath>
   </PropertyGroup>
 
-  <!--ItemGroup>
-    <Compile Remove="SchemaGenerator.cs" />
-  </ItemGroup-->
-
   <ItemGroup>
     <ProjectReference Include="..\Microfocus.FAS.AdapterSdkSchema.Generator\MicroFocus.FAS.AdapterSdkSchema.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
   </ItemGroup>
-
-  <!--PropertyGroup>
-    <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
-  </PropertyGroup-->
 
   <Target Name="GetDependencyTargetPaths" AfterTargets="ResolvePackageDependenciesForBuild">
     <ItemGroup>
@@ -47,4 +38,5 @@
       <None Include="@(ResolvedCompileFileDefinitions)" Pack="true" PackagePath="analyzers/dotnet/cs" />
     </ItemGroup>
   </Target>
+
 </Project>
