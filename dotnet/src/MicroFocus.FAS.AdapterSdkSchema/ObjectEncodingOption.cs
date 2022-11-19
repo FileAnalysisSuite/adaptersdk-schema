@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Copyright 2022 Micro Focus or one of its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,4 +14,11 @@
  * limitations under the License.
  */
 
-global using Xunit;
+namespace MicroFocus.FAS.AdapterSdkSchema
+{
+    public enum ObjectEncodingOption
+    {
+        Flattened,
+        Json
+    }
+}

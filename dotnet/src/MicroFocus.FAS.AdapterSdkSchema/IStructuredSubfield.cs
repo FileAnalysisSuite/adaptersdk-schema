@@ -13,5 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-global using Xunit;
+namespace MicroFocus.FAS.AdapterSdkSchema
+{
+    public interface IStructuredSubfield : IStructuredField, ISubfield
+    {
+    }
+}

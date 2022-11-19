@@ -13,5 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using System;
 
-global using Xunit;
+namespace MicroFocus.FAS.AdapterSdkSchema
+{
+    public sealed class FieldNotFoundException : Exception
+    {
+        public FieldNotFoundException(string fieldName) : base("Field not found: " + fieldName)
+        {
+        }
+    }
+}

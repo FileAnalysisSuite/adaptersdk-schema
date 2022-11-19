@@ -13,14 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace MicroFocus.FAS.AdapterSdkSchema.Tests
+namespace MicroFocus.FAS.AdapterSdkSchema
 {
-    public class UnitTest1
+    public interface IStructuredField : IField
     {
-        [Fact]
-        public void Test1()
-        {
-
-        }
     }
 }

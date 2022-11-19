@@ -13,5 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+namespace MicroFocus.FAS.AdapterSdkSchema
+{
+    public interface IField
+    {
+        string FieldName { get; }
 
-global using Xunit;
+        string FieldType { get; }
+
+        ObjectEncodingOption ObjectEncoding { get; }
+
+        IField ParentField { get; }
+
+        bool IsMultivalue { get; }
+
+        bool IsMandatory { get; }
+
+        bool IsCaseInsensitive { get; }
+
+        bool IsTokenizedPath { get; }
+
+    }
+}

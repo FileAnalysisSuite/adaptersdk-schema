@@ -16,6 +16,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroFocus.FAS.AdapterSdkSc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroFocus.FAS.AdapterSdkSchema.Tests", "tests\MicroFocus.FAS.AdapterSdkSchema.Tests\MicroFocus.FAS.AdapterSdkSchema.Tests.csproj", "{B4F57D4F-B5B9-431A-8AF5-3927D9068C67}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroFocus.FAS.AdapterSdkSchema.Generator", "src\Microfocus.FAS.AdapterSdkSchema.Generator\MicroFocus.FAS.AdapterSdkSchema.Generator.csproj", "{9F484E11-38C6-4765-9D92-F32BBC27E9A0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +32,10 @@ Global
 		{B4F57D4F-B5B9-431A-8AF5-3927D9068C67}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4F57D4F-B5B9-431A-8AF5-3927D9068C67}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4F57D4F-B5B9-431A-8AF5-3927D9068C67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F484E11-38C6-4765-9D92-F32BBC27E9A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F484E11-38C6-4765-9D92-F32BBC27E9A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F484E11-38C6-4765-9D92-F32BBC27E9A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F484E11-38C6-4765-9D92-F32BBC27E9A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -37,6 +43,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{F88720DC-490A-42D3-9FF7-FFD05CB4529A} = {0739C8B9-F747-4EC1-8304-6EE2B3DAEACA}
 		{B4F57D4F-B5B9-431A-8AF5-3927D9068C67} = {4B8B2DEB-E40A-4579-A819-E1344A31D73B}
+		{9F484E11-38C6-4765-9D92-F32BBC27E9A0} = {0739C8B9-F747-4EC1-8304-6EE2B3DAEACA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {82329BF8-DC6C-4086-B328-F7AED6A19459}

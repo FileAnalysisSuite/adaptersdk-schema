@@ -13,5 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+namespace MicroFocus.FAS.AdapterSdkSchema
+{
+    internal sealed class PropertyNameHelper
+    {
+        public readonly string propertyName, ucPropertyName, sanitizedPropertyName;
 
-global using Xunit;
+        public PropertyNameHelper(
+            string propertyName,
+            string ucPropertyName,
+            string sanitizedPropertyName
+        )
+        {
+            this.propertyName = propertyName;
+            this.ucPropertyName = ucPropertyName;
+            this.sanitizedPropertyName = sanitizedPropertyName;
+        }
+    }
+}

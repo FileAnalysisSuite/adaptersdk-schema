@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System;
-
-namespace MicroFocus.FAS.AdapterSdkSchema
+namespace MicroFocus.FAS.AdapterSdkSchema.Tests
 {
-    public class Class1
+    public class SchemaSourceCreatorTest
     {
+        [Fact]
+        public void TestSourceCreation()
+        {
+            Assert.NotEmpty(SchemaSourceCreator.Create());
+        }
 
     }
 }
