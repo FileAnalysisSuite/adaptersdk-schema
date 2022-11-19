@@ -19,6 +19,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema.Tests
 {
     public class AdapterSdkSchemaTest
     {
+        /*
         [Fact]
         public void TestMandatoryField()
         {
@@ -84,6 +85,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema.Tests
         {
             Assert.Equal("METADATA_FILES", AdapterSdkSchema.GetField("METADATA_FILES.CONTENT").ParentField.FieldName);
         }
+        */
 
     }
 }
