@@ -191,7 +191,9 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                     fieldClassBuiler.Append("field = new FieldImpl(");
                     fieldClassBuiler.Append("\"").Append(propertyName).Append("\", ");
                     fieldClassBuiler.Append("\"").Append(fieldType).Append("\", ");
-                    fieldClassBuiler.Append(fldEncoding.Equals("json") ? "ObjectEncodingOption.Json" : "ObjectEncodingOption.Flattened").Append(", ");
+                    fieldClassBuiler.Append(fldEncoding.Equals("json")
+                        ? "ObjectEncoding.Json"
+                        : "ObjectEncoding.Flattened").Append(", ");
                     fieldClassBuiler.Append(fldIsMultiValued.ToString().ToLower()).Append(", ");
                     fieldClassBuiler.Append(fldIsMandatory.ToString().ToLower()).Append(", ");
                     fieldClassBuiler.Append(fldIsCaseInsensitive.ToString().ToLower()).Append(", ");
@@ -214,7 +216,9 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                            ? "= new " + fieldImplClass + "("
                                 + "\"" + propertyName + "\", "
                                 + "\"" + fieldType + "\", "
-                                + (fldEncoding.Equals("json") ? "ObjectEncodingOption.Json" : "ObjectEncodingOption.Flattened") + ", "
+                                + (fldEncoding.Equals("json")
+                                ? "ObjectEncoding.Json"
+                                : "ObjectEncoding.Flattened") + ", "
                                 + fldIsMultiValued.ToString().ToLower() + ", "
                                 + fldIsMandatory.ToString().ToLower() + ", "
                                 + fldIsCaseInsensitive.ToString().ToLower() + ", "

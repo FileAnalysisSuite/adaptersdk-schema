@@ -21,7 +21,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 
         public SubfieldImpl(string fieldName,
                      string fieldType,
-                     ObjectEncodingOption objectEncoding,
+                     ObjectEncoding objectEncoding,
                      bool multivalue,
                      bool mandatory,
                      bool caseInsensitive,

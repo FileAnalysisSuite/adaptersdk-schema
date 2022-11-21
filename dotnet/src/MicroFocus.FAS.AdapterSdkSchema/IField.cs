@@ -21,7 +21,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 
         string FieldType { get; }
 
-        ObjectEncodingOption ObjectEncoding { get; }
+        ObjectEncoding ObjectEncoding { get; }
 
         IField ParentField { get; }
 
