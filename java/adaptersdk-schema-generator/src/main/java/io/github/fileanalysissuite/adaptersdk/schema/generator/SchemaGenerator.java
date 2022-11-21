@@ -189,8 +189,10 @@ public final class SchemaGenerator extends AbstractProcessor
 
             final String fldEncoding =
                 fieldAttributes.hasNonNull("objectEncoding")
-                ? fieldAttributes.get("objectEncoding").textValue()
-                : "json";
+                ? (fieldAttributes.get("objectEncoding").textValue().equals("json")
+                    ? "Field.ObjectEncoding.JSON"
+                        : "Field.ObjectEncoding.FLATTENED")
+                : "Field.ObjectEncoding.JSON";
             final boolean fldIsMultiValued = fieldType.endsWith("[]");
             final boolean fldIsMandatory = 
                 fieldAttributes.hasNonNull("mandatory")
@@ -220,7 +222,7 @@ public final class SchemaGenerator extends AbstractProcessor
                         .addModifiers(fieldOrTypeModifiers).superclass(fieldImplClass)
                         .addSuperinterface(isSubfield ? StructuredSubfield.class : StructuredField.class)
                         .addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE)
-                                .addStatement("super($S, $S, $S, $L, $L, $L, $L$L)",
+                                .addStatement("super($S, $S, $L, $L, $L, $L, $L$L)",
                                         propertyName,
                                         fieldType,
                                         fldEncoding,
@@ -242,7 +244,7 @@ public final class SchemaGenerator extends AbstractProcessor
                 final FieldSpec field = FieldSpec
                         .builder(isSubfield ? Subfield.class : Field.class, sanitizedPropertyName)
                         .addModifiers(fieldOrTypeModifiers).addAnnotation(Nonnull.class)
-                        .initializer("new $T($S, $S, $S, $L, $L, $L, $L$L)",
+                        .initializer("new $T($S, $S, $L, $L, $L, $L, $L$L)",
                                 fieldImplClass,
                                 propertyName,
                                 fieldType,

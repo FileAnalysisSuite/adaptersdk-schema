@@ -26,6 +26,9 @@ public interface Field
     @Nonnull
     String getFieldType();
 
+    @Nonnull
+    ObjectEncoding getObjectEncoding();
+
     Field getParentField();
 
     boolean isMultivalue();
@@ -36,6 +39,16 @@ public interface Field
 
     boolean isTokenizedPath();
 
-    @Nonnull
-    String getObjectEncoding();
+    enum ObjectEncoding
+    {
+        FLATTENED("flattened"),
+        JSON("json");
+
+        final String option;
+
+        ObjectEncoding(final String option)
+        {
+            this.option = option;
+        }
+    }
 }

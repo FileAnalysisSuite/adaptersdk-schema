@@ -22,7 +22,7 @@ class FieldImpl implements Field
 {
     private final String fieldName;
     private final String fieldType;
-    private final String objectEncoding;
+    private final ObjectEncoding objectEncoding;
     private final boolean multivalue;
     private final boolean mandatory;
     private final boolean caseInsensitive;
@@ -32,7 +32,7 @@ class FieldImpl implements Field
     FieldImpl(
         final String fieldName,
         final String fieldType,
-        final String objectEncoding,
+        final ObjectEncoding objectEncoding,
         final boolean multivalue,
         final boolean mandatory,
         final boolean caseInsensitive,
@@ -63,7 +63,7 @@ class FieldImpl implements Field
 
 
     @Override
-    public String getObjectEncoding()
+    public ObjectEncoding getObjectEncoding()
     {
         return objectEncoding;
     }

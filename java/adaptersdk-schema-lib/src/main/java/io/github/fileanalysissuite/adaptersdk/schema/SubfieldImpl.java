@@ -25,7 +25,7 @@ class SubfieldImpl extends FieldImpl implements Subfield
 
     SubfieldImpl(final String fieldName,
                  final String fieldType,
-                 final String objectEncoding,
+                 final ObjectEncoding objectEncoding,
                  final boolean multivalue,
                  final boolean mandatory,
                  final boolean caseInsensitive,

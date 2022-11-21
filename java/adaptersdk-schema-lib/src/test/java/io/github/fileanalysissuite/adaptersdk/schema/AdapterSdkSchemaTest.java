@@ -21,6 +21,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import io.github.fileanalysissuite.adaptersdk.schema.model.Field.ObjectEncoding;
+
 public final class AdapterSdkSchemaTest
 {
     @Test
@@ -44,13 +46,13 @@ public final class AdapterSdkSchemaTest
     @Test
     public void testFlattenedField()
     {
-        assertEquals("flattened", AdapterSdkSchema.getField("METADATA_FILES").getObjectEncoding());
+        assertEquals(ObjectEncoding.FLATTENED, AdapterSdkSchema.getField("METADATA_FILES").getObjectEncoding());
     }
 
     @Test
     public void testJsonField()
     {
-        assertEquals("json", AdapterSdkSchema.getField("accounts", true).getObjectEncoding());
+        assertEquals(ObjectEncoding.JSON, AdapterSdkSchema.getField("accounts", true).getObjectEncoding());
     }
 
     @Test
