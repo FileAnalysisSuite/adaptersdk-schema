@@ -31,8 +31,10 @@
 
   <ItemGroup>
     <!-- Generator dependencies -->
-    <PackageReference Include="YamlDotNet" Version="12.0.2" GeneratePathProperty="true" PrivateAssets="all" />
+    <PackageReference Include="System.CodeDom" Version="7.0.0" GeneratePathProperty="true" PrivateAssets="all" />
     <PackageReference Include="System.Text.Json" Version="6.0.0" GeneratePathProperty="true" PrivateAssets="all" />
+    <PackageReference Include="YamlDotNet" Version="12.0.2" GeneratePathProperty="true" PrivateAssets="all" />
+    <None Include="..\..\..\schemaDefinition.json.yaml" Link="schemaDefinition.json.yaml"/>
   </ItemGroup>
 
   <PropertyGroup>
@@ -41,8 +43,9 @@
 
   <Target Name="GetDependencyTargetPaths">
     <ItemGroup>
-      <TargetPathWithTargetPlatformMoniker Include="$(PKGYamlDotNet)\lib\netstandard2.0\YamlDotNet.dll" IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker Include="$(PKGSystem_CodeDom)\lib\netstandard2.0\System.CodeDom.dll" IncludeRuntimeDependency="false" />
       <TargetPathWithTargetPlatformMoniker Include="$(PKGSystem_Text_Json)\lib\netstandard2.0\System.Text.Json.dll" IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker Include="$(PKGYamlDotNet)\lib\netstandard2.0\YamlDotNet.dll" IncludeRuntimeDependency="false" />
     </ItemGroup>
   </Target>
 

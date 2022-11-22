@@ -33,7 +33,8 @@ namespace MicroFocus.FAS.AdapterSdkSchema
         public void Execute(GeneratorExecutionContext context)
         {
             // Define a class
-            var schemaSource = SchemaSourceCreator.Create();
+            //var schemaSource = SchemaSourceCreator.Create();
+            var schemaSource = SchemaSourceDomCreator.Create();
             var formattedSchemaSource = CSharpSyntaxTree.ParseText(schemaSource).GetRoot().NormalizeWhitespace().ToFullString();
             Debug.WriteLine("schema source : " + formattedSchemaSource);
 
