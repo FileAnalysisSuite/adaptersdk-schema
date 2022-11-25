@@ -25,7 +25,6 @@ public interface Field
     @Nonnull
     String getFieldType();
 
-    @Nonnull
     ObjectEncoding getObjectEncoding();
 
     Field getParentField();
@@ -40,14 +39,7 @@ public interface Field
 
     enum ObjectEncoding
     {
-        FLATTENED("flattened"),
-        JSON("json");
-
-        final String option;
-
-        ObjectEncoding(final String option)
-        {
-            this.option = option;
-        }
+        FLATTENED,
+        JSON
     }
 }
