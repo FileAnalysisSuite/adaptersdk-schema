@@ -91,9 +91,11 @@ public final class AdapterSdkSchemaTest
     }
 
     @Test
+    @SuppressWarnings("ThrowableResultIgnored")
     public void exceptionTesting()
     {
-        assertThrows(FieldNotFoundException.class, () -> AdapterSdkSchema.getField("NON_EXISTANT_FIELD"),
+        assertThrows(FieldNotFoundException.class,
+                     () -> AdapterSdkSchema.getField("NON_EXISTANT_FIELD"),
                      "Expected FieldNotFoundException");
     }
 }

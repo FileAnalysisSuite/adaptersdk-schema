@@ -75,31 +75,15 @@
     </dependencies>
 
     <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-resources</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.basedir}/java/src/main/resources</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${basedir}</directory>
-                                    <filtering>true</filtering>
-                                    <includes>
-                                        <include>schemaDefinition.json.yaml</include>
-                                    </includes>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
+        <resources>
+            <resource>
+                <directory>${project.basedir}/../..</directory>
+                <includes>
+                    <include>schemaDefinition.json.yaml</include>
+                </includes>
+                <targetPath>io/github/fileanalysissuite/adaptersdk/schema/generator</targetPath>
+            </resource>
+        </resources>
     </build>
+
 </project>

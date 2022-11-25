@@ -36,10 +36,6 @@
         </dependency>
         <dependency>
             <groupId>io.github.fileanalysissuite.adaptersdk.schema</groupId>
-            <artifactId>adaptersdk-schema-java-generator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.github.fileanalysissuite.adaptersdk.schema</groupId>
             <artifactId>adaptersdk-schema-java-interfaces</artifactId>
         </dependency>
         <dependency>
@@ -53,13 +49,23 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>**/generator/*</exclude>
-                    </excludes>
-                </configuration>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-compile</id>
+                        <configuration>
+                            <annotationProcessorPaths>
+                                <path>
+                                    <groupId>io.github.fileanalysissuite.adaptersdk.schema</groupId>
+                                    <artifactId>adaptersdk-schema-java-generator</artifactId>
+                                    <version>${project.version}</version>
+                                </path>
+                            </annotationProcessorPaths>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
+
 </project>
