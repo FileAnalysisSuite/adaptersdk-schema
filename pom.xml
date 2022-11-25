@@ -131,12 +131,12 @@
             </dependency>
             <dependency>
                 <groupId>io.github.fileanalysissuite.adaptersdk.schema</groupId>
-                <artifactId>adaptersdk-schema-interfaces</artifactId>
+                <artifactId>adaptersdk-schema-java-generator</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>io.github.fileanalysissuite.adaptersdk.schema</groupId>
-                <artifactId>adaptersdk-schema-generator</artifactId>
+                <artifactId>adaptersdk-schema-java-interfaces</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
