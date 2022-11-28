@@ -110,7 +110,7 @@ final class SchemaGenerator
         try (final InputStream stream = SchemaGenerator.class.getResourceAsStream(schemaPath)) {
             schema = IOUtils.toString(stream, StandardCharsets.UTF_8);
         } catch (final IOException e) {
-            throw new RuntimeException("Error reading schrma definition from " + schemaPath, e);
+            throw new RuntimeException("Error reading schema definition from " + schemaPath, e);
         }
         return new ObjectMapper(new YAMLFactory()).readTree(schema);
     }
