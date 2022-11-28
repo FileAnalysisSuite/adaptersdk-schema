@@ -19,7 +19,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema.Tests
 {
     public class AdapterSdkSchemaTest
     {
-        /*
+
         [Fact]
         public void TestMandatoryField()
         {
@@ -41,13 +41,13 @@ namespace MicroFocus.FAS.AdapterSdkSchema.Tests
         [Fact]
         public void TestFlattenedField()
         {
-            Assert.Equal(ObjectEncodingOption.Flattened, AdapterSdkSchema.GetField("METADATA_FILES").ObjectEncoding);
+            Assert.Equal(ObjectEncoding.Flattened, AdapterSdkSchema.GetField("METADATA_FILES").ObjectEncoding);
         }
 
         [Fact]
         public void TestJsonField()
         {
-            Assert.Equal(ObjectEncodingOption.Json, AdapterSdkSchema.GetField("accounts", true).ObjectEncoding);
+            Assert.Equal(ObjectEncoding.Json, AdapterSdkSchema.GetField("accounts", true).ObjectEncoding);
         }
 
         [Fact]
@@ -56,7 +56,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema.Tests
             Assert.Equal("ocr[][]", AdapterSdkSchema.GetField("OCR").FieldType);
         }
 
-        //[Fact]
+        [Fact]
         public void TestNestedMandatoryField()
         {
             Assert.True(AdapterSdkSchema.GetField("METADATA_FILES.CONTENT").IsMandatory);
@@ -80,12 +80,11 @@ namespace MicroFocus.FAS.AdapterSdkSchema.Tests
             Assert.Equal("LONG", AdapterSdkSchema.GetField("ID").FieldType);
         }
 
-        //[Fact]
+        [Fact]
         public void TestObjectParentField()
         {
             Assert.Equal("METADATA_FILES", AdapterSdkSchema.GetField("METADATA_FILES.CONTENT").ParentField.FieldName);
         }
-        */
 
     }
 }
