@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Text.Json.Nodes;
 using Microsoft.CSharp;
@@ -46,21 +47,24 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 
         public static string Create()
         {
-            // parse the schema file
-            JsonNode schemaJson = ParseSchema();
+            JsonNode schemaJson = ParseSchemaDefinition();
 
-            // Define a class
             var schemaSource = new SchemaSourceDomCreator().CreateSchemaSource(schemaJson);
-            Debug.WriteLine("schema source : " + schemaSource);
+            Debug.WriteLine("Schema source : " + schemaSource);
             return schemaSource;
         }
 
-        private static JsonNode ParseSchema()
+        private static JsonNode ParseSchemaDefinition()
         {
             string schemaFile = Path.Combine(
-                Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName,
+                Directory.GetParent(Assembly.GetExecutingAssembly().Location).FullName,
                 "schemaDefinition.json.yaml");
-            var schemaReader = new StreamReader(schemaFile);
+            return ParseSchema(schemaFile);
+        }
+
+        private static JsonNode ParseSchema(string schemaPath)
+        {
+            using StreamReader schemaReader = new(schemaPath);
             var schemaDeserializer = new Deserializer();
             var yamlSchema = schemaDeserializer.Deserialize(schemaReader);
 

@@ -46,7 +46,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
         public static string Create()
         {
             // parse the schema file
-            JsonNode schemaJson = ParseSchema();
+            JsonNode schemaJson = ParseSchemaDefinition();
 
             // Define a class
             var schemaSource = new SchemaSourceCreator().CreateSchemaSource(schemaJson);
@@ -54,14 +54,18 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             return schemaSource;
         }
 
-        private static JsonNode ParseSchema()
+        private static JsonNode ParseSchemaDefinition()
         {
             string schemaFile = Path.Combine(
                 Directory.GetParent(System.IO.Directory.GetCurrentDirectory())
                 .Parent.Parent.Parent.Parent.Parent.FullName,
                 "schemaDefinition.json.yaml");
+            return ParseSchema(schemaFile);
+        }
 
-            var schemaReader = new StreamReader(schemaFile);
+        private static JsonNode ParseSchema(string schemaPath)
+        {
+            var schemaReader = new StreamReader(schemaPath);
             var schemaDeserializer = new Deserializer();
             var yamlSchema = schemaDeserializer.Deserialize(schemaReader);
 

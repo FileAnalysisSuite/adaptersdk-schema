@@ -30,11 +30,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="..\..\..\schemaDefinition.json.yaml" Link="schemaDefinition.json.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- Generator dependencies -->
     <PackageReference Include="System.CodeDom" Version="7.0.0" GeneratePathProperty="true" PrivateAssets="all" />
     <PackageReference Include="System.Text.Json" Version="6.0.0" GeneratePathProperty="true" PrivateAssets="all" />
     <PackageReference Include="YamlDotNet" Version="12.0.2" GeneratePathProperty="true" PrivateAssets="all" />
-    <None Include="..\..\..\schemaDefinition.json.yaml" Link="schemaDefinition.json.yaml"/>
   </ItemGroup>
 
   <PropertyGroup>
