@@ -24,6 +24,5 @@ namespace MicroFocus.FAS.AdapterSdkSchema.Tests
         {
             Assert.NotEmpty(SchemaSourceCreator.Create());
         }
-
     }
 }
