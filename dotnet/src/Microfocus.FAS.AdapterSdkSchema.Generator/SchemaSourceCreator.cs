@@ -92,7 +92,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             CodeTypeDeclaration schemaClassBuilder = new(CLASS_NAME)
             {
                 IsClass = true,
-                TypeAttributes = System.Reflection.TypeAttributes.Public | System.Reflection.TypeAttributes.Sealed
+                TypeAttributes = TypeAttributes.Public | TypeAttributes.Sealed
             };
             schemaClassBuilder.Members.Add(new CodeConstructor() { Attributes = MemberAttributes.Private });
             schemaNamespace.Types.Add(schemaClassBuilder);
@@ -180,7 +180,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                     CodeTypeDeclaration fieldClassBuilder = new(fieldName)
                     {
                         IsClass = true,
-                        TypeAttributes = System.Reflection.TypeAttributes.Public
+                        TypeAttributes = TypeAttributes.Public
                     };
                     fieldClassBuilder.BaseTypes.Add(isSubfield ? new CodeTypeReference("IStructuredSubfield") : new CodeTypeReference("IStructuredField"));
 
