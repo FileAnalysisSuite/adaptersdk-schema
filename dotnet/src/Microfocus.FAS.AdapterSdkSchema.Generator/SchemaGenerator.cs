@@ -27,9 +27,11 @@ namespace MicroFocus.FAS.AdapterSdkSchema
         public SchemaGenerator()
         {
         }
+
         public void Initialize(GeneratorInitializationContext context)
         {
         }
+
         public void Execute(GeneratorExecutionContext context)
         {
             var schemaSource = SchemaSourceCreator.Create();
