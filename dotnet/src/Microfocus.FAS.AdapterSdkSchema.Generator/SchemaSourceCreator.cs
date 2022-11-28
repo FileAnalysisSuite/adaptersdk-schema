@@ -325,9 +325,9 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             CodeMemberMethod getFieldOverloadBuilder = new()
             {
                 Name = "GetField",
-                ReturnType = new CodeTypeReference("IField")
+                ReturnType = new CodeTypeReference("IField"),
+                Attributes = MemberAttributes.Public | MemberAttributes.Static
             };
-            getFieldBuilder.Attributes = MemberAttributes.Public | MemberAttributes.Static;
             getFieldOverloadBuilder.Parameters.Add(paramName);
             getFieldOverloadBuilder.Parameters.Add(paramIgnoreCase);
 
