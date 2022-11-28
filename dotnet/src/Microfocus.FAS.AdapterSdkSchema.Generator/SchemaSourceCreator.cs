@@ -56,16 +56,10 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 
         private static JsonNode ParseSchemaDefinition()
         {
-            string schemaFile = Path.Combine(
-                Directory.GetParent(Assembly.GetExecutingAssembly().Location).FullName,
-                "schemaDefinition.json.yaml");
-            //schemaFile = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase), "schemaDefinition.json.yaml");
-            //schemaFile = "..\\..\\..\\schemaDefinition.json.yaml";
-
-            string codeBase = Assembly.GetExecutingAssembly().CodeBase;
-            UriBuilder uri = new(codeBase);
+            UriBuilder uri = new(Assembly.GetExecutingAssembly().CodeBase);
+            //UriBuilder uri = new(Assembly.GetExecutingAssembly().Location);
             string path = Uri.UnescapeDataString(uri.Path);
-            schemaFile = Path.Combine(Path.GetDirectoryName(path), "schemaDefinition.json.yaml");
+            string schemaFile = Path.Combine(Path.GetDirectoryName(path), "schemaDefinition.json.yaml");
 
             //schemaFile = "schemaDefinition.json.yaml";
             Debug.WriteLine("Loading schema definition from : " + schemaFile);
