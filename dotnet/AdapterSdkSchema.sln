@@ -16,7 +16,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroFocus.FAS.AdapterSdkSc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroFocus.FAS.AdapterSdkSchema.Tests", "tests\MicroFocus.FAS.AdapterSdkSchema.Tests\MicroFocus.FAS.AdapterSdkSchema.Tests.csproj", "{B4F57D4F-B5B9-431A-8AF5-3927D9068C67}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroFocus.FAS.AdapterSdkSchema.Generator", "src\Microfocus.FAS.AdapterSdkSchema.Generator\MicroFocus.FAS.AdapterSdkSchema.Generator.csproj", "{9F484E11-38C6-4765-9D92-F32BBC27E9A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroFocus.FAS.AdapterSdkSchema.Generator", "src\MicroFocus.FAS.AdapterSdkSchema.Generator\MicroFocus.FAS.AdapterSdkSchema.Generator.csproj", "{9F484E11-38C6-4765-9D92-F32BBC27E9A0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroFocus.FAS.AdapterSdkSchema.Generator.Tests", "tests\MicroFocus.FAS.AdapterSdkSchema.Generator.Tests\MicroFocus.FAS.AdapterSdkSchema.Generator.Tests.csproj", "{348DFA4B-7117-4534-967A-F4D58E3AEDC5}"
 EndProject
