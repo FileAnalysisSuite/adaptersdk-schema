@@ -24,7 +24,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Microfocus.FAS.AdapterSdkSchema.Generator\MicroFocus.FAS.AdapterSdkSchema.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
+    <ProjectReference Include="..\MicroFocus.FAS.AdapterSdkSchema.Generator\MicroFocus.FAS.AdapterSdkSchema.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
   </ItemGroup>
 
 </Project>
