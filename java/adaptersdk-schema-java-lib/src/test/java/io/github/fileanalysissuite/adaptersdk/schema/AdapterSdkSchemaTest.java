@@ -56,7 +56,7 @@ public final class AdapterSdkSchemaTest
     @Test
     public void testObjectField()
     {
-        assertEquals("ocr[][]", AdapterSdkSchema.getField("OCR").getFieldType());
+        assertEquals("ocr[]", AdapterSdkSchema.getField("OCR").getFieldType());
     }
 
     @Test
