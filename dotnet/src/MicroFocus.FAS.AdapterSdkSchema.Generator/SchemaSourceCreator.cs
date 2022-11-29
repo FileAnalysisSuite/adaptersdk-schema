@@ -90,8 +90,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 
             CodeTypeDeclaration schemaClassBuilder = new(CLASS_NAME)
             {
-                IsClass = true,
-                TypeAttributes = TypeAttributes.Public | TypeAttributes.Sealed
+                TypeAttributes = TypeAttributes.Public | TypeAttributes.Sealed | TypeAttributes.Class
             };
             schemaClassBuilder.Members.Add(new CodeConstructor() { Attributes = MemberAttributes.Private });
             schemaNamespace.Types.Add(schemaClassBuilder);
@@ -187,7 +186,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                     {
                         Name = "field",
                         Attributes = MemberAttributes.Private,
-                        Type = new CodeTypeReference("readonly IField") // no other way to set 'readonly' modifier
+                        Type = new CodeTypeReference("readonly IField")
                     };
                     fieldClassBuilder.Members.Add(pvtIField);
 
