@@ -149,6 +149,8 @@ final class SchemaGenerator
 
             final String fieldType = fieldAttributes.get("type").textValue();
 
+            final int endOfTypeDimension = fieldType.lastIndexOf('[');
+            final String fieldTypeValue = endOfTypeDimension > 0 ? fieldType.substring(0, endOfTypeDimension) : fieldType;
             final String fldEncoding
                 = fieldAttributes.hasNonNull("objectEncoding")
                 ? (fieldAttributes.get("objectEncoding").textValue().equals("json")
@@ -186,7 +188,7 @@ final class SchemaGenerator
                     .addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE)
                         .addStatement("super($S, $S, $L, $L, $L, $L, $L$L)",
                                       propertyName,
-                                      fieldType,
+                                      fieldTypeValue,
                                       fldEncoding,
                                       fldIsMultiValued,
                                       fldIsMandatory,
@@ -209,7 +211,7 @@ final class SchemaGenerator
                     .initializer("new $T($S, $S, $L, $L, $L, $L, $L$L)",
                                  fieldImplClass,
                                  propertyName,
-                                 fieldType,
+                                 fieldTypeValue,
                                  fldEncoding,
                                  fldIsMultiValued,
                                  fldIsMandatory,
