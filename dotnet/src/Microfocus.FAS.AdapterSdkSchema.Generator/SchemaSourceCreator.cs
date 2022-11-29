@@ -187,7 +187,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                     {
                         Name = "field",
                         Attributes = MemberAttributes.Private,
-                        Type = new CodeTypeReference("readonly IField") // hack alert, no other way to set 'readonly' modifier
+                        Type = new CodeTypeReference("readonly IField") // no other way to set 'readonly' modifier
                     };
                     fieldClassBuilder.Members.Add(pvtIField);
 
@@ -195,16 +195,6 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                         {
                             Attributes = MemberAttributes.Public
                         };
-
-                    CodeExpression[] fieldCtorParams = {
-                                new CodePrimitiveExpression(propertyName),
-                                new CodePrimitiveExpression(fieldType),
-                                new CodePrimitiveExpression(fldEncoding), // cannot resolve ObjectEncoding
-                                new CodePrimitiveExpression(fldIsMultiValued),
-                                new CodePrimitiveExpression(fldIsMandatory),
-                                new CodePrimitiveExpression(fldIsCaseInsensitive),
-                                new CodePrimitiveExpression(fldIsTokenizedPath)
-                            };
 
                     string fieldInitialization = "new FieldImpl("
                                 + "\"" + propertyName + "\", "
@@ -221,7 +211,6 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                     CodeAssignStatement ctorBodyFieldInit = new()
                     {
                         Left = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), "field"),
-                        //Right = new CodeObjectCreateExpression("FieldImpl", fieldCtorParams)
                         Right = new CodeSnippetExpression(fieldInitialization)
                     };
                     defaultConstructor.Statements.Add(ctorBodyFieldInit);
@@ -265,31 +254,9 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                                 + fldIsTokenizedPath.ToString().ToLower()
                                 + (isSubfield ? ", this)" : ")");
 
-                    //TODO:  ObjectEncoding cannot be referenced
-                    CodeExpression[] propertyCtorParams = isSubfield
-                            ? new CodeExpression[] {
-                                new CodePrimitiveExpression(propertyName),
-                                new CodePrimitiveExpression(fieldType),
-                                new CodePrimitiveExpression(fldEncoding),
-                                new CodePrimitiveExpression(fldIsMultiValued),
-                                new CodePrimitiveExpression(fldIsMandatory),
-                                new CodePrimitiveExpression(fldIsCaseInsensitive),
-                                new CodePrimitiveExpression(fldIsTokenizedPath),
-                                new CodeThisReferenceExpression()
-                            }
-                            : new CodeExpression[] {
-                                new CodePrimitiveExpression(propertyName),
-                                new CodePrimitiveExpression(fieldType),
-                                new CodePrimitiveExpression(fldEncoding),
-                                new CodePrimitiveExpression(fldIsMultiValued),
-                                new CodePrimitiveExpression(fldIsMandatory),
-                                new CodePrimitiveExpression(fldIsCaseInsensitive),
-                                new CodePrimitiveExpression(fldIsTokenizedPath)
-                            };
                     if (initialize)
                     {
                         // Initialize field value during decleration
-                        // field.InitExpression = new CodeObjectCreateExpression(fieldImplClass, propertyCtorParams);
                         field.InitExpression = new CodeSnippetExpression(propertyInitialization);
                     }
                     else
@@ -298,8 +265,6 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                         CodeAssignStatement ctorBodyPropInit = new()
                         {
                             Left = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), propertyName),
-
-                            //Right = new CodeObjectCreateExpression("SubFieldImpl", propertyCtorParams)
                             Right = new CodeSnippetExpression(propertyInitialization)
                     };
                         defaultConstructor.Statements.Add(ctorBodyPropInit);
@@ -321,9 +286,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                 ReturnType = new CodeTypeReference("IField"),
                 Attributes = MemberAttributes.Public | MemberAttributes.Static
             };
-
             getFieldBuilder.Parameters.Add(paramName);
-            //getFieldBuilder.Statements.Add(new CodeMethodReturnStatement(new CodeArgumentReferenceExpression("text")));
 
             CodeMemberMethod getFieldOverloadBuilder = new()
             {
