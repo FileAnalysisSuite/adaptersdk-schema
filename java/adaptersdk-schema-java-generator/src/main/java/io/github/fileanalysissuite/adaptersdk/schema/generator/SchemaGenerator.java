@@ -151,6 +151,7 @@ final class SchemaGenerator
 
             final int endOfTypeDimension = fieldType.lastIndexOf('[');
             final String fieldTypeValue = endOfTypeDimension > 0 ? fieldType.substring(0, endOfTypeDimension) : fieldType;
+
             final String fldEncoding
                 = fieldAttributes.hasNonNull("objectEncoding")
                 ? (fieldAttributes.get("objectEncoding").textValue().equals("json")
@@ -212,7 +213,7 @@ final class SchemaGenerator
                                  fieldImplClass,
                                  propertyName,
                                  fieldTypeValue,
-                                 fldEncoding,
+                                 null,
                                  fldIsMultiValued,
                                  fldIsMandatory,
                                  fldIsCaseInsensitive,
