@@ -139,6 +139,9 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 
                 string fieldType = fieldAttributes["type"].GetValue<string>();
 
+                int endOfArrayDimension = fieldType.LastIndexOf('[');
+                string fieldTypeValue = endOfArrayDimension > 0 ? fieldType.Substring(0, endOfArrayDimension) : fieldType;
+
                 string fldEncoding =
                     fieldAttributes["objectEncoding"] != null
                     ? fieldAttributes["objectEncoding"].GetValue<string>()
@@ -195,12 +198,12 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                             Attributes = MemberAttributes.Public
                         };
 
-                    string fieldInitialization = "new FieldImpl("
+                    string pvtIFieldInitialization = "new FieldImpl("
                                 + "\"" + propertyName + "\", "
-                                + "\"" + fieldType + "\", "
+                                + "\"" + fieldTypeValue + "\", "
                                 + (fldEncoding.Equals("json")
-                                ? "ObjectEncoding.Json"
-                                : "ObjectEncoding.Flattened") + ", "
+                                ? "MicroFocus.FAS.AdapterSdkSchema.ObjectEncoding.Json"
+                                : "MicroFocus.FAS.AdapterSdkSchema.ObjectEncoding.Flattened") + ", "
                                 + fldIsMultiValued.ToString().ToLower() + ", "
                                 + fldIsMandatory.ToString().ToLower() + ", "
                                 + fldIsCaseInsensitive.ToString().ToLower() + ", "
@@ -210,7 +213,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                     CodeAssignStatement ctorBodyFieldInit = new()
                     {
                         Left = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), "field"),
-                        Right = new CodeSnippetExpression(fieldInitialization)
+                        Right = new CodeSnippetExpression(pvtIFieldInitialization)
                     };
                     defaultConstructor.Statements.Add(ctorBodyFieldInit);
 
@@ -222,7 +225,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                     // Implement IField interface
                     fieldClassBuilder.Members.Add(new CodeSnippetTypeMember { Text = "public string FieldName => field.FieldName;" });
                     fieldClassBuilder.Members.Add(new CodeSnippetTypeMember { Text = "public string FieldType => field.FieldType;" });
-                    fieldClassBuilder.Members.Add(new CodeSnippetTypeMember { Text = "public ObjectEncoding ObjectEncoding => field.ObjectEncoding;" });
+                    fieldClassBuilder.Members.Add(new CodeSnippetTypeMember { Text = "public ObjectEncoding? ObjectEncoding => field.ObjectEncoding;" });
                     fieldClassBuilder.Members.Add(new CodeSnippetTypeMember { Text = "public IField ParentField => field.ParentField;" });
                     fieldClassBuilder.Members.Add(new CodeSnippetTypeMember { Text = "public bool IsMultivalue => field.IsMultivalue;" });
                     fieldClassBuilder.Members.Add(new CodeSnippetTypeMember { Text = "public bool IsMandatory => field.IsMandatory;" });
@@ -243,10 +246,8 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 
                     string propertyInitialization = "new " + fieldImplClass + "("
                                 + "\"" + propertyName + "\", "
-                                + "\"" + fieldType + "\", "
-                                + (fldEncoding.Equals("json")
-                                ? "ObjectEncoding.Json"
-                                : "ObjectEncoding.Flattened") + ", "
+                                + "\"" + fieldTypeValue + "\", "
+                                + "null, "
                                 + fldIsMultiValued.ToString().ToLower() + ", "
                                 + fldIsMandatory.ToString().ToLower() + ", "
                                 + fldIsCaseInsensitive.ToString().ToLower() + ", "
@@ -265,7 +266,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                         {
                             Left = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), propertyName),
                             Right = new CodeSnippetExpression(propertyInitialization)
-                    };
+                        };
                         defaultConstructor.Statements.Add(ctorBodyPropInit);
                     }
                     classBuilder.Members.Add(field);

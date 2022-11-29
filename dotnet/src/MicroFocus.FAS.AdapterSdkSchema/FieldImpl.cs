@@ -19,7 +19,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
     {
         private readonly string fieldName;
         private readonly string fieldType;
-        private readonly ObjectEncoding objectEncoding;
+        private readonly ObjectEncoding? objectEncoding;
         private readonly bool multivalue;
         private readonly bool mandatory;
         private readonly bool caseInsensitive;
@@ -28,7 +28,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
         public FieldImpl(
             string fieldName,
             string fieldType,
-            ObjectEncoding objectEncoding,
+            ObjectEncoding? objectEncoding,
             bool multivalue,
             bool mandatory,
             bool caseInsensitive,
@@ -48,7 +48,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 
         public string FieldType => fieldType;
 
-        public ObjectEncoding ObjectEncoding => objectEncoding;
+        public ObjectEncoding? ObjectEncoding => objectEncoding;
 
         public IField ParentField => null;
 

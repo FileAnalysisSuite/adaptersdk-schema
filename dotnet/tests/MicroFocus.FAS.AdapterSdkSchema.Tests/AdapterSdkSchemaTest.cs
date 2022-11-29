@@ -53,7 +53,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema.Tests
         [Fact]
         public void TestObjectField()
         {
-            Assert.Equal("ocr[][]", AdapterSdkSchema.GetField("OCR").FieldType);
+            Assert.Equal("ocr[]", AdapterSdkSchema.GetField("OCR").FieldType);
         }
 
         [Fact]
