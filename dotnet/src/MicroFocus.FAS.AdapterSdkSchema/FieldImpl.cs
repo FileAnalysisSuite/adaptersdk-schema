@@ -50,7 +50,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 
         public ObjectEncoding? ObjectEncoding => objectEncoding;
 
-        public IField ParentField => null;
+        public virtual IField ParentField => null;
 
         public bool IsMultivalue => multivalue;
 
