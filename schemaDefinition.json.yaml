@@ -102,10 +102,6 @@
         "CC": {
             "type": "STRING"
         },
-        "COLLECTION_STATUS": {
-            "infrastructure": true,
-            "type": "STRING"
-        },
         "CONTENT_PRIMARY": {
             "ignoreCase": true,
             "type": "FULLTEXT"
@@ -165,10 +161,6 @@
         "FAMILY_DATE_POSTED": {
             "type": "DATETIME"
         },
-        "FAMILY_ID": {
-            "infrastructure": true,
-            "type": "LONG"
-        },
         "FAMILY_THREAD_TOPIC": {
             "type": "STRING"
         },
@@ -203,34 +195,8 @@
             "mandatory": true,
             "type": "STRING"
         },
-        "ID": {
-            "infrastructure": true,
-            "mandatory": true,
-            "type": "LONG"
-        },
-        "ID_PATH": {
-            "ignoreCase": true,
-            "infrastructure": true,
-            "mandatory": true,
-            "tokenizedPath": true,
-            "type": "STRING"
-        },
-        "IS_HEAD_OF_FAMILY": {
-            "infrastructure": true,
-            "type": "BOOLEAN"
-        },
         "IS_OLE": {
             "type": "BOOLEAN"
-        },
-        "IS_ROOT_DOC": {
-            "infrastructure": true,
-            "mandatory": true,
-            "type": "BOOLEAN"
-        },
-        "JOB_RUN_ID": {
-            "infrastructure": true,
-            "mandatory": true,
-            "type": "INTEGER"
         },
         "MESSAGE_ID": {
             "type": "STRING"
@@ -243,10 +209,6 @@
             "ignoreCase": true,
             "mandatory": true,
             "type": "STRING"
-        },
-        "OCR_PERFORMED": {
-            "infrastructure": true,
-            "type": "BOOLEAN"
         },
         "OCR": {
             "objectEncoding": "flattened",
@@ -279,20 +241,6 @@
         "REPO_URI": {
             "type": "LONG"
         },
-        "REPOSITORY_ID": {
-            "infrastructure": true,
-            "mandatory": true,
-            "type": "LONG[]"
-        },
-        "REPOSITORY_SUB_TYPE": {
-            "infrastructure": true,
-            "type": "STRING"
-        },
-        "REPOSITORY_TYPE": {
-            "infrastructure": true,
-            "mandatory": true,
-            "type": "STRING"
-        },
         "ROOT_DATE_MODIFIED": {
             "type": "DATETIME"
         },
@@ -305,11 +253,6 @@
         },
         "ROOT_FILE_SIZE": {
             "type": "LONG"
-        },
-        "ROOT_ID": {
-            "infrastructure": true,
-            "mandatory": true,
-            "type": "STRING"
         },
         "ROOT_REPO_CLASSIFICATION": {
             "ignoreCase": true,
