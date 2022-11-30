@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.fileanalysissuite.adaptersdk.schema;
+package io.github.fileanalysissuite.adaptersdk.schema.model;
 
 import javax.annotation.Nonnull;
 
-public final class Class1
+public interface Subfield extends Field
 {
     @Nonnull
-    public static Object method1()
-    {
-        return new Object();
-    }
+    @Override
+    Field getParentField();
 }
