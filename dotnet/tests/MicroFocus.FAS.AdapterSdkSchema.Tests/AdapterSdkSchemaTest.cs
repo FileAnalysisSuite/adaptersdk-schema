@@ -22,7 +22,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema.Tests
         [Fact]
         public void TestMandatoryField()
         {
-            Assert.True(AdapterSdkSchema.GetField("ID").IsMandatory);
+            Assert.True(AdapterSdkSchema.GetField("FILE_NAME").IsMandatory);
         }
 
         [Fact]
@@ -34,7 +34,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema.Tests
         [Fact]
         public void TestTokenizedPathField()
         {
-            Assert.True(AdapterSdkSchema.GetField("ID_PATH").IsTokenizedPath);
+            Assert.True(AdapterSdkSchema.GetField("FILEPATH").IsTokenizedPath);
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema.Tests
         [Fact]
         public void TestLongField()
         {
-            Assert.Equal("LONG", AdapterSdkSchema.GetField("ID").FieldType);
+            Assert.Equal("LONG", AdapterSdkSchema.GetField("FILE_SIZE").FieldType);
         }
 
         [Fact]

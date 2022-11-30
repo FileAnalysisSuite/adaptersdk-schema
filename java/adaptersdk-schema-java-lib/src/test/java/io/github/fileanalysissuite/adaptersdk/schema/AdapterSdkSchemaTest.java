@@ -26,7 +26,7 @@ public final class AdapterSdkSchemaTest
     @Test
     public void testMandatoryField()
     {
-        assertTrue(AdapterSdkSchema.getField("ID").isMandatory());
+        assertTrue(AdapterSdkSchema.getField("FILE_NAME").isMandatory());
     }
 
     @Test
@@ -38,7 +38,7 @@ public final class AdapterSdkSchemaTest
     @Test
     public void testTokenizedPathField()
     {
-        assertTrue(AdapterSdkSchema.getField("ID_PATH").isTokenizedPath());
+        assertTrue(AdapterSdkSchema.getField("FILEPATH").isTokenizedPath());
     }
 
     @Test
@@ -80,7 +80,7 @@ public final class AdapterSdkSchemaTest
     @Test
     public void testLongField()
     {
-        assertEquals("LONG", AdapterSdkSchema.getField("ID").getFieldType());
+        assertEquals("LONG", AdapterSdkSchema.getField("FILE_SIZE").getFieldType());
     }
 
     @Test
