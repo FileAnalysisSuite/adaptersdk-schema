@@ -127,7 +127,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                 KeyValuePair<string, JsonNode> property = propertyIterator.Current;
                 JsonNode fieldAttributes = property.Value;
                 string propertyName = property.Key;
-                string ucPropertyName = propertyName.ToUpper();
+                string ucPropertyName = propertyName.ToUpperInvariant();
                 string sanitizedPropertyName = ucPropertyName.Replace('-', '_');
 
                 if (!isSubfield)
@@ -138,7 +138,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                 else
                 {
                     string subFieldPropertyName = parentFieldName + "." + propertyName;
-                    string subFieldUcPropertyName = subFieldPropertyName.ToUpper();
+                    string subFieldUcPropertyName = subFieldPropertyName.ToUpperInvariant();
                     string subFieldSanitizedPropertyName = subFieldUcPropertyName.Replace('-', '_');
 
                     propertyNames.Add(new PropertyNameHelper(
@@ -322,7 +322,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 
             // Start Switch block.
             getFieldBuilder.Statements.Add(new CodeSnippetStatement("switch (fieldName){"));
-            getFieldOverloadBuilder.Statements.Add(new CodeSnippetStatement("switch (fieldName.ToUpper()){"));
+            getFieldOverloadBuilder.Statements.Add(new CodeSnippetStatement("switch (fieldName.ToUpperInvariant()){"));
 
             foreach (PropertyNameHelper helper in propertyNames)
             {
