@@ -19,6 +19,14 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)\GeneratedFiles</CompilerGeneratedFilesOutputPath>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MicroFocus.FAS.AdapterSdkSchema.Generator\MicroFocus.FAS.AdapterSdkSchema.Generator.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="False" />
+  </ItemGroup>
 
 </Project>

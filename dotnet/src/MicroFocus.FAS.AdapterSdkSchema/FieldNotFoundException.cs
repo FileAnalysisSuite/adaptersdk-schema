@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace MicroFocus.FAS.AdapterSdkSchema.Tests
-{
-    public class UnitTest1
-    {
-        [Fact]
-        public void Test1()
-        {
+using System;
 
+namespace MicroFocus.FAS.AdapterSdkSchema
+{
+    public sealed class FieldNotFoundException : Exception
+    {
+        public FieldNotFoundException(string fieldName)
+            : base("Field not found: " + fieldName)
+        {
         }
     }
 }

@@ -13,12 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System;
-
 namespace MicroFocus.FAS.AdapterSdkSchema
 {
-    public class Class1
+    internal class SubfieldImpl : FieldImpl, ISubfield
     {
+        private readonly IField parentField;
 
+        public SubfieldImpl(
+            string fieldName,
+            string fieldType,
+            ObjectEncoding? objectEncoding,
+            bool multivalue,
+            bool mandatory,
+            bool caseInsensitive,
+            bool tokenizedPath,
+            IField parentField
+        )
+            : base(fieldName, fieldType, objectEncoding, multivalue, mandatory, caseInsensitive, tokenizedPath)
+        {
+            this.parentField = parentField;
+        }
+
+        public override IField ParentField => parentField;
     }
 }
