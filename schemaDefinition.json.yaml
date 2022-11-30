@@ -276,10 +276,6 @@
         "REPO_RECORDTYPE": {
             "type": "STRING"
         },
-        "REPO_TITLE": {
-            "ignoreCase": true,
-            "type": "FULLTEXT"
-        },
         "REPO_URI": {
             "type": "LONG"
         },

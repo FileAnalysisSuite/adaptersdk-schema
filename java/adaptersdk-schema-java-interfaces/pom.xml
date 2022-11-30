@@ -23,17 +23,17 @@
 
     <parent>
         <groupId>io.github.fileanalysissuite.adaptersdk.schema</groupId>
-        <artifactId>adaptersdk-schema-aggregator</artifactId>
+        <artifactId>adaptersdk-schema-java</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>adaptersdk-schema-java</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>adaptersdk-schema-java-interfaces</artifactId>
 
-    <modules>
-        <module>adaptersdk-schema-java-generator</module>
-        <module>adaptersdk-schema-java-interfaces</module>
-        <module>adaptersdk-schema-java-lib</module>
-    </modules>
+    <dependencies>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>
