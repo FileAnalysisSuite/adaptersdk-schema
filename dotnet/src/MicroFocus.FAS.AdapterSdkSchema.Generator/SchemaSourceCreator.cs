@@ -205,7 +205,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 
                     defaultConstructor = new()
                     {
-                        Attributes = MemberAttributes.Public
+                        Attributes = MemberAttributes.Assembly
                     };
 
                     string pvtIFieldInitialization = "new FieldImpl("
