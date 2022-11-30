@@ -17,8 +17,6 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 {
     internal class SubfieldImpl : FieldImpl, ISubfield
     {
-        private readonly IField parentField;
-
         public SubfieldImpl(
             string fieldName,
             string fieldType,
@@ -31,9 +29,6 @@ namespace MicroFocus.FAS.AdapterSdkSchema
         )
             : base(fieldName, fieldType, objectEncoding, multivalue, mandatory, caseInsensitive, tokenizedPath)
         {
-            this.parentField = parentField;
         }
-
-        public new IField ParentField => parentField;
     }
 }

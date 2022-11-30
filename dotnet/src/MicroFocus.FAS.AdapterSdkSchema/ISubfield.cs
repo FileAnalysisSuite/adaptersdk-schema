@@ -17,6 +17,5 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 {
     public interface ISubfield : IField
     {
-        new IField ParentField { get; }
     }
 }
