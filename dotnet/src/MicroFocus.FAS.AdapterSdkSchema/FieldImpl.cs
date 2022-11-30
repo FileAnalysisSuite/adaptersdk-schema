@@ -33,7 +33,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             bool mandatory,
             bool caseInsensitive,
             bool tokenizedPath
-            )
+        )
         {
             this.fieldName = fieldName;
             this.fieldType = fieldType;
@@ -59,6 +59,5 @@ namespace MicroFocus.FAS.AdapterSdkSchema
         public bool IsCaseInsensitive => caseInsensitive;
 
         public bool IsTokenizedPath => tokenizedPath;
-
     }
 }

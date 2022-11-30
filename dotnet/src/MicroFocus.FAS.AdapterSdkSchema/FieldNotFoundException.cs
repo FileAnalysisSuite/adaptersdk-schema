@@ -19,7 +19,8 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 {
     public sealed class FieldNotFoundException : Exception
     {
-        public FieldNotFoundException(string fieldName) : base("Field not found: " + fieldName)
+        public FieldNotFoundException(string fieldName)
+            : base("Field not found: " + fieldName)
         {
         }
     }

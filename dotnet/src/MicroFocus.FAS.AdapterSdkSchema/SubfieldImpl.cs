@@ -19,19 +19,21 @@ namespace MicroFocus.FAS.AdapterSdkSchema
     {
         private readonly IField parentField;
 
-        public SubfieldImpl(string fieldName,
-                     string fieldType,
-                     ObjectEncoding? objectEncoding,
-                     bool multivalue,
-                     bool mandatory,
-                     bool caseInsensitive,
-                     bool tokenizedPath,
-                     IField parentField) : base(fieldName, fieldType, objectEncoding, multivalue, mandatory, caseInsensitive, tokenizedPath)
+        public SubfieldImpl(
+            string fieldName,
+            string fieldType,
+            ObjectEncoding? objectEncoding,
+            bool multivalue,
+            bool mandatory,
+            bool caseInsensitive,
+            bool tokenizedPath,
+            IField parentField
+        )
+            : base(fieldName, fieldType, objectEncoding, multivalue, mandatory, caseInsensitive, tokenizedPath)
         {
             this.parentField = parentField;
         }
 
         public new IField ParentField => parentField;
-
     }
 }

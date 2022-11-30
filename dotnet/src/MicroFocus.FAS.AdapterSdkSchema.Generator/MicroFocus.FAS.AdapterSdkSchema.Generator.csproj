@@ -34,7 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Generator dependencies -->
     <PackageReference Include="System.CodeDom" Version="7.0.0" GeneratePathProperty="true" PrivateAssets="all" />
     <PackageReference Include="System.Text.Json" Version="6.0.0" GeneratePathProperty="true" PrivateAssets="all" />
     <PackageReference Include="YamlDotNet" Version="12.0.2" GeneratePathProperty="true" PrivateAssets="all" />

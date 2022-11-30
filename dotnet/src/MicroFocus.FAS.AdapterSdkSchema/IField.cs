@@ -32,6 +32,5 @@ namespace MicroFocus.FAS.AdapterSdkSchema
         bool IsCaseInsensitive { get; }
 
         bool IsTokenizedPath { get; }
-
     }
 }

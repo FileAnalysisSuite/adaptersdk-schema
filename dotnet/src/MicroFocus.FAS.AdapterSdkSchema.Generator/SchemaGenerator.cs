@@ -35,11 +35,19 @@ namespace MicroFocus.FAS.AdapterSdkSchema
         public void Execute(GeneratorExecutionContext context)
         {
             var schemaSource = SchemaSourceCreator.Create();
-            var formattedSchemaSource = CSharpSyntaxTree.ParseText(schemaSource).GetRoot().NormalizeWhitespace().ToFullString();
+
+            var formattedSchemaSource = CSharpSyntaxTree
+                .ParseText(schemaSource)
+                .GetRoot()
+                .NormalizeWhitespace()
+                .ToFullString();
+
             Debug.WriteLine("schema source : " + formattedSchemaSource);
 
-            // inject the created source into the compilation
-            context.AddSource("AdapterSdkSchemaGenerated.g.cs", SourceText.From(formattedSchemaSource, Encoding.UTF8));
+            // Inject the created source into the compilation
+            context.AddSource(
+                "AdapterSdkSchemaGenerated.g.cs",
+                SourceText.From(formattedSchemaSource, Encoding.UTF8));
         }
     }
 }
