@@ -3,7 +3,7 @@
 The **Adapter SDK Schema** is a representation of the data that an adapter retrieves from a repository.
 The schema defines a set of fields that the adapters are allowed to set.
 
-This repository has code that auto generates schema definition libraries in multiple languages based on this (schema descriptor)[schemaDefinition.json.yaml].
+This repository has code that auto generates schema definition libraries in multiple languages based on this [schema descriptor](schemaDefinition.json.yaml).
 
 These libraries provide classes that expose the schema fields to Adapter implementations.
 
