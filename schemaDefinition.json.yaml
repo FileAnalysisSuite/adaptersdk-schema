@@ -223,6 +223,9 @@
         "REPO_CLASSIFICATION": {
             "type": "STRING[]"
         },
+        "REPO_EXPANDEDNUMBER": {
+            "type": "STRING"
+        },
         "REPO_FOLDER": {
             "ignoreCase": true,
             "type": "STRING"
@@ -233,6 +236,9 @@
         },
         "REPO_NOTES": {
             "ignoreCase": true,
+            "type": "STRING"
+        },
+        "REPO_RECORDNUMBER": {
             "type": "STRING"
         },
         "REPO_RECORDTYPE": {
