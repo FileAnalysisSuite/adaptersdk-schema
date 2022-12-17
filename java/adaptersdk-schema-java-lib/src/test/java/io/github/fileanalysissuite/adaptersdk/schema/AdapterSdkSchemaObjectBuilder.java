@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EntIT Software LLC, a Micro Focus company.
+ * Copyright 2022 Micro Focus or one of its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import io.github.fileanalysissuite.adaptersdk.schema.builders.JsonBuilder;
+import io.github.fileanalysissuite.adaptersdk.schema.builders.SchemaObjectBuilder;
+// auto-generated code
 public final class AdapterSdkSchemaObjectBuilder
 {
     private final SchemaObjectBuilder schemaObjectBuilder;
@@ -31,22 +34,22 @@ public final class AdapterSdkSchemaObjectBuilder
 
     public void setAddressBcc(final String value)
     {
-        schemaObjectBuilder.setFieldValue(AdapterSdkSchema.ADDRESS_BCC, value);
+        schemaObjectBuilder.setStringFieldValue(AdapterSdkSchema.ADDRESS_BCC, value);
     }
 
     public void setAddressBcc(final String... values)
     {
-        schemaObjectBuilder.setFieldValue(AdapterSdkSchema.ADDRESS_BCC, values);
+        schemaObjectBuilder.setStringFieldValue(AdapterSdkSchema.ADDRESS_BCC, values);
     }
 
     public void setAddressBcc(final List<String> values)
     {
-        schemaObjectBuilder.setFieldValue(AdapterSdkSchema.ADDRESS_BCC, values);
+        schemaObjectBuilder.setStringFieldValue(AdapterSdkSchema.ADDRESS_BCC, values);
     }
 
     public void addAddressBcc(final String value)
     {
-        schemaObjectBuilder.addFieldValue(AdapterSdkSchema.ADDRESS_BCC, value);
+        schemaObjectBuilder.addStringFieldValue(AdapterSdkSchema.ADDRESS_BCC, value);
     }
 
     public void clearAddressBcc()
@@ -56,7 +59,7 @@ public final class AdapterSdkSchemaObjectBuilder
 
     public void setAddressDisplayFrom(final String value)
     {
-        schemaObjectBuilder.setFieldValue(AdapterSdkSchema.ADDRESS_DISPLAY_FROM, value);
+        schemaObjectBuilder.setStringFieldValue(AdapterSdkSchema.ADDRESS_DISPLAY_FROM, value);
     }
 
     public void clearAddressDisplayFrom()
@@ -66,7 +69,7 @@ public final class AdapterSdkSchemaObjectBuilder
 
     public void setDateArchived(final Instant value)
     {
-        schemaObjectBuilder.setFieldValue(AdapterSdkSchema.DATE_ARCHIVED, value);
+        schemaObjectBuilder.setInstantFieldValue(AdapterSdkSchema.DATE_ARCHIVED, value);
     }
 
     public void setAccounts(final Consumer<AccountsObjectBuilder> builder)
@@ -74,7 +77,7 @@ public final class AdapterSdkSchemaObjectBuilder
         final AccountsObjectBuilder accountsBuilder = new AccountsObjectBuilder();
         builder.accept(accountsBuilder);
 
-        schemaObjectBuilder.setFieldValue(
+        schemaObjectBuilder.setJsonFieldValue(
             AdapterSdkSchema.ACCOUNTS,
             jsonBuilder -> {
                 accountsBuilder.build(jsonBuilder);

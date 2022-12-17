@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EntIT Software LLC, a Micro Focus company.
+ * Copyright 2022 Micro Focus or one of its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,16 @@ import java.time.Instant;
 import java.util.Map;
 import java.util.stream.Stream;
 
+// Say a developer is building a SalesForceAdapter
 public class FromAdapterDeveloperPerspective
 {
     public static void doSomething(final Map<String, Object> document)
     {
-        document.put("DATE_ARCHIVED", Instant.now());
+        // Error prone to make an un-typed schema object this way, mis-spelled keys, unvalid keys
+        //document.put("DATE_ARCHIVED", Instant.now());
 
+        // Instead use typed builders
+        // Here is how a Map can be built for an Adapter's DataSet (earlier known as Repository)
         final AdapterSdkSchemaObjectBuilder documentBuilder = new AdapterSdkSchemaObjectBuilder(new MapSchemaObjectBuilder(document));
 
         documentBuilder.setDateArchived(Instant.now());
