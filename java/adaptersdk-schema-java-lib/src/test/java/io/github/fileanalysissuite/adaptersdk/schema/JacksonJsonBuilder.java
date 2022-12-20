@@ -136,6 +136,11 @@ public final class JacksonJsonBuilder implements JsonBuilder
 
     public String encode()
     {
+        try {
+            jsonGenerator.flush();
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
         return writer.toString();
     }
 }
