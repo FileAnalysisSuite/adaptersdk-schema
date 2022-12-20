@@ -560,7 +560,7 @@ final class SchemaGenerator
             .addStatement("builder.accept($L)", internalBuilderVarName)
             .addCode("schemaObjectBuilder.setJsonFieldValue(\n")
             .addCode("  $L.$L,\n", CLASS_NAME, propertyName)
-            .beginControlFlow("  jsonBuilder -> ")
+            .beginControlFlow("  jsonBuilder ->")
             .addStatement("  $L.build(jsonBuilder)", internalBuilderVarName)
             .endControlFlow()
             .addStatement(")")
