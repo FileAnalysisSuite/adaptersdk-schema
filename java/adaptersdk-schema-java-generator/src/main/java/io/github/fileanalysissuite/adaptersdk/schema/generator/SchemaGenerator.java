@@ -336,8 +336,6 @@ final class SchemaGenerator
         final Iterator<Entry<String, JsonNode>> propertyIterator = entityDef.fields();
 
         final boolean isSubfield = path.length > 0;
-        final Modifier[] fieldOrTypeModifiers = isSubfield ? new Modifier[]{Modifier.PRIVATE}
-            : new Modifier[]{Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL};
 
         while (propertyIterator.hasNext()) {
             final Entry<String, JsonNode> property = propertyIterator.next();
@@ -408,7 +406,7 @@ final class SchemaGenerator
 
                 // Add an object builder class for property
                 final TypeSpec.Builder fieldObjectBuilderClassBuiler = TypeSpec.classBuilder(objBuilderClassName)
-                    .addModifiers(fieldOrTypeModifiers)
+                    .addModifiers(new Modifier[]{Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL})
                     .addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE)
                     .build());
 
@@ -482,7 +480,7 @@ final class SchemaGenerator
                                     ClassName.get(List.class), ClassName.get(PROPERTY_TYPES_LOOKUP.get(fieldTypeValue)))
                                 : ClassName.get(PROPERTY_TYPES_LOOKUP.get(fieldTypeValue)),
                             subFieldName)
-                        .addModifiers(fieldOrTypeModifiers)
+                        .addModifiers(new Modifier[]{Modifier.PRIVATE})
                         .build();
                     objectBuilderClassBuilder.addField(field);
 
