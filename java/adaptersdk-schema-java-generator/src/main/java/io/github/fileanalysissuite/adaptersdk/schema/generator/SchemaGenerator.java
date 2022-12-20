@@ -380,7 +380,7 @@ final class SchemaGenerator
                 addBuilderParamSetter(
                     objectBuilderClassBuilder,
                     fieldFunctionName,
-                    propertyName,
+                    fullName,
                     builderTypeName,
                     objBuilderClassName,
                     internalBuilderVarName);
@@ -389,7 +389,7 @@ final class SchemaGenerator
                 addBuilderStreamParamSetter(
                     objectBuilderClassBuilder,
                     fieldFunctionName,
-                    propertyName,
+                    fullName,
                     builderTypeName,
                     objBuilderClassName,
                     internalBuilderVarName);
@@ -398,13 +398,13 @@ final class SchemaGenerator
                 addBuilderListParamSetter(
                     objectBuilderClassBuilder,
                     fieldFunctionName,
-                    propertyName,
+                    fullName,
                     builderTypeName,
                     objBuilderClassName,
                     internalBuilderVarName);
 
                 // Add clear field method
-                clearFieldMethodBuilder.addStatement("schemaObjectBuilder.clearField(" + CLASS_NAME + "." + propertyName + ")");
+                clearFieldMethodBuilder.addStatement("schemaObjectBuilder.clearField($L.$L)", CLASS_NAME, fullName);
 
                 // Add an object builder class for property
                 final TypeSpec.Builder fieldObjectBuilderClassBuiler = TypeSpec.classBuilder(objBuilderClassName)
@@ -491,42 +491,43 @@ final class SchemaGenerator
 
                     // write Json fields
                     buildFunctionBuilder
-                        .beginControlFlow("if (" + subFieldName + " != null)")
+                        .beginControlFlow("if ($L != null)", subFieldName)
                         .addStatement(
-                            "jsonBuilder.writeFieldName(" + CLASS_NAME + "." + parentFieldName + "." + propertyName + ".getFieldName())");
+                            "jsonBuilder.writeFieldName($L.$L.$L.getFieldName())", CLASS_NAME, parentFieldName, propertyName);
 
                     // Add setters for multi-valued subfield
                     if (fldIsMultiValued) {
                         // Add set single value function body
-                        setSingleFieldValue.beginControlFlow("if (" + subFieldName + " == null)");
+                        setSingleFieldValue.beginControlFlow("if ($L == null)", subFieldName);
                         setSingleFieldValue.addStatement(
-                            "this." + subFieldName + " = new $T()",
+                            "this.$L = new $T()",
+                            subFieldName,
                             ParameterizedTypeName
-                            .get(ClassName.get(ArrayList.class), TypeName.get(PROPERTY_TYPES_LOOKUP.get(fieldTypeValue))));
+                                .get(ClassName.get(ArrayList.class), TypeName.get(PROPERTY_TYPES_LOOKUP.get(fieldTypeValue))));
                         setSingleFieldValue.endControlFlow();
-                        setSingleFieldValue.addStatement("this." + subFieldName + ".add(value)");
+                        setSingleFieldValue.addStatement("this.$L.add(value)", subFieldName);
 
                         // Add build function body
                         buildFunctionBuilder.addStatement("jsonBuilder.writeStartArray()");
                         buildFunctionBuilder.beginControlFlow(
-                            "for(final " + PROPERTY_TYPES_LOOKUP.get(fieldTypeValue).getSimpleName() + " value : " + subFieldName + ")");
+                            "for(final $L value : $L)", PROPERTY_TYPES_LOOKUP.get(fieldTypeValue).getSimpleName(), subFieldName);
                         buildFunctionBuilder.addStatement(
-                            "jsonBuilder.write" + PROPERTY_TYPES_LOOKUP.get(fieldTypeValue).getSimpleName() + "(value)");
+                            "jsonBuilder.write$L(value)", PROPERTY_TYPES_LOOKUP.get(fieldTypeValue).getSimpleName());
                         buildFunctionBuilder.endControlFlow();
                         buildFunctionBuilder.addStatement("jsonBuilder.writeEndArray()");
                     } else {
-                        setSingleFieldValue.addStatement("this." + subFieldName + " = value");
+                        setSingleFieldValue.addStatement("this.$L = value", subFieldName);
 
                         buildFunctionBuilder.addStatement(
-                            "jsonBuilder.write" + PROPERTY_TYPES_LOOKUP.get(fieldTypeValue).getSimpleName() + "(" + subFieldName + ")");
+                            "jsonBuilder.write$L($L)", PROPERTY_TYPES_LOOKUP.get(fieldTypeValue).getSimpleName(), subFieldName);
                     }
                     buildFunctionBuilder.endControlFlow();
                 } else {
-                    clearFieldMethodBuilder.addStatement("schemaObjectBuilder.clearField(" + CLASS_NAME + "." + propertyName + ")");
+                    clearFieldMethodBuilder.addStatement("schemaObjectBuilder.clearField($L.$L)", CLASS_NAME, propertyName);
 
                     setSingleFieldValue.addStatement(
-                        "schemaObjectBuilder.set" + PROPERTY_TYPES_LOOKUP.get(fieldTypeValue).getSimpleName() + "FieldValue("
-                        + CLASS_NAME + "." + propertyName + ", value)");
+                        "schemaObjectBuilder.set$LFieldValue($L.$L, value)",
+                        PROPERTY_TYPES_LOOKUP.get(fieldTypeValue).getSimpleName(), CLASS_NAME, propertyName);
 
                 }
                 // Add single value setter method
@@ -552,18 +553,17 @@ final class SchemaGenerator
             .addModifiers(Modifier.FINAL)
             .build();
 
-        final String setterBuilderBody =
-                "final " + objBuilderClassName + " " + internalBuilderVarName + " = new " + objBuilderClassName + "();"
-                + "builder.accept(" + internalBuilderVarName + ");"
-                + "schemaObjectBuilder.setJsonFieldValue(" // TODO: Json vs Flattened
-                + CLASS_NAME + "." + propertyName + ","
-                +      "jsonBuilder -> {"
-                +         internalBuilderVarName + ".build(jsonBuilder);"
-                + "})";
         final MethodSpec setBuilderFieldValue = MethodSpec.methodBuilder("set" + fieldFunctionName)
             .addModifiers(Modifier.PUBLIC)
             .addParameter(builderParamName)
-            .addStatement(setterBuilderBody)
+            .addStatement("final $L $L = new $L()", objBuilderClassName, internalBuilderVarName, objBuilderClassName)
+            .addStatement("builder.accept($L)", internalBuilderVarName)
+            .addCode("schemaObjectBuilder.setJsonFieldValue(\n")
+            .addCode("  $L.$L,\n", CLASS_NAME, propertyName)
+            .beginControlFlow("  jsonBuilder -> ")
+            .addStatement("  $L.build(jsonBuilder)", internalBuilderVarName)
+            .endControlFlow()
+            .addStatement(")")
             .build();
 
         objectBuilderClassBuilder.addMethod(setBuilderFieldValue);
@@ -582,20 +582,18 @@ final class SchemaGenerator
             .builder(ParameterizedTypeName.get(ClassName.get(Stream.class), builderTypeName), "builders")
             .addModifiers(Modifier.FINAL)
             .build();
-        final String setterStreamBody =
-            "schemaObjectBuilder.setJsonFieldValue(" // TODO: Json vs Flattened
-                + CLASS_NAME + "." + propertyName + ","
-                + "builders.<Consumer<JsonBuilder>>map(builder -> {"
-                +     "final " + objBuilderClassName + " " + internalBuilderVarName + " = new " + objBuilderClassName + "();"
-                +     "builder.accept(" + internalBuilderVarName + ");"
-                +     "return jsonBuilder -> {"
-                +         internalBuilderVarName + ".build(jsonBuilder);"
-                +     "};"
-                + "}))";
         final MethodSpec setStreamFieldValue = MethodSpec.methodBuilder("set" + fieldFunctionName)
             .addModifiers(Modifier.PUBLIC)
             .addParameter(streamParamFieldName)
-            .addStatement(setterStreamBody)
+            .addCode("schemaObjectBuilder.setJsonFieldValue(\n")
+            .addCode("  $L.$L,\n", CLASS_NAME, propertyName)
+            .addCode("  builders.<Consumer<JsonBuilder>>map(builder -> {\n")
+            .addStatement("    final $L $L = new $L()", objBuilderClassName, internalBuilderVarName, objBuilderClassName)
+            .addStatement("    builder.accept($L)", internalBuilderVarName)
+            .addCode("    return jsonBuilder -> {\n")
+            .addStatement("      $L.build(jsonBuilder)", internalBuilderVarName)
+            .addStatement("    }")
+            .addStatement("}))")
             .build();
 
         objectBuilderClassBuilder.addMethod(setStreamFieldValue);
@@ -615,11 +613,10 @@ final class SchemaGenerator
             .addModifiers(Modifier.FINAL)
             .build();
 
-        final String setterListBody = "set" + toProperCase(propertyName) + "(builders.stream())";
         final MethodSpec setListFieldValue = MethodSpec.methodBuilder("set" + fieldFunctionName)
             .addModifiers(Modifier.PUBLIC)
             .addParameter(listParamFieldName)
-            .addStatement(setterListBody)
+            .addStatement("set$L(builders.stream())", fieldFunctionName)
             .build();
 
         objectBuilderClassBuilder.addMethod(setListFieldValue);
@@ -645,11 +642,11 @@ final class SchemaGenerator
             .varargs(true);
 
         if (isSubfield) {
-            setArrayFieldValue.addStatement("this." + subFieldName + "= java.util.Arrays.asList(values)");
+            setArrayFieldValue.addStatement("this.$L = $T.asList(values)", subFieldName, Arrays.class);
         } else {
-            setArrayFieldValue
-                .addStatement("schemaObjectBuilder.set" + PROPERTY_TYPES_LOOKUP.get(fieldTypeValue).getSimpleName()
-                    + "FieldValue(" + CLASS_NAME + "." + propertyName + ", values)");
+            setArrayFieldValue.addStatement(
+                "schemaObjectBuilder.set$LFieldValue($L.$L, values)",
+                PROPERTY_TYPES_LOOKUP.get(fieldTypeValue).getSimpleName(), CLASS_NAME, propertyName);
         }
         objectBuilderClassBuilder.addMethod(setArrayFieldValue.build());
     }
@@ -665,8 +662,7 @@ final class SchemaGenerator
     {
         final ParameterSpec listParamFieldName = ParameterSpec
             .builder(
-                ParameterizedTypeName
-                    .get(ClassName.get(List.class), TypeName.get(PROPERTY_TYPES_LOOKUP.get(fieldTypeValue))),
+                ParameterizedTypeName.get(ClassName.get(List.class), TypeName.get(PROPERTY_TYPES_LOOKUP.get(fieldTypeValue))),
                 "values")
             .addModifiers(Modifier.FINAL)
             .build();
@@ -676,11 +672,11 @@ final class SchemaGenerator
             .addParameter(listParamFieldName);
 
         if (isSubfield) {
-            setListFieldValue.addStatement("this." + subFieldName + "= values");
+            setListFieldValue.addStatement("this.$L = values", subFieldName);
         } else {
-            setListFieldValue
-                .addStatement("schemaObjectBuilder.set" + PROPERTY_TYPES_LOOKUP.get(fieldTypeValue).getSimpleName()
-                    + "FieldValue(" + CLASS_NAME + "." + propertyName + ", values)");
+            setListFieldValue.addStatement(
+                "schemaObjectBuilder.set$LFieldValue($L.$L, values)",
+                PROPERTY_TYPES_LOOKUP.get(fieldTypeValue).getSimpleName(), CLASS_NAME, propertyName);
         }
 
         objectBuilderClassBuilder.addMethod(setListFieldValue.build());
@@ -701,17 +697,17 @@ final class SchemaGenerator
             .addParameter(paramSingleFieldValue);
 
         if (isSubfield) {
-            addFieldValue.beginControlFlow("if (" + subFieldName + " == null)");
+            addFieldValue.beginControlFlow("if ($L == null)", subFieldName);
             addFieldValue.addStatement(
-                "this." + subFieldName + " = new $T()",
-                ParameterizedTypeName
-                .get(ClassName.get(ArrayList.class), TypeName.get(PROPERTY_TYPES_LOOKUP.get(fieldTypeValue))));
+                "this.$L = new $T()",
+                subFieldName,
+                ParameterizedTypeName.get(ClassName.get(ArrayList.class), TypeName.get(PROPERTY_TYPES_LOOKUP.get(fieldTypeValue))));
             addFieldValue.endControlFlow();
-            addFieldValue.addStatement("this." + subFieldName + ".add(value)");
+            addFieldValue.addStatement("this.$L.add(value)", subFieldName);
         } else {
-            addFieldValue
-                .addStatement("schemaObjectBuilder.add" + PROPERTY_TYPES_LOOKUP.get(fieldTypeValue).getSimpleName()
-                    + "FieldValue(" + CLASS_NAME + "." + propertyName + ", value)");
+            addFieldValue.addStatement(
+                "schemaObjectBuilder.add$LFieldValue($L.$L, value)",
+                PROPERTY_TYPES_LOOKUP.get(fieldTypeValue).getSimpleName(), CLASS_NAME, propertyName);
         }
 
         objectBuilderClassBuilder.addMethod(addFieldValue.build());
