@@ -490,21 +490,29 @@ final class SchemaGenerator
                     clearFieldMethodBuilder.addStatement(subFieldName + " = null");
 
                     // write Json fields
+                    if(fldIsMandatory) {
+                        buildFunctionBuilder
+                            .beginControlFlow("if ($L == null)", subFieldName)
+                            .addStatement(
+                                "throw new IllegalArgumentException(\"Mandatory field '$L.$L.$L' is not set\")",
+                                CLASS_NAME, parentFieldName, propertyName)
+                            .nextControlFlow("else");
+                    } else {
+                        buildFunctionBuilder
+                            .beginControlFlow("if ($L != null)", subFieldName);
+                    }
                     buildFunctionBuilder
-                        .beginControlFlow("if ($L != null)", subFieldName)
                         .addStatement(
                             "jsonBuilder.writeFieldName($L.$L.$L.getFieldName())", CLASS_NAME, parentFieldName, propertyName);
 
                     // Add setters for multi-valued subfield
                     if (fldIsMultiValued) {
                         // Add set single value function body
-                        setSingleFieldValue.beginControlFlow("if ($L == null)", subFieldName);
                         setSingleFieldValue.addStatement(
                             "this.$L = new $T()",
                             subFieldName,
                             ParameterizedTypeName
                                 .get(ClassName.get(ArrayList.class), TypeName.get(PROPERTY_TYPES_LOOKUP.get(fieldTypeValue))));
-                        setSingleFieldValue.endControlFlow();
                         setSingleFieldValue.addStatement("this.$L.add(value)", subFieldName);
 
                         // Add build function body
@@ -523,6 +531,7 @@ final class SchemaGenerator
                     }
                     buildFunctionBuilder.endControlFlow();
                 } else {
+                    // TODO: how to ensure mandatory field is set?
                     clearFieldMethodBuilder.addStatement("schemaObjectBuilder.clearField($L.$L)", CLASS_NAME, propertyName);
 
                     setSingleFieldValue.addStatement(
