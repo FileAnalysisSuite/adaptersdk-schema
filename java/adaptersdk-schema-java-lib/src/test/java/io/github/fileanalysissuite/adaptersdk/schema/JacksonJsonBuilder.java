@@ -64,20 +64,40 @@ public final class JacksonJsonBuilder implements JsonBuilder
     }
 
     @Override
-    public void writeString(final String value)
+    public void writeBoolean(final boolean value)
     {
         try {
-            jsonGenerator.writeString(value);
+            jsonGenerator.writeBoolean(value);
         } catch (final IOException ex) {
             throw new UncheckedIOException(ex);
         }
     }
 
     @Override
-    public void writeNumber(final long value)
+    public void writeDouble(final double value)
     {
         try {
             jsonGenerator.writeNumber(value);
+        } catch (final IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
+    }
+
+    @Override
+    public void writeInteger(final long value)
+    {
+        try {
+            jsonGenerator.writeNumber(value);
+        } catch (final IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
+    }
+
+    @Override
+    public void writeString(final String value)
+    {
+        try {
+            jsonGenerator.writeString(value);
         } catch (final IOException ex) {
             throw new UncheckedIOException(ex);
         }

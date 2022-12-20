@@ -23,9 +23,13 @@ public interface JsonBuilder
 
     void writeFieldName(String key);
 
-    void writeString(String value);
+    void writeBoolean(boolean value);
 
-    void writeNumber(long value);
+    void writeDouble(double value);
+
+    void writeInteger(long value);
+
+    void writeString(String value);
 
     void writeEndArray();
 
