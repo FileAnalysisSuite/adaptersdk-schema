@@ -27,10 +27,21 @@ import io.github.fileanalysissuite.adaptersdk.schema.builders.JsonBuilder;
 public final class JacksonJsonBuilder implements JsonBuilder
 {
     private final JsonGenerator jsonGenerator;
+    private final StringWriter writer;
 
-    public JacksonJsonBuilder(final JsonGenerator jsonGenerator)
+    public JacksonJsonBuilder()
     {
-        this.jsonGenerator = jsonGenerator;
+        final JsonFactory newJsonFactory = new JsonFactory();
+        newJsonFactory.disable(JsonGenerator.Feature.AUTO_CLOSE_JSON_CONTENT);
+        newJsonFactory.disable(JsonGenerator.Feature.AUTO_CLOSE_TARGET);
+        newJsonFactory.disable(JsonGenerator.Feature.FLUSH_PASSED_TO_STREAM);
+
+        writer = new StringWriter();
+        try {
+            this.jsonGenerator = newJsonFactory.createGenerator(writer);
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -125,13 +136,6 @@ public final class JacksonJsonBuilder implements JsonBuilder
 
     public String encode()
     {
-        final JsonFactory newJsonFactory = new JsonFactory();
-        newJsonFactory.disable(JsonGenerator.Feature.AUTO_CLOSE_JSON_CONTENT);
-        newJsonFactory.disable(JsonGenerator.Feature.AUTO_CLOSE_TARGET);
-        newJsonFactory.disable(JsonGenerator.Feature.FLUSH_PASSED_TO_STREAM);
-
-        final StringWriter sw = new StringWriter();
-
-        return sw.toString();
+        return writer.toString();
     }
 }

@@ -75,7 +75,7 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
     @Override
     public void setJsonFieldValue(final Field field, final Consumer<JsonBuilder> builder)
     {
-        final JacksonJsonBuilder jsonBuilder = new JacksonJsonBuilder(null);
+        final JacksonJsonBuilder jsonBuilder = new JacksonJsonBuilder();
         builder.accept(jsonBuilder);
 
         document.put(field.getFieldName(), jsonBuilder.encode());
@@ -87,7 +87,7 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
         document.put(
             field.getFieldName(),
             builders.map(builder -> {
-                final JacksonJsonBuilder jsonBuilder = new JacksonJsonBuilder(null);
+                final JacksonJsonBuilder jsonBuilder = new JacksonJsonBuilder();
                 builder.accept(jsonBuilder);
                 return jsonBuilder.encode();
             }).collect(Collectors.toList()));
