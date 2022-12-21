@@ -347,16 +347,17 @@ final class SchemaGenerator
             final String fieldType = fieldAttributes.get("type").textValue();
 
             final int endOfTypeDimension = fieldType.lastIndexOf('[');
+
             final String fieldTypeValue = endOfTypeDimension > 0 ? fieldType.substring(0, endOfTypeDimension) : fieldType;
+
+            final int numberOfDimensions = endOfTypeDimension > 0 ? StringUtils.countMatches(fieldType, "[]") : 0;
 
             final String fldEncoding
                 = fieldAttributes.hasNonNull("objectEncoding")
                 ? fieldAttributes.get("objectEncoding").textValue()
                 : "json";
-                // TODO: flattened does not need build and instance / state variables
+            // TODO: flattened does not need 'build' function and instance / state variables
             final boolean fldIsMultiValued = fieldType.endsWith("[]");
-
-            // TODO: "ocr[][]" // every additional [] would need a ListBuilder
 
             final boolean fldIsMandatory
                 = fieldAttributes.hasNonNull("mandatory")
@@ -381,28 +382,99 @@ final class SchemaGenerator
                 final String internalBuilderVarName = internalVarName + "Builder";
 
                 if (parentFieldName.isEmpty()) {
-                    // Add set function Builder param
-                    addBuilderParamSetter(
-                        objectBuilderClassBuilder,
-                        fieldFunctionName,
-                        fullName,
-                        builderTypeName,
-                        objBuilderClassName,
-                        internalBuilderVarName);
+                    // first level object type field
+                    // TODO: "ocr[][]" // every additional [] would need a ListBuilder
+                    // TODO: Are multi-dimensional fields allowed at any level?
+                    if(numberOfDimensions > 1) {
+                        // Multi-dimensional field
+                        // Add an list object builder class for property
+                        final String listObjBuilderClassName = fieldFunctionName + "ListObjectBuilder";
+                        final TypeSpec.Builder fieldListObjectBuilderClassBuiler = TypeSpec.classBuilder(listObjBuilderClassName)
+                            .addModifiers(new Modifier[]{Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL})
+                            .addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE)
+                            .build());
 
-                    // Add set function with Stream param
-                    addBuilderStreamParamSetter(
-                        objectBuilderClassBuilder,
-                        fieldFunctionName,
-                        fullName,
-                        builderTypeName,
-                        objBuilderClassName,
-                        internalBuilderVarName);
+                        // Add instance variable for list of field object builders
+                        final String listName = internalVarName + "Builders";
+                        final FieldSpec fieldObjBuilderList = FieldSpec
+                            .builder(ParameterizedTypeName.get(
+                                ClassName.get(List.class), ClassName.get("", objBuilderClassName)), listName)
+                            .addModifiers(new Modifier[]{Modifier.PRIVATE})
+                            .build();
+                        fieldListObjectBuilderClassBuiler.addField(fieldObjBuilderList);
 
+                        // Add set function Builder param
+                        addFieldListObjectBuilderBuilderParamSetter(
+                            fieldListObjectBuilderClassBuiler, objBuilderClassName, internalVarName, listName);
+
+                        // Add set function with Stream param
+                        addFieldListObjectBuilderStreamParamSetter(
+                            fieldListObjectBuilderClassBuiler, objBuilderClassName, internalVarName, listName);
+
+                        // Add set function with List param
+                        addFieldListObjectBuilderListParamSetter(fieldListObjectBuilderClassBuiler, objBuilderClassName);
+
+                        // Add clear field method
+                        addFieldListObjectBuilderClearFunction(fieldListObjectBuilderClassBuiler, listName);
+
+                        // Add build method
+                        addFieldListObjectBuilderBuildFunction(fieldListObjectBuilderClassBuiler, objBuilderClassName, listName);
+
+                        objectBuilderClassBuilder.addType(fieldListObjectBuilderClassBuiler.build());
+
+                        final ParameterizedTypeName listBuilderTypeName = ParameterizedTypeName
+                            .get(ClassName.get(Consumer.class), ClassName.get("", listObjBuilderClassName));
+
+                        // Add set function Builder param
+                        addBuilderParamSetter(
+                            objectBuilderClassBuilder,
+                            fieldFunctionName,
+                            fullName,
+                            listBuilderTypeName,
+                            listObjBuilderClassName,
+                            internalBuilderVarName);
+
+                        // Add set function with Stream param
+                        addBuilderStreamParamSetter(
+                            objectBuilderClassBuilder,
+                            fieldFunctionName,
+                            fullName,
+                            listBuilderTypeName,
+                            listObjBuilderClassName,
+                            internalBuilderVarName);
+
+                        // Add set function with List param
+                        addBuilderListParamSetter(
+                            objectBuilderClassBuilder,
+                            fieldFunctionName,
+                            listBuilderTypeName,
+                            listObjBuilderClassName,
+                            internalBuilderVarName);
+                    } else {
+                        // Single dimension field
+                        // Add set function Builder param
+                        addBuilderParamSetter(
+                            objectBuilderClassBuilder,
+                            fieldFunctionName,
+                            fullName,
+                            builderTypeName,
+                            objBuilderClassName,
+                            internalBuilderVarName);
+
+                        // Add set function with Stream param
+                        addBuilderStreamParamSetter(
+                            objectBuilderClassBuilder,
+                            fieldFunctionName,
+                            fullName,
+                            builderTypeName,
+                            objBuilderClassName,
+                            internalBuilderVarName);
+                    }
                     // Add clear field method
                     clearFieldMethodBuilder.addStatement("schemaObjectBuilder.clearField($L.$L)", CLASS_NAME, fullName);
                 }
                 else {
+                    // next level object type field
                     final FieldSpec nonPrimitiveField = FieldSpec
                         .builder(
                             fldIsMultiValued
@@ -447,13 +519,15 @@ final class SchemaGenerator
                         objBuilderClassName);
                 }
 
-                // Add set function with List param
-                addBuilderListParamSetter(
-                    objectBuilderClassBuilder,
-                    fieldFunctionName,
-                    builderTypeName,
-                    objBuilderClassName,
-                    internalBuilderVarName);
+                if (numberOfDimensions <= 1) {
+                    // Add set function with List param
+                    addBuilderListParamSetter(
+                        objectBuilderClassBuilder,
+                        fieldFunctionName,
+                        builderTypeName,
+                        objBuilderClassName,
+                        internalBuilderVarName);
+                }
 
                 // Add an object builder class for property
                 final TypeSpec.Builder fieldObjectBuilderClassBuiler = TypeSpec.classBuilder(objBuilderClassName)
@@ -577,6 +651,117 @@ final class SchemaGenerator
             // Add clear field method
             objectBuilderClassBuilder.addMethod(clearFieldMethodBuilder.build());
         }
+    }
+
+    private static void addFieldListObjectBuilderBuilderParamSetter(
+        final Builder fieldListObjectBuilderClassBuiler,
+        final String objBuilderClassName,
+        final String fieldName,
+        final String listName
+    )
+    {
+        final ParameterizedTypeName builderTypeName = ParameterizedTypeName
+            .get(ClassName.get(Consumer.class), ClassName.get("", objBuilderClassName));
+        final ParameterSpec builderParamName = ParameterSpec
+            .builder(builderTypeName, "builder")
+            .addModifiers(Modifier.FINAL)
+            .build();
+        final String varName = fieldName + "ObjectBuilder";
+        final MethodSpec setBuilderFieldValue = MethodSpec.methodBuilder("set")
+            .addModifiers(Modifier.PUBLIC)
+            .addParameter(builderParamName)
+            .addStatement("final $L $L = new $L()", objBuilderClassName, varName, objBuilderClassName)
+            .addStatement("builder.accept($L)", varName)
+            .addStatement("$L = new ArrayList<>()", listName)
+            .addStatement("$L.add($L)", listName, varName)
+            .build();
+
+        fieldListObjectBuilderClassBuiler.addMethod(setBuilderFieldValue);
+    }
+
+    private static void addFieldListObjectBuilderStreamParamSetter(
+        final Builder fieldListObjectBuilderClassBuiler,
+        final String objBuilderClassName,
+        final String fieldName,
+        final String listName
+    )
+    {
+        final ParameterizedTypeName builderTypeName = ParameterizedTypeName
+            .get(ClassName.get(Consumer.class), ClassName.get("", objBuilderClassName));
+
+        final ParameterSpec streamParamFieldName = ParameterSpec
+            .builder(ParameterizedTypeName.get(ClassName.get(Stream.class), builderTypeName), "builders")
+            .addModifiers(Modifier.FINAL)
+            .build();
+        final String varName = fieldName + "ObjectBuilder";
+        final MethodSpec setStreamFieldValue = MethodSpec.methodBuilder("set")
+            .addModifiers(Modifier.PUBLIC)
+            .addParameter(streamParamFieldName)
+            .addCode("$L = builders.map(builder -> {\n", listName)
+            .addStatement("  final $L $L = new $L()", objBuilderClassName, varName, objBuilderClassName)
+            .addStatement("  builder.accept($L)", varName)
+            .addStatement("  return $L", varName)
+            .addStatement("}).collect($T.toList())", Collectors.class)
+            .build();
+
+        fieldListObjectBuilderClassBuiler.addMethod(setStreamFieldValue);
+    }
+
+    private static void addFieldListObjectBuilderListParamSetter(
+        final Builder fieldListObjectBuilderClassBuiler,
+        final String objBuilderClassName
+    )
+    {
+        final ParameterizedTypeName builderTypeName = ParameterizedTypeName
+            .get(ClassName.get(Consumer.class), ClassName.get("", objBuilderClassName));
+
+        final ParameterSpec listParamFieldName = ParameterSpec
+            .builder(ParameterizedTypeName.get(ClassName.get(List.class), builderTypeName), "builders")
+            .addModifiers(Modifier.FINAL)
+            .build();
+
+        final MethodSpec setBuilderFieldValue = MethodSpec.methodBuilder("set")
+            .addModifiers(Modifier.PUBLIC)
+            .addParameter(listParamFieldName)
+            .addStatement("set(builders.stream())")
+            .build();
+
+        fieldListObjectBuilderClassBuiler.addMethod(setBuilderFieldValue);
+    }
+
+    private static void addFieldListObjectBuilderClearFunction(
+        final Builder fieldListObjectBuilderClassBuiler,
+        final String listName
+    )
+    {
+        final MethodSpec setBuilderFieldValue = MethodSpec.methodBuilder("clear")
+            .addModifiers(Modifier.PUBLIC)
+            .addStatement("$L = null", listName)
+            .build();
+
+        fieldListObjectBuilderClassBuiler.addMethod(setBuilderFieldValue);
+    }
+
+    private static void addFieldListObjectBuilderBuildFunction(
+        final Builder fieldListObjectBuilderClassBuiler,
+        final String objBuilderClassName,
+        final String listName
+    )
+    {
+        final MethodSpec buildFunctionBuilder = MethodSpec.methodBuilder("build")
+            .addModifiers(Modifier.PRIVATE)
+            .addParameter(ParameterSpec.builder(JsonBuilder.class, "jsonBuilder")
+            .addModifiers(Modifier.FINAL).build())
+            .addStatement("jsonBuilder.writeStartArray()")
+            .beginControlFlow("if ($L != null)", listName)
+            .beginControlFlow("for (final $L value : $L)", objBuilderClassName, listName)
+            .addStatement("value.build(jsonBuilder)")
+            .endControlFlow()
+            .endControlFlow()
+            .addStatement("jsonBuilder.writeEndArray()")
+            .build();
+
+        fieldListObjectBuilderClassBuiler.addMethod(buildFunctionBuilder);
     }
 
     private static void writeJsonFields(
