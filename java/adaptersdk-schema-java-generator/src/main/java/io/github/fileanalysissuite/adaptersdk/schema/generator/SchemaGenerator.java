@@ -50,6 +50,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.annotation.Nonnull;
@@ -352,7 +353,11 @@ final class SchemaGenerator
                 = fieldAttributes.hasNonNull("objectEncoding")
                 ? fieldAttributes.get("objectEncoding").textValue()
                 : "json";
+                // TODO: flattened does not need build and instance / state variables
             final boolean fldIsMultiValued = fieldType.endsWith("[]");
+
+            // TODO: "ocr[][]" // every additional [] would need a ListBuilder
+
             final boolean fldIsMandatory
                 = fieldAttributes.hasNonNull("mandatory")
                 ? fieldAttributes.get("mandatory").booleanValue()
@@ -372,37 +377,83 @@ final class SchemaGenerator
                 final ParameterizedTypeName builderTypeName = ParameterizedTypeName
                     .get(ClassName.get(Consumer.class), ClassName.get("", objBuilderClassName));
 
-                final String internalBuilderVarName = toFieldNameCase(propertyName) + "Builder";
+                final String internalVarName = toFieldNameCase(propertyName);
+                final String internalBuilderVarName = internalVarName + "Builder";
 
-                // Add set function Builder param
-                addBuilderParamSetter(
-                    objectBuilderClassBuilder,
-                    fieldFunctionName,
-                    fullName,
-                    builderTypeName,
-                    objBuilderClassName,
-                    internalBuilderVarName);
+                if (parentFieldName.isEmpty()) {
+                    // Add set function Builder param
+                    addBuilderParamSetter(
+                        objectBuilderClassBuilder,
+                        fieldFunctionName,
+                        fullName,
+                        builderTypeName,
+                        objBuilderClassName,
+                        internalBuilderVarName);
 
-                // Add set function with Stream param
-                addBuilderStreamParamSetter(
-                    objectBuilderClassBuilder,
-                    fieldFunctionName,
-                    fullName,
-                    builderTypeName,
-                    objBuilderClassName,
-                    internalBuilderVarName);
+                    // Add set function with Stream param
+                    addBuilderStreamParamSetter(
+                        objectBuilderClassBuilder,
+                        fieldFunctionName,
+                        fullName,
+                        builderTypeName,
+                        objBuilderClassName,
+                        internalBuilderVarName);
+
+                    // Add clear field method
+                    clearFieldMethodBuilder.addStatement("schemaObjectBuilder.clearField($L.$L)", CLASS_NAME, fullName);
+                }
+                else {
+                    final FieldSpec nonPrimitiveField = FieldSpec
+                        .builder(
+                            fldIsMultiValued
+                                ? ParameterizedTypeName.get(
+                                    ClassName.get(List.class), ClassName.get("", objBuilderClassName))
+                                : ClassName.get("", objBuilderClassName),
+                                internalVarName)
+                        .addModifiers(new Modifier[]{Modifier.PRIVATE})
+                        .build();
+                    objectBuilderClassBuilder.addField(nonPrimitiveField);
+
+                    // Add nonPrimitiveField set function Builder param
+                    addNestedObjectBuilderParamSetter(
+                        objectBuilderClassBuilder,
+                        fieldFunctionName,
+                        internalVarName,
+                        builderTypeName,
+                        objBuilderClassName,
+                        internalBuilderVarName);
+
+                    // Add nonPrimitiveField set function with Stream param
+                    addNestedObjectBuilderStreamParamSetter(
+                        objectBuilderClassBuilder,
+                        fieldFunctionName,
+                        internalVarName,
+                        builderTypeName,
+                        objBuilderClassName,
+                        internalBuilderVarName);
+
+                    // Add clear field method
+                    clearFieldMethodBuilder.addStatement("$L = null", internalVarName);
+
+                    // Write Json field
+                    writeJsonFields(
+                        buildFunctionBuilder,
+                        fieldTypeValue,
+                        fldIsMandatory,
+                        fldIsMultiValued,
+                        parentFieldName,
+                        propertyName,
+                        internalVarName,
+                        objBuilderClassName);
+                }
 
                 // Add set function with List param
                 addBuilderListParamSetter(
                     objectBuilderClassBuilder,
                     fieldFunctionName,
-                    fullName,
                     builderTypeName,
                     objBuilderClassName,
                     internalBuilderVarName);
-
-                // Add clear field method
-                clearFieldMethodBuilder.addStatement("schemaObjectBuilder.clearField($L.$L)", CLASS_NAME, fullName);
 
                 // Add an object builder class for property
                 final TypeSpec.Builder fieldObjectBuilderClassBuiler = TypeSpec.classBuilder(objBuilderClassName)
@@ -488,20 +539,15 @@ final class SchemaGenerator
                     clearFieldMethodBuilder.addStatement(subFieldName + " = null");
 
                     // write Json fields
-                    if(fldIsMandatory) {
-                        buildFunctionBuilder
-                            .beginControlFlow("if ($L == null)", subFieldName)
-                            .addStatement(
-                                "throw new IllegalArgumentException(\"Mandatory field '$L.$L.$L' is not set\")",
-                                CLASS_NAME, parentFieldName, propertyName)
-                            .nextControlFlow("else");
-                    } else {
-                        buildFunctionBuilder
-                            .beginControlFlow("if ($L != null)", subFieldName);
-                    }
-                    buildFunctionBuilder
-                        .addStatement(
-                            "jsonBuilder.writeFieldName($L.$L.$L.getFieldName())", CLASS_NAME, parentFieldName, propertyName);
+                    writeJsonFields(
+                        buildFunctionBuilder,
+                        fieldTypeValue,
+                        fldIsMandatory,
+                        fldIsMultiValued,
+                        parentFieldName,
+                        propertyName,
+                        subFieldName,
+                        null);
 
                     // Add setters for multi-valued subfield
                     if (fldIsMultiValued) {
@@ -512,22 +558,9 @@ final class SchemaGenerator
                             ParameterizedTypeName
                                 .get(ClassName.get(ArrayList.class), TypeName.get(PROPERTY_TYPES_LOOKUP.get(fieldTypeValue))));
                         setSingleFieldValue.addStatement("this.$L.add(value)", subFieldName);
-
-                        // Add build function body
-                        buildFunctionBuilder.addStatement("jsonBuilder.writeStartArray()");
-                        buildFunctionBuilder.beginControlFlow(
-                            "for(final $L value : $L)", PROPERTY_TYPES_LOOKUP.get(fieldTypeValue).getSimpleName(), subFieldName);
-                        buildFunctionBuilder.addStatement(
-                            "jsonBuilder.write$L(value)", PROPERTY_TYPES_LOOKUP.get(fieldTypeValue).getSimpleName());
-                        buildFunctionBuilder.endControlFlow();
-                        buildFunctionBuilder.addStatement("jsonBuilder.writeEndArray()");
                     } else {
                         setSingleFieldValue.addStatement("this.$L = value", subFieldName);
-
-                        buildFunctionBuilder.addStatement(
-                            "jsonBuilder.write$L($L)", PROPERTY_TYPES_LOOKUP.get(fieldTypeValue).getSimpleName(), subFieldName);
                     }
-                    buildFunctionBuilder.endControlFlow();
                 } else {
                     // TODO: how to ensure mandatory field is set?
                     clearFieldMethodBuilder.addStatement("schemaObjectBuilder.clearField($L.$L)", CLASS_NAME, propertyName);
@@ -544,6 +577,52 @@ final class SchemaGenerator
             // Add clear field method
             objectBuilderClassBuilder.addMethod(clearFieldMethodBuilder.build());
         }
+    }
+
+    private static void writeJsonFields(
+        final MethodSpec.Builder buildFunctionBuilder,
+        final String fieldTypeValue,
+        final boolean fldIsMandatory,
+        final boolean fldIsMultiValued,
+        final String parentFieldName,
+        final String propertyName,
+        final String subFieldName,
+        final String objBuilderClassName)
+    {
+        if(fldIsMandatory) {
+            buildFunctionBuilder
+                .beginControlFlow("if ($L == null)", subFieldName)
+                .addStatement(
+                    "throw new IllegalArgumentException(\"Mandatory field '$L.$L.$L' is not set\")",
+                    CLASS_NAME, parentFieldName, propertyName)
+                .nextControlFlow("else");
+        } else {
+            buildFunctionBuilder.beginControlFlow("if ($L != null)", subFieldName);
+        }
+        buildFunctionBuilder
+            .addStatement("jsonBuilder.writeFieldName($L.$L.$L.getFieldName())", CLASS_NAME, parentFieldName, propertyName);
+
+        if (fldIsMultiValued) {
+            // Add build function body
+            buildFunctionBuilder.addStatement("jsonBuilder.writeStartArray()");
+
+            if (objBuilderClassName == null) {
+                buildFunctionBuilder.beginControlFlow(
+                    "for(final $L value : $L)", PROPERTY_TYPES_LOOKUP.get(fieldTypeValue).getSimpleName(), subFieldName);
+                buildFunctionBuilder.addStatement(
+                    "jsonBuilder.write$L(value)", PROPERTY_TYPES_LOOKUP.get(fieldTypeValue).getSimpleName());
+            } else {
+                buildFunctionBuilder.beginControlFlow("for(final $L value : $L)", objBuilderClassName, subFieldName);
+                buildFunctionBuilder.addStatement("value.build(jsonBuilder)");
+            }
+            buildFunctionBuilder.endControlFlow();
+
+            buildFunctionBuilder.addStatement("jsonBuilder.writeEndArray()");
+        } else {
+            buildFunctionBuilder.addStatement(
+                "jsonBuilder.write$L($L)", PROPERTY_TYPES_LOOKUP.get(fieldTypeValue).getSimpleName(), subFieldName);
+        }
+        buildFunctionBuilder.endControlFlow();
     }
 
     private static void addBuilderParamSetter(
@@ -609,7 +688,6 @@ final class SchemaGenerator
     private static void addBuilderListParamSetter(
         final Builder objectBuilderClassBuilder,
         final String fieldFunctionName,
-        final String propertyName,
         final ParameterizedTypeName builderTypeName,
         final String objBuilderClassName,
         final String internalBuilderVarName
@@ -627,6 +705,58 @@ final class SchemaGenerator
             .build();
 
         objectBuilderClassBuilder.addMethod(setListFieldValue);
+    }
+
+    private static void addNestedObjectBuilderParamSetter(
+        final Builder objectBuilderClassBuilder,
+        final String fieldFunctionName,
+        final String internalVarName,
+        final ParameterizedTypeName builderTypeName,
+        final String objBuilderClassName,
+        final String internalBuilderVarName
+    )
+    {
+        final ParameterSpec builderParamName = ParameterSpec
+            .builder(builderTypeName, "builder")
+            .addModifiers(Modifier.FINAL)
+            .build();
+
+        final MethodSpec setBuilderFieldValue = MethodSpec.methodBuilder("set" + fieldFunctionName)
+            .addModifiers(Modifier.PUBLIC)
+            .addParameter(builderParamName)
+            .addStatement("final $L $L = new $L()", objBuilderClassName, internalBuilderVarName, objBuilderClassName)
+            .addStatement("builder.accept($L)", internalBuilderVarName)
+            .addStatement("$L = new ArrayList<>()", internalVarName)
+            .addStatement("$L.add($L)", internalVarName, internalBuilderVarName)
+            .build();
+
+        objectBuilderClassBuilder.addMethod(setBuilderFieldValue);
+    }
+
+    private static void addNestedObjectBuilderStreamParamSetter(
+        final Builder objectBuilderClassBuilder,
+        final String fieldFunctionName,
+        final String internalVarName,
+        final ParameterizedTypeName builderTypeName,
+        final String objBuilderClassName,
+        final String internalBuilderVarName
+    )
+    {
+        final ParameterSpec streamParamFieldName = ParameterSpec
+            .builder(ParameterizedTypeName.get(ClassName.get(Stream.class), builderTypeName), "builders")
+            .addModifiers(Modifier.FINAL)
+            .build();
+        final MethodSpec setStreamFieldValue = MethodSpec.methodBuilder("set" + fieldFunctionName)
+            .addModifiers(Modifier.PUBLIC)
+            .addParameter(streamParamFieldName)
+            .addCode("$L = builders.map(builder -> {\n", internalVarName)
+            .addStatement("  final $L $L = new $L()", objBuilderClassName, internalBuilderVarName, objBuilderClassName)
+            .addStatement("  builder.accept($L)", internalBuilderVarName)
+            .addStatement("  return $L", internalBuilderVarName)
+            .addStatement("}).collect($T.toList())", Collectors.class)
+            .build();
+
+        objectBuilderClassBuilder.addMethod(setStreamFieldValue);
     }
 
     private static void addArrayParamSetter(
