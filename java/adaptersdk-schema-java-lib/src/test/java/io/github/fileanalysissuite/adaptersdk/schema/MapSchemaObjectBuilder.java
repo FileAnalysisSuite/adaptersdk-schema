@@ -19,7 +19,10 @@ import io.github.fileanalysissuite.adaptersdk.schema.builders.JsonBuilder;
 import io.github.fileanalysissuite.adaptersdk.schema.builders.SchemaObjectBuilder;
 import io.github.fileanalysissuite.adaptersdk.schema.model.Field;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -51,19 +54,23 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
     @Override
     public void setStringFieldValue(final Field field, final String... values)
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        document.put(field.getFieldName(), Arrays.asList(values));
     }
 
     @Override
     public void setStringFieldValue(final Field field, final List<String> values)
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        document.put(field.getFieldName(), values);
     }
 
     @Override
     public void addStringFieldValue(final Field field, final String value)
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Object currentValue = document.get(field.getFieldName());
+        if(currentValue == null) {
+            currentValue = new ArrayList<String>();
+        }
+        document.put(field.getFieldName(), ((ArrayList<String>)currentValue).add(value));
     }
 
     @Override
@@ -94,92 +101,140 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
     }
 
     @Override
-    public void setBooleanFieldValue(Field field, Boolean value)
+    public void setBooleanFieldValue(final Field field, final Boolean value)
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        document.put(field.getFieldName(), value);
     }
 
     @Override
-    public void setBooleanFieldValue(Field field, Boolean... values)
+    public void setBooleanFieldValue(final Field field, final Boolean... values)
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        document.put(field.getFieldName(), Arrays.asList(values));
     }
 
     @Override
-    public void setBooleanFieldValue(Field field, List<Boolean> values)
+    public void setBooleanFieldValue(final Field field, final List<Boolean> values)
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        document.put(field.getFieldName(), values);
     }
 
     @Override
-    public void addBooleanFieldValue(Field field, Boolean value)
+    public void addBooleanFieldValue(final Field field, final Boolean value)
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Object currentValue = document.get(field.getFieldName());
+        if(currentValue == null) {
+            currentValue = new ArrayList<Boolean>();
+        }
+        document.put(field.getFieldName(), ((ArrayList<Boolean>)currentValue).add(value));
     }
 
     @Override
-    public void setDoubleFieldValue(Field field, Double value)
+    public void setDoubleFieldValue(final Field field, final Double value)
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        document.put(field.getFieldName(), value);
     }
 
     @Override
-    public void setDoubleFieldValue(Field field, Double... values)
+    public void setDoubleFieldValue(final Field field, final Double... values)
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        document.put(field.getFieldName(), Arrays.asList(values));
     }
 
     @Override
-    public void setDoubleFieldValue(Field field, List<Double> values)
+    public void setDoubleFieldValue(final Field field, final List<Double> values)
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        document.put(field.getFieldName(), values);
     }
 
     @Override
-    public void addDoubleFieldValue(Field field, Double value)
+    public void addDoubleFieldValue(final Field field, final Double value)
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Object currentValue = document.get(field.getFieldName());
+        if(currentValue == null) {
+            currentValue = new ArrayList<Double>();
+        }
+        document.put(field.getFieldName(), ((ArrayList<Double>)currentValue).add(value));
     }
 
     @Override
-    public void setInstantFieldValue(Field field, Instant... values)
+    public void setInstantFieldValue(final Field field, final Instant... values)
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        document.put(field.getFieldName(), Arrays.asList(values));
     }
 
     @Override
-    public void setInstantFieldValue(Field field, List<Instant> values)
+    public void setInstantFieldValue(final Field field, final List<Instant> values)
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        document.put(field.getFieldName(), values);
     }
 
     @Override
-    public void addInstantFieldValue(Field field, Instant value)
+    public void addInstantFieldValue(final Field field, final Instant value)
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Object currentValue = document.get(field.getFieldName());
+        if(currentValue == null) {
+            currentValue = new ArrayList<Instant>();
+        }
+        document.put(field.getFieldName(), ((ArrayList<Instant>)currentValue).add(value));
     }
 
     @Override
-    public void setLongFieldValue(Field field, Long value)
+    public void setLongFieldValue(final Field field, final Long value)
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        document.put(field.getFieldName(), value);
     }
 
     @Override
-    public void setLongFieldValue(Field field, Long... values)
+    public void setLongFieldValue(final Field field, final Long... values)
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        document.put(field.getFieldName(), Arrays.asList(values));
     }
 
     @Override
-    public void setLongFieldValue(Field field, List<Long> values)
+    public void setLongFieldValue(final Field field, final List<Long> values)
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        document.put(field.getFieldName(), values);
     }
 
     @Override
-    public void addLongFieldValue(Field field, Long value)
+    public void addLongFieldValue(final Field field, final Long value)
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Object currentValue = document.get(field.getFieldName());
+        if(currentValue == null) {
+            currentValue = new ArrayList<Long>();
+        }
+        document.put(field.getFieldName(), ((ArrayList<Long>)currentValue).add(value));
+    }
+
+    @Override
+    public void setFlattenedFieldValue(final Field field, final Consumer<SchemaObjectBuilder> builder)
+    {
+        // clear and add
+        final Map<String, Object> nextLevel = new HashMap<>();
+        final MapSchemaObjectBuilder nextLevelBuilder = new MapSchemaObjectBuilder(nextLevel);
+        builder.accept(nextLevelBuilder);
+        for ( final Map.Entry<String,Object> entry : nextLevel.entrySet() )
+        {
+            document.put(field.getFieldName() + "_0_" + entry.getKey(), entry.getValue());
+        }
+    }
+
+    @Override
+    public void setFlattenedFieldValue(final Field field, final Stream<Consumer<SchemaObjectBuilder>> builders)
+    {
+        final Map<String, Object> nextLevel = new HashMap<>();
+        int counter = 0;
+        for ( final Map.Entry<String,Object> entry : nextLevel.entrySet() )
+        {
+            document.put(
+                field.getFieldName() + "_" + counter++ + "_" + entry.getKey(),
+                builders.map(builder -> {
+                    final MapSchemaObjectBuilder nextLevelBuilder = new MapSchemaObjectBuilder(nextLevel);
+                    builder.accept(nextLevelBuilder);
+                    return nextLevelBuilder;
+                }).collect(Collectors.toList())
+            );
+        }
+
     }
 }

@@ -68,4 +68,8 @@ public interface SchemaObjectBuilder
     void setJsonFieldValue(Field field, Consumer<JsonBuilder> builder);
 
     void setJsonFieldValue(Field field, Stream<Consumer<JsonBuilder>> builders);
+
+    void setFlattenedFieldValue(Field field, Consumer<SchemaObjectBuilder> builder);
+
+    void setFlattenedFieldValue(Field field, Stream<Consumer<SchemaObjectBuilder>> builders);
 }
