@@ -22,54 +22,54 @@ import java.util.stream.Stream;
 
 import io.github.fileanalysissuite.adaptersdk.schema.builders.JsonBuilder;
 import io.github.fileanalysissuite.adaptersdk.schema.builders.SchemaObjectBuilder;
-// auto-generated code
-public final class AdapterSdkSchemaObjectBuilder
+
+public final class SampleSchemaObjectBuilder
 {
     private final SchemaObjectBuilder schemaObjectBuilder;
 
-    public AdapterSdkSchemaObjectBuilder(final SchemaObjectBuilder schemaObjectBuilder)
+    public SampleSchemaObjectBuilder(final SchemaObjectBuilder schemaObjectBuilder)
     {
         this.schemaObjectBuilder = schemaObjectBuilder;
     }
 
     public void setAddressBcc(final String value)
     {
-        schemaObjectBuilder.setStringFieldValue(AdapterSdkSchema.ADDRESS_BCC, value);
+        schemaObjectBuilder.setStringFieldValue(TestSchema.ADDRESS_BCC, value);
     }
 
     public void setAddressBcc(final String... values)
     {
-        schemaObjectBuilder.setStringFieldValue(AdapterSdkSchema.ADDRESS_BCC, values);
+        schemaObjectBuilder.setStringFieldValue(TestSchema.ADDRESS_BCC, values);
     }
 
     public void setAddressBcc(final List<String> values)
     {
-        schemaObjectBuilder.setStringFieldValue(AdapterSdkSchema.ADDRESS_BCC, values);
+        schemaObjectBuilder.setStringFieldValue(TestSchema.ADDRESS_BCC, values);
     }
 
     public void addAddressBcc(final String value)
     {
-        schemaObjectBuilder.addStringFieldValue(AdapterSdkSchema.ADDRESS_BCC, value);
+        schemaObjectBuilder.addStringFieldValue(TestSchema.ADDRESS_BCC, value);
     }
 
     public void clearAddressBcc()
     {
-        schemaObjectBuilder.clearField(AdapterSdkSchema.ADDRESS_BCC);
+        schemaObjectBuilder.clearField(TestSchema.ADDRESS_BCC);
     }
 
     public void setAddressDisplayFrom(final String value)
     {
-        schemaObjectBuilder.setStringFieldValue(AdapterSdkSchema.ADDRESS_DISPLAY_FROM, value);
+        schemaObjectBuilder.setStringFieldValue(TestSchema.ADDRESS_DISPLAY_FROM, value);
     }
 
     public void clearAddressDisplayFrom()
     {
-        schemaObjectBuilder.clearField(AdapterSdkSchema.ADDRESS_DISPLAY_FROM);
+        schemaObjectBuilder.clearField(TestSchema.ADDRESS_DISPLAY_FROM);
     }
 
     public void setDateArchived(final Instant value)
     {
-        schemaObjectBuilder.setInstantFieldValue(AdapterSdkSchema.DATE_ARCHIVED, value);
+        schemaObjectBuilder.setInstantFieldValue(TestSchema.DATE_ARCHIVED, value);
     }
 
     public void setAccounts(final Consumer<AccountsObjectBuilder> builder)
@@ -78,7 +78,7 @@ public final class AdapterSdkSchemaObjectBuilder
         builder.accept(accountsBuilder);
 
         schemaObjectBuilder.setJsonFieldValue(
-            AdapterSdkSchema.ACCOUNTS,
+            TestSchema.ACCOUNTS,
             jsonBuilder -> {
                 accountsBuilder.build(jsonBuilder);
             });
@@ -87,7 +87,7 @@ public final class AdapterSdkSchemaObjectBuilder
     public void setAccounts(final Stream<Consumer<AccountsObjectBuilder>> builders)
     {
         schemaObjectBuilder.setJsonFieldValue(
-            AdapterSdkSchema.ACCOUNTS,
+            TestSchema.ACCOUNTS,
             builders.<Consumer<JsonBuilder>>map(builder -> {
                 final AccountsObjectBuilder accountsBuilder = new AccountsObjectBuilder();
                 builder.accept(accountsBuilder);
@@ -125,11 +125,11 @@ public final class AdapterSdkSchemaObjectBuilder
         {
             jsonBuilder.writeStartObject();
             if (displayName != null) {
-                jsonBuilder.writeFieldName(AdapterSdkSchema.ACCOUNTS.DISPLAY_NAME.getFieldName());
+                jsonBuilder.writeFieldName(TestSchema.ACCOUNTS.DISPLAY_NAME.getFieldName());
                 jsonBuilder.writeString(displayName);
             }
             if (identifier != null) {
-                jsonBuilder.writeFieldName(AdapterSdkSchema.ACCOUNTS.IDENTIFIER.getFieldName());
+                jsonBuilder.writeFieldName(TestSchema.ACCOUNTS.IDENTIFIER.getFieldName());
                 jsonBuilder.writeString(identifier);
             }
             jsonBuilder.writeEndObject();
