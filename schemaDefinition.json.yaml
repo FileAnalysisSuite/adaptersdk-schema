@@ -118,9 +118,6 @@
         "DATE_POSTED": {
             "type": "DATETIME"
         },
-        "DATE_PROCESSED": {
-            "type": "DATETIME"
-        },
         "DIRECTION": {
             "type": "STRING"
         },
