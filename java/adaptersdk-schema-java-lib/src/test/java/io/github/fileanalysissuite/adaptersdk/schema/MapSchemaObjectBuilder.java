@@ -179,6 +179,34 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
     }
 
     @Override
+    public void setIntegerFieldValue(final Field field, final Integer value)
+    {
+        document.put(field.getFieldName(), value);
+    }
+
+    @Override
+    public void setIntegerFieldValue(final Field field, final Integer... values)
+    {
+        document.put(field.getFieldName(), Arrays.asList(values));
+    }
+
+    @Override
+    public void setIntegerFieldValue(final Field field, final List<Integer> values)
+    {
+        document.put(field.getFieldName(), values);
+    }
+
+    @Override
+    public void addIntegerFieldValue(final Field field, final Integer value)
+    {
+        Object currentValue = document.get(field.getFieldName());
+        if(currentValue == null) {
+            currentValue = new ArrayList<Double>();
+        }
+        document.put(field.getFieldName(), ((ArrayList<Integer>)currentValue).add(value));
+    }
+
+    @Override
     public void setLongFieldValue(final Field field, final Long value)
     {
         document.put(field.getFieldName(), value);

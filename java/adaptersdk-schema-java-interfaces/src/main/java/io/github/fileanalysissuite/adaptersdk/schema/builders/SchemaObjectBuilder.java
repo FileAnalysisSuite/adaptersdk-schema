@@ -41,6 +41,14 @@ public interface SchemaObjectBuilder
 
     void addDoubleFieldValue(Field field, Double value);
 
+    void setIntegerFieldValue(Field field, Integer value);
+
+    void setIntegerFieldValue(Field field, Integer... values);
+
+    void setIntegerFieldValue(Field field, List<Integer> values);
+
+    void addIntegerFieldValue(Field field, Integer value);
+
     void setInstantFieldValue(Field field, Instant value);
 
     void setInstantFieldValue(Field field, Instant... values);
