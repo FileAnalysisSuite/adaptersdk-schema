@@ -38,11 +38,13 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             "STRING[]", "FULLTEXT[]", "LONG[]", "DOUBLE[]", "INTEGER[]", "BOOLEAN[]", "DATETIME[]"};
 
         private readonly List<PropertyNameHelper> propertyNames;
+        private readonly Dictionary<string, CodeConstructor> propertyConstructors;
         private JsonNode typesNode;
 
         private SchemaSourceCreator()
         {
             propertyNames = new List<PropertyNameHelper>();
+            propertyConstructors = new Dictionary<string, CodeConstructor>();
         }
 
         public static string Create()
@@ -97,7 +99,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             schemaNamespace.Types.Add(schemaClassBuilder);
 
             // Add properties
-            AddPropertyFields(schemaClassBuilder, null, fields, new string[0], "", true);
+            AddPropertyFields(schemaClassBuilder, fields, new string[0], "", true);
 
             // Add property accessors
             AddPropertyAccessors(schemaClassBuilder);
@@ -111,7 +113,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                 "public static class " + CLASS_NAME);
         }
 
-        private void AddPropertyFields(CodeTypeDeclaration classBuilder, CodeConstructor defaultConstructor,
+        private void AddPropertyFields(CodeTypeDeclaration classBuilder,
             JsonNode entityDef, string[] path, string parentFieldName, bool initialize)
         {
             IEnumerator<KeyValuePair<string, JsonNode>> propertyIterator = entityDef.AsObject().GetEnumerator();
@@ -202,11 +204,14 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                         Type = new CodeTypeReference("readonly IField")
                     };
                     fieldClassBuilder.Members.Add(pvtIField);
-
-                    defaultConstructor = new()
+                    if (!propertyConstructors.TryGetValue(fullName, out CodeConstructor defaultConstructor))
                     {
-                        Attributes = MemberAttributes.Assembly
-                    };
+                        defaultConstructor = new()
+                        {
+                            Attributes = MemberAttributes.Assembly
+                        };
+                        propertyConstructors.Add(fullName, defaultConstructor);
+                    }
 
                     string pvtIFieldInitialization = "new FieldImpl("
                                 + "\"" + propertyName + "\", "
@@ -229,7 +234,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                     defaultConstructor.Statements.Add(ctorBodyFieldInit);
 
                     // Add uninitialized property fields
-                    AddPropertyFields(fieldClassBuilder, defaultConstructor, subentityDef, newPath, fullName, false);
+                    AddPropertyFields(fieldClassBuilder, subentityDef, newPath, fullName, false);
 
                     fieldClassBuilder.Members.Add(defaultConstructor);
 
@@ -282,7 +287,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                             Left = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), propertyName),
                             Right = new CodeSnippetExpression(propertyInitialization)
                         };
-                        defaultConstructor.Statements.Add(ctorBodyPropInit);
+                        propertyConstructors[parentFieldName].Statements.Add(ctorBodyPropInit);
                     }
                     classBuilder.Members.Add(field);
                 }
