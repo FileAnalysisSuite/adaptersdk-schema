@@ -37,40 +37,6 @@
                 "type": "BOOLEAN"
             }
         },
-        "columns": {
-            "GRAMMAR_MATCHES": {
-                "objectEncoding": "json",
-                "type": "grammar_matches[]"
-            },
-            "NAME": {
-                "type": "STRING"
-            },
-            "REVIEWED_BY": {
-                "ignoreCase": true,
-                "type": "FULLTEXT"
-            },
-            "REVIEWER_COMMENTS": {
-                "ignoreCase": true,
-                "type": "FULLTEXT"
-            },
-            "SELECTED_GRAMMAR_RULE": {
-                "type": "STRING"
-            },
-            "STATUS": {
-                "type": "STRING"
-            },
-            "TYPE": {
-                "type": "STRING"
-            }
-        },
-        "grammar_matches": {
-            "RULES": {
-                "type": "STRING[]"
-            },
-            "WEIGHT": {
-                "type": "INTEGER"
-            }
-        },
         "metadata_files": {
             "CONTENT": {
                 "ignoreCase": true,
@@ -136,13 +102,6 @@
         "CC": {
             "type": "STRING"
         },
-        "COLUMNS": {
-            "objectEncoding": "json",
-            "type": "columns[]"
-        },
-        "COLUMN_COUNT": {
-            "type": "INTEGER"
-        },
         "CONTENT_PRIMARY": {
             "ignoreCase": true,
             "type": "FULLTEXT"
@@ -157,6 +116,9 @@
             "type": "DATETIME"
         },
         "DATE_POSTED": {
+            "type": "DATETIME"
+        },
+        "DATE_PROCESSED": {
             "type": "DATETIME"
         },
         "DIRECTION": {
@@ -306,16 +268,10 @@
             "ignoreCase": true,
             "type": "STRING"
         },
-        "ROW_COUNT": {
-            "type": "LONG"
-        },
         "SCAN_REFERENCE": {
             "type": "STRING"
         },
         "SOURCE_REFERENCE": {
-            "type": "STRING"
-        },
-        "TABLE_TYPE": {
             "type": "STRING"
         },
         "THREAD_INDEX": {
