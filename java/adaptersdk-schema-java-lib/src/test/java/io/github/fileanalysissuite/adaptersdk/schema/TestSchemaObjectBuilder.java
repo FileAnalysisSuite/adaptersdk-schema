@@ -549,7 +549,7 @@ public final class TestSchemaObjectBuilder {
   }
 
   public void setMetadataFiles(final Consumer<MetadataFilesObjectBuilder> builder) {
-      //TODO: flattened
+      //TODO: flattened - not working
       schemaObjectBuilder.setFlattenedFieldValue(
         TestSchema.METADATA_FILES,
         nextLevelBuilder ->  {

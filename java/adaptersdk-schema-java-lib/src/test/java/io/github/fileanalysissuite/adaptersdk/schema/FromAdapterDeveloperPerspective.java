@@ -80,7 +80,7 @@ public class FromAdapterDeveloperPerspective
             })
         );
 
-        // multi-values Nested object, flattened
+        // multi-values Nested object, flattened - not working
         documentBuilder.setMetadataFiles(Stream.of(
             builder -> {
                 builder.setContent("mdf-content1");

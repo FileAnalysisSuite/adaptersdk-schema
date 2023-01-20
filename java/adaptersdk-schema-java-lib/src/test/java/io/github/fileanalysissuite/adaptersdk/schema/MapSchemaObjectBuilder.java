@@ -25,6 +25,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -241,7 +243,8 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
         final Map<String, Object> nextLevel = new HashMap<>();
         final MapSchemaObjectBuilder nextLevelBuilder = new MapSchemaObjectBuilder(nextLevel);
         builder.accept(nextLevelBuilder);
-        for ( final Map.Entry<String,Object> entry : nextLevel.entrySet() )
+        final Set<Entry<String, Object>> entrySet = nextLevel.entrySet();
+        for ( final Map.Entry<String,Object> entry : entrySet )
         {
             document.put(field.getFieldName() + "_0_" + entry.getKey(), entry.getValue());
         }
@@ -250,9 +253,11 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
     @Override
     public void setFlattenedFieldValue(final Field field, final Stream<Consumer<SchemaObjectBuilder>> builders)
     {
+        // TODO : check this
         final Map<String, Object> nextLevel = new HashMap<>();
         int counter = 0;
-        for ( final Map.Entry<String,Object> entry : nextLevel.entrySet() )
+        final Set<Entry<String, Object>> entrySet = nextLevel.entrySet();
+        for ( final Map.Entry<String,Object> entry : entrySet )
         {
             document.put(
                 field.getFieldName() + "_" + counter++ + "_" + entry.getKey(),
