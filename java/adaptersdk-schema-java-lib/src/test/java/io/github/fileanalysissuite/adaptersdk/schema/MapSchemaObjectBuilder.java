@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -31,8 +30,6 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import org.codehaus.plexus.util.StringUtils;
 
 public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
 {
@@ -240,66 +237,36 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
     }
 
     @Override
-    public void setFlattenedFieldValue(final Field field, final Consumer<SchemaObjectBuilder> builder)
+    public void setFlattenedFieldValue(final Field field, final Consumer<SchemaObjectBuilder> director)
     {
-        // clear and add
-        final int numberOfDimensions = getNumberOfDimensions(field);
-        if (numberOfDimensions <= 1) {
-            putFieldValues(field, builder, "" + 0);
-        }
-        else {
-            // multi-dimensional
-            for (int i = 0; i <= numberOfDimensions; i++) {
-                putFieldValues(field, builder, i + "_0");
-            }
-        }
-    }
-
-    private static int getNumberOfDimensions(final Field field)
-    {
-        final String fieldType = field.getFieldType();
-        final int endOfTypeDimension = fieldType.lastIndexOf('[');
-        //final String fieldTypeValue = endOfTypeDimension > 0 ? fieldType.substring(0, endOfTypeDimension) : fieldType;
-        return endOfTypeDimension > 0 ? StringUtils.countMatches(fieldType, "[]") : 0;
+        final String prefix = (field==null ? "" : field.getFieldName() + "_") + "0_";
+        putFieldValues(prefix, director);
     }
 
     @Override
-    public void setFlattenedFieldValue(final Field field, final Stream<Consumer<SchemaObjectBuilder>> builders)
+    public void setFlattenedFieldValue(final Field field, final Stream<Consumer<SchemaObjectBuilder>> directors)
     {
-        // TODO : check this
-        final int numberOfDimensions = getNumberOfDimensions(field);
-        if (numberOfDimensions <= 1) {
-            int counter = 0;
-            Iterator<Consumer<SchemaObjectBuilder>> iter = builders.iterator();
-            while (iter.hasNext())
-            {
-                putFieldValues(field, iter.next(), "" + counter);
-                counter++;
-            }
-        }
-        else {
-            // multi-dimensional
-            for (int i = 0; i <= numberOfDimensions; i++) {
-                int counter = 0;
-                Iterator<Consumer<SchemaObjectBuilder>> iter = builders.iterator();
-                while (iter.hasNext())
-                {
-                    putFieldValues(field, iter.next(), i + "_" + counter);
-                    counter++;
-                }
-            }
+        final String basePrefix = field == null ? "" : field.getFieldName() + "_";
+
+        final Iterable<Consumer<SchemaObjectBuilder>> directorsIt = directors::iterator;
+
+        int i = 0;
+        for (final Consumer<SchemaObjectBuilder> director : directorsIt) {
+            final String prefix = basePrefix + i + "_";
+            putFieldValues(prefix, director);
+            i++;
         }
     }
 
-    private void putFieldValues(final Field field, final Consumer<SchemaObjectBuilder> builder, final String counter)
+    private void putFieldValues(final String prefix, final Consumer<SchemaObjectBuilder> director)
     {
         final Map<String, Object> nextLevel = new HashMap<>();
         final MapSchemaObjectBuilder nextLevelBuilder = new MapSchemaObjectBuilder(nextLevel);
-        builder.accept(nextLevelBuilder);
+        director.accept(nextLevelBuilder);
         final Set<Entry<String, Object>> entrySet = nextLevel.entrySet();
         for ( final Map.Entry<String,Object> entry : entrySet )
         {
-            document.put(field.getFieldName() + "_" + counter + "_" + entry.getKey(), entry.getValue());
+            document.put(prefix + entry.getKey(), entry.getValue());
         }
     }
 

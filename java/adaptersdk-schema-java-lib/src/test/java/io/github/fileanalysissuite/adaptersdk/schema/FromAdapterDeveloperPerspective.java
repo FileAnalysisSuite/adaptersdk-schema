@@ -31,7 +31,7 @@ public class FromAdapterDeveloperPerspective
 
     public static void createDataSetWithTestSchemaObjectBuilder(final Map<String, Object> document)
     {
-        // Error prone to make an untyped schema object this way, misspelled keys, invalid keys
+        // Note: Error prone to make an untyped schema object this way, misspelled keys, invalid keys
         //document.put("DATE_ARCHIVED", Instant.now());
 
         // Instead use typed builders
@@ -97,7 +97,7 @@ public class FromAdapterDeveloperPerspective
                 ));
             })
         );
-/*
+
         // 2 level Nested objects, Flattened encoded -- not working
         documentBuilder.setEntities(Stream.of(
             builder -> {
@@ -109,6 +109,11 @@ public class FromAdapterDeveloperPerspective
                         mbuilder.setContext("someMatchCtx");
                         mbuilder.setValue("USA");
                         mbuilder.setScore(99.9); //Double
+                    },
+                    mbuilder -> {
+                        mbuilder.setContext("someMatchCtx2");
+                        mbuilder.setValue("USA2");
+                        mbuilder.setScore(33.9); //Double
                     }
                 ));
             },
@@ -116,9 +121,26 @@ public class FromAdapterDeveloperPerspective
                 builder.setEntityId("234-45-4566");
                 builder.setEntityCategoryId("pii/ssn");
                 builder.setGrammarId("pii");
+            },
+            builder -> {
+                builder.setEntityId("Japan", "China");
+                builder.setEntityCategoryId("geo/country");
+                builder.setGrammarId("geo");
+                builder.setMatches(Stream.of(
+                    mbuilder -> {
+                        mbuilder.setContext("JapanMatchCtx");
+                        mbuilder.setValue("Japan");
+                        mbuilder.setScore(70.9); //Double
+                    },
+                    mbuilder -> {
+                        mbuilder.setContext("ChinaMatchCtx2");
+                        mbuilder.setValue("China");
+                        mbuilder.setScore(55.9); //Double
+                    }
+                ));
             })
         );
-*/
+
         // multi-values Nested object, single-dimension - flattened
         // Expected:
         /*
@@ -206,8 +228,9 @@ public class FromAdapterDeveloperPerspective
         OCR_1_1_CONFIDENCE=422
         OCR_1_1_VALUE=free form text from a non-templated region2
         */
-        // Setting single value for multi-valued Nested object, multi-dimension - flattened - not working
+        // Setting single value for multi-valued Nested object, multi-dimension - flattened
         documentBuilder.setOcr(
+            Stream.of(
             listBuilder -> { listBuilder.set(
                 Stream.of(
                     builder -> {
@@ -222,9 +245,26 @@ public class FromAdapterDeveloperPerspective
                     }
                 )
             );
+            },
+            listBuilder -> { listBuilder.set(
+                Stream.of(
+                    builder -> {
+                        builder.setName("Reporter");
+                        builder.setType("Name");
+                        builder.setValue("Jane Doe");
+                        builder.setConfidence(41);
+                    },
+                    builder -> {
+                        builder.setConfidence(44);
+                        builder.setValue("free form text from a non-templated region");
+                    }
+                )
+            );
             }
+            )
         );
-        // TODO: Setting multi-values Nested object, multi-dimension - flattened - not working
+
+        // Setting multi-values Nested object, multi-dimension - flattened
         /*
         documentBuilder.setOcr(Stream.of(
             listBuilder -> { listBuilder.set(
@@ -258,6 +298,28 @@ public class FromAdapterDeveloperPerspective
             );
             })
         );*/
+
+        //TODO: entry with flattened encoding with a nested field with json encoding - not working
+        documentBuilder.setTest(Stream.of(
+            builder -> {
+                builder.setTestId("testid-1");
+                builder.setTestMatches(
+                    mbuilder -> {
+                        mbuilder.setType("sometype");
+                        mbuilder.setValue("free form text from a non-templated region2");
+                    }
+                    );
+            },
+            builder -> {
+                builder.setTestId("testid-2");
+                builder.setTestMatches(
+                    mbuilder -> {
+                        mbuilder.setType("someothertype");
+                        mbuilder.setValue("free form text from a non-templated region2");
+                    }
+                    );
+            })
+        );
 
         System.out.println("-------------   Built TestSchemaObject ---------------------\n");
         final Map<String, Object> treeMap = new TreeMap<String, Object>(document);
