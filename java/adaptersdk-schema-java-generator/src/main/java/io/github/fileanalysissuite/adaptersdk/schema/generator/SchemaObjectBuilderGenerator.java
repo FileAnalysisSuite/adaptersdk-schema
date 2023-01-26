@@ -219,7 +219,8 @@ final class SchemaObjectBuilderGenerator
                     path,
                     propertyName,
                     parentFieldName,
-                    isFlattened
+                    isFlattened,
+                    flattenedParentField
                 );
             } else {
                 // Primitive type field
@@ -252,7 +253,8 @@ final class SchemaObjectBuilderGenerator
         final String[] path,
         final String propertyName,
         final String parentFieldName,
-        final boolean isFlattened
+        final boolean isFlattened,
+        final boolean flattenedParentField
     )
     {
         final MethodSpec.Builder clearFieldMethodBuilder = MethodSpec.methodBuilder("clear" + fieldFunctionName)
@@ -351,7 +353,6 @@ final class SchemaObjectBuilderGenerator
         } else {
             // next level object type field
             if(isFlattened) {
-                // TODO
                 // Add nonPrimitiveField set function Builder param
                 addBuilderParamSetterFunction(
                     objectBuilderClassBuilder,
@@ -376,46 +377,72 @@ final class SchemaObjectBuilderGenerator
                 clearFieldMethodBuilder
                     .addStatement("schemaObjectBuilder.clearField($L.$L)", SchemaGeneratorHelper.CLASS_NAME, fullName);
             } else {
-                final FieldSpec nonPrimitiveField = FieldSpec
-                    .builder(
-                        fldIsMultiValued
-                            ? ParameterizedTypeName.get(
-                                ClassName.get(List.class), ClassName.get("", objBuilderClassName))
-                            : ClassName.get("", objBuilderClassName),
-                            internalVarName)
-                    .addModifiers(new Modifier[]{Modifier.PRIVATE})
-                    .build();
-                objectBuilderClassBuilder.addField(nonPrimitiveField);
+                // TODO: Is parent flattened
+                if (flattenedParentField) {
+                    //if(buildFunctionBuilder == null) {
+                        // because parent was flattened, but this sub entity is not
+                        buildFunctionBuilder = MethodSpec.methodBuilder("build")
+                            .addModifiers(Modifier.PRIVATE)
+                            .addParameter(ParameterSpec.builder(JsonBuilder.class, "jsonBuilder").addModifiers(Modifier.FINAL).build())
+                            .addStatement("jsonBuilder.writeStartObject()");
+                    //}
+                    // Add nonPrimitiveField set function Builder param
+                    addBuilderParamSetterFunction(
+                        objectBuilderClassBuilder,
+                        fieldFunctionName,
+                        fullName,
+                        builderTypeName,
+                        objBuilderClassName,
+                        internalBuilderVarName,
+                        isFlattened);
 
-                // Add nonPrimitiveField set function Builder param
-                addNestedObjectBuilderParamSetterFunction(
-                    objectBuilderClassBuilder,
-                    fieldFunctionName,
-                    internalVarName,
-                    builderTypeName,
-                    objBuilderClassName,
-                    internalBuilderVarName,
-                    isFlattened);
+                    // Add nonPrimitiveField set function with Stream param
+                    addBuilderStreamParamSetterFunction(
+                        objectBuilderClassBuilder,
+                        fieldFunctionName,
+                        fullName,
+                        builderTypeName,
+                        objBuilderClassName,
+                        internalBuilderVarName,
+                        isFlattened);
 
-                // Add nonPrimitiveField set function with Stream param
-                addNestedObjectBuilderStreamParamSetterFunction(
-                    objectBuilderClassBuilder,
-                    fieldFunctionName,
-                    internalVarName,
-                    builderTypeName,
-                    objBuilderClassName,
-                    internalBuilderVarName,
-                    isFlattened);
+                    // Add clear field method
+                    clearFieldMethodBuilder
+                        .addStatement("schemaObjectBuilder.clearField($L.$L)", SchemaGeneratorHelper.CLASS_NAME, fullName);
+                } else {
+                    final FieldSpec nonPrimitiveField = FieldSpec
+                        .builder(
+                            fldIsMultiValued
+                                ? ParameterizedTypeName.get(
+                                    ClassName.get(List.class), ClassName.get("", objBuilderClassName))
+                                : ClassName.get("", objBuilderClassName),
+                                internalVarName)
+                        .addModifiers(new Modifier[]{Modifier.PRIVATE})
+                        .build();
+                    objectBuilderClassBuilder.addField(nonPrimitiveField);
 
-                // Add clear field method
-                clearFieldMethodBuilder.addStatement("$L = null", internalVarName);
+                    // Add nonPrimitiveField set function Builder param
+                    addNestedObjectBuilderParamSetterFunction(
+                        objectBuilderClassBuilder,
+                        fieldFunctionName,
+                        internalVarName,
+                        builderTypeName,
+                        objBuilderClassName,
+                        internalBuilderVarName,
+                        isFlattened);
 
-                if(buildFunctionBuilder == null) {
-                    // because parent was flattened, but this sub entity is not
-                    buildFunctionBuilder = MethodSpec.methodBuilder("build")
-                        .addModifiers(Modifier.PRIVATE)
-                        .addParameter(ParameterSpec.builder(JsonBuilder.class, "jsonBuilder").addModifiers(Modifier.FINAL).build())
-                        .addStatement("jsonBuilder.writeStartObject()");
+                    // Add nonPrimitiveField set function with Stream param
+                    addNestedObjectBuilderStreamParamSetterFunction(
+                        objectBuilderClassBuilder,
+                        fieldFunctionName,
+                        internalVarName,
+                        builderTypeName,
+                        objBuilderClassName,
+                        internalBuilderVarName,
+                        isFlattened);
+
+                    // Add clear field method
+                    clearFieldMethodBuilder.addStatement("$L = null", internalVarName);
                 }
                 // Write Json field
                 writeJsonFieldsInBuildFunction(
@@ -721,10 +748,10 @@ final class SchemaObjectBuilderGenerator
             .addParameter(builderParamName);
 
         setBuilderFieldValue
-            .addStatement("this.schemaObjectBuilder.setFlattenedFieldValue(null, builder -> {\n")
-            .addStatement("final $L $L = new $L(builder)", objBuilderClassName, varName, objBuilderClassName)
-            .addStatement("director.accept($L)", varName)
-            //.addStatement("$L.validate()", varName) // TODO: needs to be added
+            .addCode("this.schemaObjectBuilder.setFlattenedFieldValue(null, builder -> {\n")
+            .addStatement("    final $L $L = new $L(builder)", objBuilderClassName, varName, objBuilderClassName)
+            .addStatement("    director.accept($L)", varName)
+            .addStatement("    // $L.validate()", varName) // TODO: needs to be added
             .addStatement("})");
 
         fieldListObjectBuilderClassBuiler.addMethod(setBuilderFieldValue.build());
@@ -789,10 +816,10 @@ final class SchemaObjectBuilderGenerator
             .addParameter(streamParamFieldName);
 
         setStreamFieldValue
-        .addStatement("this.schemaObjectBuilder.setFlattenedFieldValue(null, directors.map(director -> builder -> {\n")
-        .addStatement("final $L $L = new $L(builder)", objBuilderClassName, varName, objBuilderClassName)
-        .addStatement("director.accept($L)", varName)
-        // .addStatement("$L.validate()", varName) // TODO: needs to be added
+        .addCode("this.schemaObjectBuilder.setFlattenedFieldValue(null, directors.map(director -> builder -> {\n")
+        .addStatement("    final $L $L = new $L(builder)", objBuilderClassName, varName, objBuilderClassName)
+        .addStatement("    director.accept($L)", varName)
+        .addStatement("    // $L.validate()", varName) // TODO: needs to be added
         .addStatement("}))");
 
         fieldListObjectBuilderClassBuiler.addMethod(setStreamFieldValue.build());
@@ -980,7 +1007,8 @@ final class SchemaObjectBuilderGenerator
             .addCode("  $L.$L,\n", SchemaGeneratorHelper.CLASS_NAME, propertyName)
             .beginControlFlow("  jsonBuilder ->")
             .addStatement("  $L.build(jsonBuilder)", internalBuilderVarName)
-            .endControlFlow().addStatement(")");
+            .endControlFlow()
+            .addStatement(")");
         }
 
         objectBuilderClassBuilder.addMethod(setBuilderFieldValue.build());

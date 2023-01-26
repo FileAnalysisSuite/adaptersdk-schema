@@ -1394,17 +1394,17 @@ public final class TestSchemaObjectBuilder {
 
     public void set(final Consumer<OcrObjectBuilder> director) {
       this.schemaObjectBuilder.setFlattenedFieldValue(null, builder -> {
-          ;
-      final OcrObjectBuilder ocrObjectBuilder = new OcrObjectBuilder(builder);
-      director.accept(ocrObjectBuilder);
+          final OcrObjectBuilder ocrObjectBuilder = new OcrObjectBuilder(builder);
+          director.accept(ocrObjectBuilder);
+          // ocrObjectBuilder.validate();
       });
     }
 
     public void set(final Stream<Consumer<OcrObjectBuilder>> directors) {
       this.schemaObjectBuilder.setFlattenedFieldValue(null, directors.map(director -> builder -> {
-          ;
-      final OcrObjectBuilder ocrObjectBuilder = new OcrObjectBuilder(builder);
-      director.accept(ocrObjectBuilder);
+          final OcrObjectBuilder ocrObjectBuilder = new OcrObjectBuilder(builder);
+          director.accept(ocrObjectBuilder);
+          // ocrObjectBuilder.validate();
       }));
     }
 
@@ -1426,17 +1426,17 @@ public final class TestSchemaObjectBuilder {
 
     public void set(final Consumer<OcrObjectBuilder> director) {
       this.schemaObjectBuilder.setFlattenedFieldValue(null, builder -> {
-          ;
-      final OcrObjectBuilder ocrObjectBuilder = new OcrObjectBuilder(builder);
-      director.accept(ocrObjectBuilder);
+          final OcrObjectBuilder ocrObjectBuilder = new OcrObjectBuilder(builder);
+          director.accept(ocrObjectBuilder);
+          // ocrObjectBuilder.validate();
       });
     }
 
     public void set(final Stream<Consumer<OcrObjectBuilder>> directors) {
       this.schemaObjectBuilder.setFlattenedFieldValue(null, directors.map(director -> builder -> {
-          ;
-      final OcrObjectBuilder ocrObjectBuilder = new OcrObjectBuilder(builder);
-      director.accept(ocrObjectBuilder);
+          final OcrObjectBuilder ocrObjectBuilder = new OcrObjectBuilder(builder);
+          director.accept(ocrObjectBuilder);
+          // ocrObjectBuilder.validate();
       }));
     }
 
@@ -1492,8 +1492,6 @@ public final class TestSchemaObjectBuilder {
   public static final class TestObjectBuilder {
     private final SchemaObjectBuilder schemaObjectBuilder;
 
-    private List<TestMatchesObjectBuilder> testMatches;
-
     public TestObjectBuilder(final SchemaObjectBuilder schemaObjectBuilder) {
       this.schemaObjectBuilder = schemaObjectBuilder;
     }
@@ -1509,16 +1507,24 @@ public final class TestSchemaObjectBuilder {
     public void setTestMatches(final Consumer<TestMatchesObjectBuilder> director) {
       final TestMatchesObjectBuilder testMatchesBuilder = new TestMatchesObjectBuilder();
       director.accept(testMatchesBuilder);
-      testMatches = new ArrayList<>();
-      testMatches.add(testMatchesBuilder);
+      schemaObjectBuilder.setJsonFieldValue(
+        TestSchema.TEST.TEST_MATCHES,
+        jsonBuilder -> {
+          testMatchesBuilder.build(jsonBuilder);
+      }
+      );
     }
 
     public void setTestMatches(final Stream<Consumer<TestMatchesObjectBuilder>> directors) {
-      testMatches = directors.map(director -> {
-        final TestMatchesObjectBuilder testMatchesBuilder = new TestMatchesObjectBuilder();
-        director.accept(testMatchesBuilder);
-        return testMatchesBuilder;
-      }).collect(Collectors.toList());
+      schemaObjectBuilder.setJsonFieldValue(
+        TestSchema.TEST.TEST_MATCHES,
+        directors.<Consumer<JsonBuilder>>map(director -> {
+          final TestMatchesObjectBuilder testMatchesBuilder = new TestMatchesObjectBuilder();
+          director.accept(testMatchesBuilder);
+          return jsonBuilder -> {
+            testMatchesBuilder.build(jsonBuilder);
+          };
+      }));
     }
 
     public void setTestMatches(final List<Consumer<TestMatchesObjectBuilder>> directors) {
@@ -1526,7 +1532,7 @@ public final class TestSchemaObjectBuilder {
     }
 
     public void clearTestMatches() {
-      testMatches = null;
+      schemaObjectBuilder.clearField(TestSchema.TEST.TEST_MATCHES);
     }
 
     public static final class TestMatchesObjectBuilder {
