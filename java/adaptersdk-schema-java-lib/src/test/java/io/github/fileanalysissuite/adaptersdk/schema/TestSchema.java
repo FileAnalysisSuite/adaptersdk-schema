@@ -219,6 +219,9 @@ public final class TestSchema {
   public static final TestField TEST = new TestField();
 
   @Nonnull
+  public static final TestJsonField TEST_JSON = new TestJsonField();
+
+  @Nonnull
   public static final Field TABLE_TYPE = new FieldImpl("TABLE_TYPE", "STRING", null, false, false, false, false);
 
   @Nonnull
@@ -440,6 +443,12 @@ public final class TestSchema {
         return TEST.TEST_MATCHES.TYPE;
       case "TEST.TEST_MATCHES.VALUE":
         return TEST.TEST_MATCHES.VALUE;
+      case "TEST_JSON":
+        return TEST_JSON;
+      case "TEST_JSON.SOME_TYPE":
+        return TEST_JSON.SOME_TYPE;
+      case "TEST_JSON.SOME_VALUE":
+        return TEST_JSON.SOME_VALUE;
       case "TABLE_TYPE":
         return TABLE_TYPE;
       case "THREAD_INDEX":
@@ -660,6 +669,12 @@ public final class TestSchema {
         return TEST.TEST_MATCHES.TYPE;
       case "TEST.TEST_MATCHES.VALUE":
         return TEST.TEST_MATCHES.VALUE;
+      case "TEST_JSON":
+        return TEST_JSON;
+      case "TEST_JSON.SOME_TYPE":
+        return TEST_JSON.SOME_TYPE;
+      case "TEST_JSON.SOME_VALUE":
+        return TEST_JSON.SOME_VALUE;
       case "TABLE_TYPE":
         return TABLE_TYPE;
       case "THREAD_INDEX":
@@ -770,7 +785,7 @@ public final class TestSchema {
       public final Subfield SCORE = new SubfieldImpl("SCORE", "DOUBLE", null, false, false, false, false, this);
 
       private MatchesField() {
-        super("MATCHES", "entity_details_matches", Field.ObjectEncoding.FLATTENED, true, false, false, false, EntitiesField.this);
+        super("MATCHES", "entity_details_matches[]", Field.ObjectEncoding.FLATTENED, true, false, false, false, EntitiesField.this);
       }
 
       public final class EgrammarsField extends SubfieldImpl implements StructuredSubfield {
@@ -838,6 +853,18 @@ public final class TestSchema {
       private TestMatchesField() {
         super("TEST_MATCHES", "test_next_level", Field.ObjectEncoding.JSON, true, false, false, false, TestField.this);
       }
+    }
+  }
+
+  public static final class TestJsonField extends FieldImpl implements StructuredField {
+    @Nonnull
+    public final Subfield SOME_TYPE = new SubfieldImpl("SOME_TYPE", "STRING", null, false, false, false, false, this);
+
+    @Nonnull
+    public final Subfield SOME_VALUE = new SubfieldImpl("SOME_VALUE", "FULLTEXT", null, false, false, false, false, this);
+
+    private TestJsonField() {
+      super("TEST_JSON", "test_json_entity[]", Field.ObjectEncoding.JSON, true, false, false, false);
     }
   }
 }

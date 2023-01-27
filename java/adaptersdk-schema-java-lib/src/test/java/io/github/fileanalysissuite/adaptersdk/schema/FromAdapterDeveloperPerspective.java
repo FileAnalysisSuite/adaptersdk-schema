@@ -184,7 +184,7 @@ public class FromAdapterDeveloperPerspective
             })
         );
 
-        // multi-values Nested object, multi-dimension - flattened - not working
+        // multi-values Nested object, multi-dimension - flattened
         // Expected:
         /*
         ----------------
@@ -299,7 +299,7 @@ public class FromAdapterDeveloperPerspective
             })
         );*/
 
-        //TODO: entry with flattened encoding with a nested field with json encoding - not working
+        // entry with flattened encoding with a nested field with json encoding
         documentBuilder.setTest(Stream.of(
             builder -> {
                 builder.setTestId("testid-1");
@@ -319,6 +319,37 @@ public class FromAdapterDeveloperPerspective
                     }
                     );
             })
+        );
+
+        // multi-values Nested object, multi-dimension - json encoding
+        documentBuilder.setTestJson(Stream.of(
+            listBuilder -> { listBuilder.set(
+                Stream.of(
+                    builder -> {
+                        builder.setSomeType("first somejson type");
+                        builder.setSomeValue("first somejson value");
+                    },
+                    builder -> {
+                        builder.setSomeType("first someotherjson type");
+                        builder.setSomeValue("first someotherjson value");
+                    }
+                )
+            );
+            },
+            listBuilder -> { listBuilder.set(
+                Stream.of(
+                    builder -> {
+                        builder.setSomeType("second somejson type");
+                        builder.setSomeValue("second somejson value");
+                    },
+                    builder -> {
+                        builder.setSomeType("second someotherjson type");
+                        builder.setSomeValue("second someotherjson value");
+                    }
+                )
+            );
+            }
+            )
         );
 
         System.out.println("-------------   Built TestSchemaObject ---------------------\n");

@@ -608,24 +608,24 @@ public final class TestSchemaObjectBuilder {
     schemaObjectBuilder.clearField(TestSchema.MIMETYPE);
   }
 
-  public void setOcr(final Consumer<OcrListListObjectBuilder> director) {
+  public void setOcr(final Consumer<OcrListObjectBuilder> director) {
     schemaObjectBuilder.setFlattenedFieldValue(TestSchema.OCR, sBuilder-> {
-        final OcrListListObjectBuilder ocrBuilder = new OcrListListObjectBuilder(sBuilder);
+        final OcrListObjectBuilder ocrBuilder = new OcrListObjectBuilder(sBuilder);
         director.accept(ocrBuilder);
     });
   }
 
-  public void setOcr(final Stream<Consumer<OcrListListObjectBuilder>> directors) {
+  public void setOcr(final Stream<Consumer<OcrListObjectBuilder>> directors) {
       schemaObjectBuilder.setFlattenedFieldValue(TestSchema.OCR,
         directors.<Consumer<SchemaObjectBuilder>>map(director -> {
         return sBuilder -> {
-          final OcrListListObjectBuilder ocrBuilder = new OcrListListObjectBuilder(sBuilder);
+          final OcrListObjectBuilder ocrBuilder = new OcrListObjectBuilder(sBuilder);
           director.accept(ocrBuilder);
         };
     }));
   }
 
-  public void setOcr(final List<Consumer<OcrListListObjectBuilder>> directors) {
+  public void setOcr(final List<Consumer<OcrListObjectBuilder>> directors) {
     setOcr(directors.stream());
   }
 
@@ -844,6 +844,37 @@ public final class TestSchemaObjectBuilder {
 
   public void clearTest() {
     schemaObjectBuilder.clearField(TestSchema.TEST);
+  }
+
+  public void setTestJson(final Consumer<TestJsonListObjectBuilder> director) {
+    final TestJsonListObjectBuilder testJsonBuilder = new TestJsonListObjectBuilder();
+    director.accept(testJsonBuilder);
+    schemaObjectBuilder.setJsonFieldValue(
+      TestSchema.TEST_JSON,
+      jsonBuilder -> {
+        testJsonBuilder.build(jsonBuilder);
+    }
+    );
+  }
+
+  public void setTestJson(final Stream<Consumer<TestJsonListObjectBuilder>> directors) {
+    schemaObjectBuilder.setJsonFieldValue(
+      TestSchema.TEST_JSON,
+      directors.<Consumer<JsonBuilder>>map(director -> {
+        final TestJsonListObjectBuilder testJsonBuilder = new TestJsonListObjectBuilder();
+        director.accept(testJsonBuilder);
+        return jsonBuilder -> {
+          testJsonBuilder.build(jsonBuilder);
+        };
+    }));
+  }
+
+  public void setTestJson(final List<Consumer<TestJsonListObjectBuilder>> directors) {
+    setTestJson(directors.stream());
+  }
+
+  public void clearTestJson() {
+    schemaObjectBuilder.clearField(TestSchema.TEST_JSON);
   }
 
   public void setTableType(final String value) {
@@ -1219,10 +1250,6 @@ public final class TestSchemaObjectBuilder {
       }));
     }
 
-    public void setMatches(final List<Consumer<MatchesObjectBuilder>> directors) {
-      setMatches(directors.stream());
-    }
-
     public void clearMatches() {
       schemaObjectBuilder.clearField(TestSchema.ENTITIES.MATCHES);
     }
@@ -1417,38 +1444,6 @@ public final class TestSchemaObjectBuilder {
     }
   }
 
-  public static final class OcrListListObjectBuilder {
-    private final SchemaObjectBuilder schemaObjectBuilder;
-
-    public OcrListListObjectBuilder(final SchemaObjectBuilder schemaObjectBuilder) {
-      this.schemaObjectBuilder = schemaObjectBuilder;
-    }
-
-    public void set(final Consumer<OcrObjectBuilder> director) {
-      this.schemaObjectBuilder.setFlattenedFieldValue(null, builder -> {
-          final OcrObjectBuilder ocrObjectBuilder = new OcrObjectBuilder(builder);
-          director.accept(ocrObjectBuilder);
-          // ocrObjectBuilder.validate();
-      });
-    }
-
-    public void set(final Stream<Consumer<OcrObjectBuilder>> directors) {
-      this.schemaObjectBuilder.setFlattenedFieldValue(null, directors.map(director -> builder -> {
-          final OcrObjectBuilder ocrObjectBuilder = new OcrObjectBuilder(builder);
-          director.accept(ocrObjectBuilder);
-          // ocrObjectBuilder.validate();
-      }));
-    }
-
-    public void set(final List<Consumer<OcrObjectBuilder>> directors) {
-      set(directors.stream());
-    }
-
-    public void clear() {
-      this.schemaObjectBuilder.clearField(null);
-    }
-  }
-
   public static final class OcrObjectBuilder {
     private final SchemaObjectBuilder schemaObjectBuilder;
 
@@ -1571,6 +1566,84 @@ public final class TestSchemaObjectBuilder {
         }
         jsonBuilder.writeEndObject();
       }
+    }
+  }
+
+  public static final class TestJsonListObjectBuilder {
+    private List<TestJsonObjectBuilder> testJsonBuilders;
+
+    private TestJsonListObjectBuilder() {
+    }
+
+    public void set(final Consumer<TestJsonObjectBuilder> director) {
+      final TestJsonObjectBuilder testJsonObjectBuilder = new TestJsonObjectBuilder();
+      director.accept(testJsonObjectBuilder);
+      testJsonBuilders = new ArrayList<>();
+      testJsonBuilders.add(testJsonObjectBuilder);
+    }
+
+    public void set(final Stream<Consumer<TestJsonObjectBuilder>> directors) {
+      testJsonBuilders = directors.map(director -> {
+        final TestJsonObjectBuilder testJsonObjectBuilder = new TestJsonObjectBuilder();
+        director.accept(testJsonObjectBuilder);
+        return testJsonObjectBuilder;
+      }).collect(Collectors.toList());
+    }
+
+    public void set(final List<Consumer<TestJsonObjectBuilder>> directors) {
+      set(directors.stream());
+    }
+
+    public void clear() {
+      testJsonBuilders = null;
+    }
+
+    private void build(final JsonBuilder jsonBuilder) {
+      jsonBuilder.writeStartArray();
+      if (testJsonBuilders != null) {
+        for (final TestJsonObjectBuilder value : testJsonBuilders) {
+          value.build(jsonBuilder);
+        }
+      }
+      jsonBuilder.writeEndArray();
+    }
+  }
+
+  public static final class TestJsonObjectBuilder {
+    private String someType;
+
+    private String someValue;
+
+    private TestJsonObjectBuilder() {
+    }
+
+    public void setSomeType(final String value) {
+      this.someType = value;
+    }
+
+    public void clearSomeType() {
+      someType = null;
+    }
+
+    public void setSomeValue(final String value) {
+      this.someValue = value;
+    }
+
+    public void clearSomeValue() {
+      someValue = null;
+    }
+
+    private void build(final JsonBuilder jsonBuilder) {
+      jsonBuilder.writeStartObject();
+      if (someType != null) {
+        jsonBuilder.writeFieldName(TestSchema.TEST_JSON.SOME_TYPE.getFieldName());
+        jsonBuilder.writeString(someType);
+      }
+      if (someValue != null) {
+        jsonBuilder.writeFieldName(TestSchema.TEST_JSON.SOME_VALUE.getFieldName());
+        jsonBuilder.writeString(someValue);
+      }
+      jsonBuilder.writeEndObject();
     }
   }
 }
