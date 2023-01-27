@@ -1233,21 +1233,25 @@ public final class TestSchemaObjectBuilder {
       schemaObjectBuilder.clearField(TestSchema.ENTITIES.ENTITY_CATEGORY_ID);
     }
 
-    public void setMatches(final Consumer<MatchesObjectBuilder> director) {
+    public void setMatches(final Consumer<MatchesListObjectBuilder> director) {
       schemaObjectBuilder.setFlattenedFieldValue(TestSchema.ENTITIES.MATCHES, sBuilder-> {
-          final MatchesObjectBuilder matchesBuilder = new MatchesObjectBuilder(sBuilder);
+          final MatchesListObjectBuilder matchesBuilder = new MatchesListObjectBuilder(sBuilder);
           director.accept(matchesBuilder);
       });
     }
 
-    public void setMatches(final Stream<Consumer<MatchesObjectBuilder>> directors) {
+    public void setMatches(final Stream<Consumer<MatchesListObjectBuilder>> directors) {
         schemaObjectBuilder.setFlattenedFieldValue(TestSchema.ENTITIES.MATCHES,
           directors.<Consumer<SchemaObjectBuilder>>map(director -> {
           return sBuilder -> {
-            final MatchesObjectBuilder matchesBuilder = new MatchesObjectBuilder(sBuilder);
+            final MatchesListObjectBuilder matchesBuilder = new MatchesListObjectBuilder(sBuilder);
             director.accept(matchesBuilder);
           };
       }));
+    }
+
+    public void setMatches(final List<Consumer<MatchesListObjectBuilder>> directors) {
+      setMatches(directors.stream());
     }
 
     public void clearMatches() {
@@ -1280,6 +1284,38 @@ public final class TestSchemaObjectBuilder {
 
     public void clearGrammarId() {
       schemaObjectBuilder.clearField(TestSchema.ENTITIES.GRAMMAR_ID);
+    }
+
+    public static final class MatchesListObjectBuilder {
+      private final SchemaObjectBuilder schemaObjectBuilder;
+
+      public MatchesListObjectBuilder(final SchemaObjectBuilder schemaObjectBuilder) {
+        this.schemaObjectBuilder = schemaObjectBuilder;
+      }
+
+      public void set(final Consumer<MatchesObjectBuilder> director) {
+        this.schemaObjectBuilder.setFlattenedFieldValue(null, builder -> {
+            final MatchesObjectBuilder matchesObjectBuilder = new MatchesObjectBuilder(builder);
+            director.accept(matchesObjectBuilder);
+            // matchesObjectBuilder.validate();
+        });
+      }
+
+      public void set(final Stream<Consumer<MatchesObjectBuilder>> directors) {
+        this.schemaObjectBuilder.setFlattenedFieldValue(null, directors.map(director -> builder -> {
+            final MatchesObjectBuilder matchesObjectBuilder = new MatchesObjectBuilder(builder);
+            director.accept(matchesObjectBuilder);
+            // matchesObjectBuilder.validate();
+        }));
+      }
+
+      public void set(final List<Consumer<MatchesObjectBuilder>> directors) {
+        set(directors.stream());
+      }
+
+      public void clear() {
+        this.schemaObjectBuilder.clearField(null);
+      }
     }
 
     public static final class MatchesObjectBuilder {

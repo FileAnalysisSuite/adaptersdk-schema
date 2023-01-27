@@ -98,23 +98,27 @@ public class FromAdapterDeveloperPerspective
             })
         );
 
-        // 2 level Nested objects, Flattened encoded -- not working
+        // 2 level Nested objects, Flattened -- not working
         documentBuilder.setEntities(Stream.of(
             builder -> {
                 builder.setEntityId("USA", "India");
                 builder.setEntityCategoryId("geo/country");
                 builder.setGrammarId("geo");
                 builder.setMatches(Stream.of(
-                    mbuilder -> {
-                        mbuilder.setContext("someMatchCtx");
-                        mbuilder.setValue("USA");
-                        mbuilder.setScore(99.9); //Double
-                    },
-                    mbuilder -> {
-                        mbuilder.setContext("someMatchCtx2");
-                        mbuilder.setValue("USA2");
-                        mbuilder.setScore(33.9); //Double
-                    }
+                    listBuilder -> listBuilder.set(
+                        Stream.of(
+                            mbuilder -> {
+                                mbuilder.setContext("someMatchCtx");
+                                mbuilder.setValue("USA");
+                                mbuilder.setScore(99.9); //Double
+                            },
+                            mbuilder -> {
+                                mbuilder.setContext("someMatchCtx2");
+                                mbuilder.setValue("USA2");
+                                mbuilder.setScore(33.9); //Double
+                            }
+                        )
+                    )
                 ));
             },
             builder -> {
@@ -127,16 +131,20 @@ public class FromAdapterDeveloperPerspective
                 builder.setEntityCategoryId("geo/country");
                 builder.setGrammarId("geo");
                 builder.setMatches(Stream.of(
-                    mbuilder -> {
-                        mbuilder.setContext("JapanMatchCtx");
-                        mbuilder.setValue("Japan");
-                        mbuilder.setScore(70.9); //Double
-                    },
-                    mbuilder -> {
-                        mbuilder.setContext("ChinaMatchCtx2");
-                        mbuilder.setValue("China");
-                        mbuilder.setScore(55.9); //Double
-                    }
+                    listBuilder -> listBuilder.set(
+                        Stream.of(
+                            mbuilder -> {
+                                mbuilder.setContext("JapanMatchCtx");
+                                mbuilder.setValue("Japan");
+                                mbuilder.setScore(70.9); //Double
+                            },
+                            mbuilder -> {
+                                mbuilder.setContext("ChinaMatchCtx2");
+                                mbuilder.setValue("China");
+                                mbuilder.setScore(55.9); //Double
+                            }
+                        )
+                    )
                 ));
             })
         );

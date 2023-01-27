@@ -230,8 +230,6 @@ final class SchemaObjectBuilderGenerator
         final boolean flattenedParentField
     )
     {
-        final MethodSpec.Builder clearFieldMethodBuilder = MethodSpec.methodBuilder("clear" + fieldFunctionName)
-            .addModifiers(Modifier.PUBLIC);
         final String objBuilderClassName = fieldFunctionName + "ObjectBuilder";
         final int endOfTypeName = fieldType.indexOf('[');
         final String refTypeName = endOfTypeName > 0 ? fieldType.substring(0, endOfTypeName) : fieldType;
@@ -246,82 +244,28 @@ final class SchemaObjectBuilderGenerator
         final String internalVarName = SchemaGeneratorHelper.toFieldNameCase(propertyName);
         final String internalBuilderVarName = internalVarName + "Builder";
 
-        if (parentFieldName.isEmpty()) {
-            // first level object type field
-            // "ocr[][]" // every additional [] would need a ListBuilder
-            // multi-dimensional fields are allowed at any level
-            if(numberOfDimensions > 1) {
-                // Multi-dimensional field
-                // Add an list object builder class for property
-                final String suffix = "ObjectBuilder";
-                String listName = "";
-                for(int i = 0; i < numberOfDimensions - 1; i++) {
-                    listName += "List";
-                    addListBuilderClass(
-                        objectBuilderClassBuilder,
-                        objBuilderClassName,
-                        fieldFunctionName + listName + suffix,
-                        internalVarName,
-                        isFlattened);
-                }
-                final String listObjBuilderClassName = fieldFunctionName + listName + suffix;
-                final ParameterizedTypeName listBuilderTypeName = ParameterizedTypeName
-                    .get(ClassName.get(Consumer.class), ClassName.get("", listObjBuilderClassName));
+        // Add clear field method body
+        final MethodSpec.Builder clearFieldMethodBuilder = MethodSpec.methodBuilder("clear" + fieldFunctionName)
+            .addModifiers(Modifier.PUBLIC);
 
-                // Add set function Builder param
-                addBuilderParamSetterMethod(
-                    objectBuilderClassBuilder,
-                    fieldFunctionName,
-                    fullName,
-                    listBuilderTypeName,
-                    listObjBuilderClassName,
-                    internalBuilderVarName,
-                    isFlattened);
-
-                // Add set function with Stream param
-                addBuilderStreamParamSetterMethod(
-                    objectBuilderClassBuilder,
-                    fieldFunctionName,
-                    fullName,
-                    listBuilderTypeName,
-                    listObjBuilderClassName,
-                    internalBuilderVarName,
-                    isFlattened);
-
-                // Add set function with List param
-                addBuilderListParamSetterMethod(
-                    objectBuilderClassBuilder,
-                    fieldFunctionName,
-                    listBuilderTypeName,
-                    listObjBuilderClassName,
-                    internalBuilderVarName);
-            } else {
-                // Single dimension field
-                // Add set function Builder param
-                addBuilderParamSetterMethod(
-                    objectBuilderClassBuilder,
-                    fieldFunctionName,
-                    fullName,
-                    builderTypeName,
-                    objBuilderClassName,
-                    internalBuilderVarName,
-                    isFlattened);
-
-                // Add set function with Stream param
-                addBuilderStreamParamSetterMethod(
-                    objectBuilderClassBuilder,
-                    fieldFunctionName,
-                    fullName,
-                    builderTypeName,
-                    objBuilderClassName,
-                    internalBuilderVarName,
-                    isFlattened);
-            }
-            // Add clear field method
+        // Add setters, clear, and list object builder classes
+        // "ocr[][]" // every additional dimension would need a ListBuilder
+        if(numberOfDimensions > 1) {
+            addMultiDimensionalEntityTypeProperty(
+                objectBuilderClassBuilder,
+                objBuilderClassName,
+                internalBuilderVarName,
+                fieldFunctionName,
+                fullName,
+                internalVarName,
+                numberOfDimensions,
+                isFlattened
+            );
+            // Add 'clear' field method body
             clearFieldMethodBuilder
                 .addStatement("schemaObjectBuilder.clearField($L.$L)", SchemaGeneratorHelper.CLASS_NAME, fullName);
         } else {
-            // next level object type field
+            // Single dimension field
             if(isFlattened) {
                 // Sub entity is flattened
                 // Add entity type field 'set' function with 'Builder' param
@@ -344,18 +288,26 @@ final class SchemaObjectBuilderGenerator
                     internalBuilderVarName,
                     isFlattened);
 
-                // Add 'clear' field method
+                // Add 'set' function with 'List' param
+                addBuilderListParamSetterMethod(
+                    objectBuilderClassBuilder,
+                    fieldFunctionName,
+                    builderTypeName,
+                    objBuilderClassName,
+                    internalBuilderVarName);
+
+                // Add 'clear' field method body
                 clearFieldMethodBuilder
                     .addStatement("schemaObjectBuilder.clearField($L.$L)", SchemaGeneratorHelper.CLASS_NAME, fullName);
             } else {
                 // Sub entity is json encoded
                 if (flattenedParentField) {
-                    // because parent was flattened, but this sub entity is not
+                    // parent is flattened, but this sub entity is not
                     buildFunctionBuilder = MethodSpec.methodBuilder("build")
                         .addModifiers(Modifier.PRIVATE)
                         .addParameter(ParameterSpec.builder(JsonBuilder.class, "jsonBuilder").addModifiers(Modifier.FINAL).build())
                         .addStatement("jsonBuilder.writeStartObject()");
-                    // Add nonPrimitiveField set function Builder param
+                    // Add entity type property 'set' function 'Builder' param
                     addBuilderParamSetterMethod(
                         objectBuilderClassBuilder,
                         fieldFunctionName,
@@ -365,7 +317,7 @@ final class SchemaObjectBuilderGenerator
                         internalBuilderVarName,
                         isFlattened);
 
-                    // Add nonPrimitiveField set function with Stream param
+                    // Add entity type property 'set' function with 'Stream' param
                     addBuilderStreamParamSetterMethod(
                         objectBuilderClassBuilder,
                         fieldFunctionName,
@@ -375,10 +327,11 @@ final class SchemaObjectBuilderGenerator
                         internalBuilderVarName,
                         isFlattened);
 
-                    // Add clear field method
+                    // Add 'clear' field method body
                     clearFieldMethodBuilder
                         .addStatement("schemaObjectBuilder.clearField($L.$L)", SchemaGeneratorHelper.CLASS_NAME, fullName);
                 } else {
+                    // parent is json encoded, this sub entity is also json encoded
                     final FieldSpec nonPrimitiveField = FieldSpec
                         .builder(
                             fldIsMultiValued
@@ -390,7 +343,7 @@ final class SchemaObjectBuilderGenerator
                         .build();
                     objectBuilderClassBuilder.addField(nonPrimitiveField);
 
-                    // Add nonPrimitiveField set function Builder param
+                    // Add entity type property 'set' function 'Builder' param
                     addNestedObjectBuilderParamSetterMethod(
                         objectBuilderClassBuilder,
                         fieldFunctionName,
@@ -400,7 +353,7 @@ final class SchemaObjectBuilderGenerator
                         internalBuilderVarName,
                         isFlattened);
 
-                    // Add nonPrimitiveField set function with Stream param
+                    // Add entity type property 'set' function with 'Stream' param
                     addNestedObjectBuilderStreamParamSetterMethod(
                         objectBuilderClassBuilder,
                         fieldFunctionName,
@@ -410,12 +363,12 @@ final class SchemaObjectBuilderGenerator
                         internalBuilderVarName,
                         isFlattened);
 
-                    // Add clear field method
+                    // Add 'clear' field method body
                     clearFieldMethodBuilder.addStatement("$L = null", internalVarName);
                 }
                 // Write Json field
                 writeJsonFieldsInBuildMethod(
-                    buildFunctionBuilder, // already available
+                    buildFunctionBuilder,
                     fieldTypeValue,
                     fldIsMandatory,
                     fldIsMultiValued,
@@ -423,39 +376,112 @@ final class SchemaObjectBuilderGenerator
                     propertyName,
                     internalVarName,
                     objBuilderClassName);
+
+                // Add set function with List param
+                addBuilderListParamSetterMethod(
+                    objectBuilderClassBuilder,
+                    fieldFunctionName,
+                    builderTypeName,
+                    objBuilderClassName,
+                    internalBuilderVarName);
             }
         }
 
-        if (numberOfDimensions <= 1) {
-            // Add set function with List param
-            addBuilderListParamSetterMethod(
-                objectBuilderClassBuilder,
-                fieldFunctionName,
-                builderTypeName,
-                objBuilderClassName,
-                internalBuilderVarName);
-        }
+        // Add an object builder class for entity type property
+        addEntityTypeObjectBuilderClass(
+            objectBuilderClassBuilder, objBuilderClassName, buildFunctionBuilder, subentityDef, newPath, fullName, isFlattened);
 
-        // Add an object builder class for property
+        // Add clear field method
+        objectBuilderClassBuilder.addMethod(clearFieldMethodBuilder.build());
+    }
+
+    private static void addMultiDimensionalEntityTypeProperty(
+        final TypeSpec.Builder objectBuilderClassBuilder,
+        final String objBuilderClassName,
+        final String internalBuilderVarName,
+        final String fieldFunctionName,
+        final String fullName,
+        final String internalVarName,
+        final int numberOfDimensions,
+        final boolean isFlattened
+    )
+    {
+        // Multi-dimensional field
+        // Add an list object builder class for property
+        final String suffix = "ObjectBuilder";
+        String listName = "";
+        for(int i = 0; i < numberOfDimensions - 1; i++) {
+            listName += "List";
+            addListBuilderClass(
+                objectBuilderClassBuilder,
+                objBuilderClassName,
+                fieldFunctionName + listName + suffix,
+                internalVarName,
+                isFlattened);
+        }
+        final String listObjBuilderClassName = fieldFunctionName + listName + suffix;
+        final ParameterizedTypeName listBuilderTypeName = ParameterizedTypeName
+            .get(ClassName.get(Consumer.class), ClassName.get("", listObjBuilderClassName));
+
+        // Add 'set' function with 'Builder' param
+        addBuilderParamSetterMethod(
+            objectBuilderClassBuilder,
+            fieldFunctionName,
+            fullName,
+            listBuilderTypeName,
+            listObjBuilderClassName,
+            internalBuilderVarName,
+            isFlattened);
+
+        // Add 'set' function with 'Stream' param
+        addBuilderStreamParamSetterMethod(
+            objectBuilderClassBuilder,
+            fieldFunctionName,
+            fullName,
+            listBuilderTypeName,
+            listObjBuilderClassName,
+            internalBuilderVarName,
+            isFlattened);
+
+        // Add 'set' function with 'List' param
+        addBuilderListParamSetterMethod(
+            objectBuilderClassBuilder,
+            fieldFunctionName,
+            listBuilderTypeName,
+            listObjBuilderClassName,
+            internalBuilderVarName);
+    }
+
+    private void addEntityTypeObjectBuilderClass(
+        final TypeSpec.Builder objectBuilderClassBuilder,
+        final String objBuilderClassName,
+        MethodSpec.Builder buildFunctionBuilder,
+        final JsonNode subentityDef,
+        final String[] newPath,
+        final String fullName,
+        final boolean isFlattened
+    )
+    {
         if(isFlattened) {
             final TypeSpec.Builder fieldObjectBuilderClassBuilder
                 = createSchemaObjectBuilderClass(
                     objBuilderClassName, buildFunctionBuilder, subentityDef, newPath, fullName, true, true);
             objectBuilderClassBuilder.addType(fieldObjectBuilderClassBuilder.build());
         } else {
+            // This class will have instance variables for each property and a 'build' function to write json values
             final TypeSpec.Builder fieldObjectBuilderClassBuilder = TypeSpec.classBuilder(objBuilderClassName)
             .addModifiers(new Modifier[]{Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL})
             .addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE)
             .build());
 
-            // Create a build method
+            // Create a 'build' method
             final MethodSpec.Builder parentBuilder = buildFunctionBuilder == null ? null : buildFunctionBuilder;
             buildFunctionBuilder = MethodSpec.methodBuilder("build")
                 .addModifiers(Modifier.PRIVATE)
                 .addParameter(ParameterSpec.builder(JsonBuilder.class, "jsonBuilder").addModifiers(Modifier.FINAL).build())
                 .addStatement("jsonBuilder.writeStartObject()");
 
-            // Add all the sub-fields of this non-primitive property
+            // Add all the sub-fields of this entity type property
             addPropertySetters(
                 fieldObjectBuilderClassBuilder, buildFunctionBuilder, subentityDef, newPath, fullName, false);
 
@@ -466,8 +492,6 @@ final class SchemaObjectBuilderGenerator
             }
             objectBuilderClassBuilder.addType(fieldObjectBuilderClassBuilder.build());
         }
-        // Add clear field method
-        objectBuilderClassBuilder.addMethod(clearFieldMethodBuilder.build());
     }
 
     private static void addListBuilderClass(
@@ -480,24 +504,25 @@ final class SchemaObjectBuilderGenerator
     {
         final TypeSpec.Builder fieldListObjectBuilderClassBuiler = TypeSpec.classBuilder(listObjBuilderClassName)
             .addModifiers(new Modifier[]{Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL});
-        //flattened does not need 'build' function and instance/state variables
+        // flattened does not need 'build' function and instance/state variables
         if (isFlattened) {
             addSchemaObjectBuilderFieldAndCtor(fieldListObjectBuilderClassBuiler);
 
-            // Add set function Builder param
+            // Add 'set' function with 'Builder' param
             addFieldListObjectBuilderBuilderParamSetterMethod(
                 fieldListObjectBuilderClassBuiler, objBuilderClassName, internalVarName);
 
-            // Add set function with Stream param
+            // Add 'set' function with 'Stream' param
             addFieldListObjectBuilderStreamParamSetterMethod(
                 fieldListObjectBuilderClassBuiler, objBuilderClassName, internalVarName);
 
-            // Add set function with List param
+            // Add 'set' function with 'List' param
             addFieldListObjectBuilderListParamSetterMethod(fieldListObjectBuilderClassBuiler, objBuilderClassName);
 
-            // Add clear field method
+            // Add 'clear' field method
             addFieldListObjectBuilderClearMethod(fieldListObjectBuilderClassBuiler);
         } else {
+            // Json encoded
             fieldListObjectBuilderClassBuiler.addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE).build());
 
             // Add instance variable for list of field object builders
@@ -509,21 +534,21 @@ final class SchemaObjectBuilderGenerator
                 .build();
             fieldListObjectBuilderClassBuiler.addField(fieldObjBuilderList);
 
-            // Add set function Builder param
+            // Add 'set' function with 'Builder' param
             addFieldListObjectBuilderBuilderParamSetter(
                 fieldListObjectBuilderClassBuiler, objBuilderClassName, internalVarName, listName);
 
-            // Add set function with Stream param
+            // Add 'set' function with 'Stream' param
             addFieldListObjectBuilderStreamParamSetter(
                 fieldListObjectBuilderClassBuiler, objBuilderClassName, internalVarName, listName);
 
-            // Add set function with List param
+            // Add 'set' function with 'List' param
             addFieldListObjectBuilderListParamSetterMethod(fieldListObjectBuilderClassBuiler, objBuilderClassName);
 
-            // Add clear field method
+            // Add 'clear' field method
             addFieldListObjectBuilderClearMethod(fieldListObjectBuilderClassBuiler, listName);
 
-            // Add build method
+            // Add 'build' method
             addFieldListObjectBuilderBuildMethod(fieldListObjectBuilderClassBuiler, objBuilderClassName, listName);
         }
 
@@ -551,7 +576,7 @@ final class SchemaObjectBuilderGenerator
 
         // Add setter variations for multi-valued field
         if (fldIsMultiValued) {
-            // Set array value
+            // Set 'array' value
             addArrayParamSetterMethod(
                 objectBuilderClassBuilder,
                 fieldFunctionName,
@@ -562,7 +587,7 @@ final class SchemaObjectBuilderGenerator
                 parentFieldName,
                 flattenedParentField);
 
-            // Set List value
+            // Set 'List' value
             addListParamSetterMethod(
                 objectBuilderClassBuilder,
                 fieldFunctionName,
@@ -573,7 +598,7 @@ final class SchemaObjectBuilderGenerator
                 parentFieldName,
                 flattenedParentField);
 
-            // Add single value
+            // Add 'single' value
             addSingleValueAddMethod(
                 objectBuilderClassBuilder,
                 paramSingleFieldValue,
@@ -617,7 +642,7 @@ final class SchemaObjectBuilderGenerator
                     .build();
                 objectBuilderClassBuilder.addField(field);
 
-                // Add clear function body
+                // Add 'clear' function body
                 clearFieldMethodBuilder.addStatement(subFieldName + " = null");
 
                 // write Json fields
@@ -654,10 +679,10 @@ final class SchemaObjectBuilderGenerator
                 PROPERTY_TYPES_LOOKUP.get(fieldTypeValue).getSimpleName(), SchemaGeneratorHelper.CLASS_NAME, propertyName);
 
         }
-        // Add single value setter method
+        // Add 'single value' setter method
         objectBuilderClassBuilder.addMethod(setSingleFieldValueMethodBuilder.build());
 
-        // Add clear field method
+        // Add 'clear' field method
         objectBuilderClassBuilder.addMethod(clearFieldMethodBuilder.build());
     }
 
@@ -864,7 +889,7 @@ final class SchemaObjectBuilderGenerator
             "jsonBuilder.writeFieldName($L.$L.$L.getFieldName())", SchemaGeneratorHelper.CLASS_NAME, parentFieldName, propertyName);
 
         if (fldIsMultiValued) {
-            // Add build function body
+            // Add 'build' function body
             buildFunctionBuilder.addStatement("jsonBuilder.writeStartArray()");
 
             if (objBuilderClassName == null) {
