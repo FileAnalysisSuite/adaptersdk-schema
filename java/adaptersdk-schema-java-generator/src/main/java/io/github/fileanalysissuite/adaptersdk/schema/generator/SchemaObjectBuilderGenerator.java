@@ -332,8 +332,6 @@ final class SchemaObjectBuilderGenerator
                     // Add instance variable for checking if subField is set
                     addValidateField(objectBuilderClassBuilder, validatorSubFieldName);
 
-                    // TODO: Note that mandatory field is set in all the setters
-                    // setSingleFieldValueMethodBuilder.addStatement("$L = true", subFieldNameCheck);
                     // Note that mandatory field is reset
                     clearFieldMethodBuilder.addStatement("$L = false", validatorSubFieldName);
 
