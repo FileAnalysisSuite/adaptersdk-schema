@@ -476,7 +476,7 @@ final class SchemaObjectBuilderGenerator
     )
     {
         // Multi-dimensional field
-        // Add an list object builder class for property
+        // Add a list object builder class for property
         final String suffix = "ObjectBuilder";
         String listName = "";
         for(int i = 0; i < numberOfDimensions - 1; i++) {
@@ -596,6 +596,9 @@ final class SchemaObjectBuilderGenerator
 
             // Add 'clear' field method
             addFieldListObjectBuilderClearMethod(fieldListObjectBuilderClassBuiler);
+
+            // Add 'validate' field method
+            addFieldListObjectBuilderValidateMethod(fieldListObjectBuilderClassBuiler);
         } else {
             // Json encoded
             fieldListObjectBuilderClassBuiler.addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE).build());
@@ -944,6 +947,17 @@ final class SchemaObjectBuilderGenerator
         fieldListObjectBuilderClassBuiler.addMethod(setBuilderFieldValue);
     }
 
+    private static void addFieldListObjectBuilderValidateMethod(
+        final Builder fieldListObjectBuilderClassBuiler
+    )
+    {
+        final MethodSpec setBuilderFieldValue = MethodSpec.methodBuilder("validate")
+            .addModifiers(Modifier.PUBLIC)
+            .build();
+
+        fieldListObjectBuilderClassBuiler.addMethod(setBuilderFieldValue);
+    }
+
     private static void addFieldListObjectBuilderBuildMethod(
         final Builder fieldListObjectBuilderClassBuiler,
         final String objBuilderClassName,
@@ -1047,26 +1061,11 @@ final class SchemaObjectBuilderGenerator
             .addModifiers(Modifier.PUBLIC)
             .addParameter(builderParamName);
         if (isFlattened) {
-            setBuilderFieldValue
-            .addCode("schemaObjectBuilder.setFlattenedFieldValue($L.$L, sBuilder-> {\n", SchemaGeneratorHelper.CLASS_NAME, propertyName)
-            .addStatement("    final $L $L = new $L(sBuilder)", objBuilderClassName, internalBuilderVarName, objBuilderClassName)
-            .addStatement("    director.accept($L)", internalBuilderVarName)
-            .addStatement("})");
-            if (isFldMandatory) {
-                setBuilderFieldValue.addStatement("$L = true", validatorSubFieldName);
-            }
+            setFlattenedFieldValue(
+                setBuilderFieldValue, propertyName, objBuilderClassName, internalBuilderVarName, isFldMandatory, validatorSubFieldName);
         } else {
-            setBuilderFieldValue
-            .addStatement("final $L $L = new $L()", objBuilderClassName, internalBuilderVarName, objBuilderClassName)
-            .addStatement("director.accept($L)", internalBuilderVarName)
-            .addCode("schemaObjectBuilder.setJsonFieldValue(\n")
-            .addCode("  $L.$L,\n", SchemaGeneratorHelper.CLASS_NAME, propertyName)
-            .beginControlFlow("  jsonBuilder ->")
-            .addStatement("  $L.build(jsonBuilder)", internalBuilderVarName)
-            .endControlFlow()
-            .addStatement(")");
+            setJsonFieldValue(setBuilderFieldValue, propertyName, objBuilderClassName, internalBuilderVarName);
         }
-
         objectBuilderClassBuilder.addMethod(setBuilderFieldValue.build());
     }
 
@@ -1091,32 +1090,89 @@ final class SchemaObjectBuilderGenerator
             .addParameter(streamParamFieldName);
 
         if (isFlattened) {
-            setStreamFieldValue
-                .addCode("  schemaObjectBuilder.setFlattenedFieldValue($L.$L,\n", SchemaGeneratorHelper.CLASS_NAME, propertyName)
-                .addCode("    directors.<Consumer<SchemaObjectBuilder>>map(director -> {\n")
-                .addCode("    return sBuilder -> {\n")
-                .addStatement("      final $L $L = new $L(sBuilder)", objBuilderClassName, internalBuilderVarName, objBuilderClassName)
-                .addStatement("      director.accept($L)", internalBuilderVarName)
-                .addStatement("    }")
-                .addStatement("}))");
-            if (isFldMandatory) {
-                setStreamFieldValue.addStatement("$L = true", validatorSubFieldName);
-            }
+            setFlattenedFieldValueStream(
+                setStreamFieldValue, propertyName, objBuilderClassName, internalBuilderVarName, isFldMandatory, validatorSubFieldName);
         } else {
-            setStreamFieldValue
-                .addCode("schemaObjectBuilder.setJsonFieldValue(\n")
-                .addCode("  $L.$L,\n", SchemaGeneratorHelper.CLASS_NAME, propertyName)
-                .addCode("  directors.<Consumer<JsonBuilder>>map(director -> {\n")
-                .addStatement("    final $L $L = new $L()", objBuilderClassName, internalBuilderVarName, objBuilderClassName)
-                .addStatement("    director.accept($L)", internalBuilderVarName)
-                .addCode("    return jsonBuilder -> {\n")
-                .addStatement("      $L.build(jsonBuilder)", internalBuilderVarName)
-                .addStatement("    }")
-                .addStatement("}))");
+            setJsonFieldValueStream(setStreamFieldValue, propertyName, objBuilderClassName, internalBuilderVarName);
         }
         objectBuilderClassBuilder.addMethod(setStreamFieldValue.build());
     }
 
+    private static void setJsonFieldValue(
+        final MethodSpec.Builder setBuilderFieldValue,
+        final String propertyName, String objBuilderClassName,
+        final String internalBuilderVarName
+    )
+    {
+        setBuilderFieldValue
+        .addStatement("final $L $L = new $L()", objBuilderClassName, internalBuilderVarName, objBuilderClassName)
+        .addStatement("director.accept($L)", internalBuilderVarName)
+        .addCode("schemaObjectBuilder.setJsonFieldValue(\n")
+        .addCode("  $L.$L,\n", SchemaGeneratorHelper.CLASS_NAME, propertyName)
+        .beginControlFlow("  jsonBuilder ->")
+        .addStatement("  $L.build(jsonBuilder)", internalBuilderVarName)
+        .endControlFlow()
+        .addStatement(")");
+    }
+
+    private static void setFlattenedFieldValue(
+        final MethodSpec.Builder setBuilderFieldValue,
+        final String propertyName, String objBuilderClassName,
+        final String internalBuilderVarName,
+        final boolean isFldMandatory,
+        final String validatorSubFieldName
+    )
+    {
+        setBuilderFieldValue
+        .addCode("schemaObjectBuilder.setFlattenedFieldValue($L.$L, sBuilder-> {\n", SchemaGeneratorHelper.CLASS_NAME, propertyName)
+        .addStatement("    final $L $L = new $L(sBuilder)", objBuilderClassName, internalBuilderVarName, objBuilderClassName)
+        .addStatement("    director.accept($L)", internalBuilderVarName)
+        .addStatement("    $L.validate()", internalBuilderVarName)
+        .addStatement("})");
+        if (isFldMandatory) {
+            setBuilderFieldValue.addStatement("$L = true", validatorSubFieldName);
+        }
+    }
+
+    private static void setJsonFieldValueStream(
+        final MethodSpec.Builder setStreamFieldValue,
+        final String propertyName, String objBuilderClassName,
+        final String internalBuilderVarName
+    )
+    {
+        setStreamFieldValue
+        .addCode("schemaObjectBuilder.setJsonFieldValue(\n")
+        .addCode("  $L.$L,\n", SchemaGeneratorHelper.CLASS_NAME, propertyName)
+        .addCode("  directors.<Consumer<JsonBuilder>>map(director -> {\n")
+        .addStatement("    final $L $L = new $L()", objBuilderClassName, internalBuilderVarName, objBuilderClassName)
+        .addStatement("    director.accept($L)", internalBuilderVarName)
+        .addCode("    return jsonBuilder -> {\n")
+        .addStatement("      $L.build(jsonBuilder)", internalBuilderVarName)
+        .addStatement("    }")
+        .addStatement("}))");
+    }
+
+    private static void setFlattenedFieldValueStream(
+        final MethodSpec.Builder setStreamFieldValue,
+        final String propertyName, String objBuilderClassName,
+        final String internalBuilderVarName,
+        final boolean isFldMandatory,
+        final String validatorSubFieldName
+    )
+    {
+        setStreamFieldValue
+        .addCode("  schemaObjectBuilder.setFlattenedFieldValue($L.$L,\n", SchemaGeneratorHelper.CLASS_NAME, propertyName)
+        .addCode("    directors.<Consumer<SchemaObjectBuilder>>map(director -> {\n")
+        .addCode("    return sBuilder -> {\n")
+        .addStatement("      final $L $L = new $L(sBuilder)", objBuilderClassName, internalBuilderVarName, objBuilderClassName)
+        .addStatement("      director.accept($L)", internalBuilderVarName)
+        .addStatement("      $L.validate()", internalBuilderVarName)
+        .addStatement("    }")
+        .addStatement("}))");
+        if (isFldMandatory) {
+            setStreamFieldValue.addStatement("$L = true", validatorSubFieldName);
+        }
+    }
     private static void addBuilderListParamSetterMethod(
         final Builder objectBuilderClassBuilder,
         final String fieldFunctionName,

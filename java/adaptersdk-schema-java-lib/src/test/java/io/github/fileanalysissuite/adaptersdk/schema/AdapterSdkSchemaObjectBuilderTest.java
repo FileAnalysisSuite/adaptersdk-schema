@@ -147,7 +147,15 @@ public final class AdapterSdkSchemaObjectBuilderTest
         System.out.println("-------------   Built AdapterSdkSchemaObject ---------------------\n");
         final Map<String, Object> treeMap = new TreeMap<String, Object>(document);
         treeMap.entrySet().forEach(e -> System.out.println(e.getKey() + " = " + e.getValue()));
+
         assertTrue(document.containsKey("ACCOUNTS"));
+        assertTrue(document.containsKey("COLUMNS"));
+        assertTrue(document.containsKey("METADATA_FILES_0_CONTENT"));
+        assertTrue(document.containsKey("METADATA_FILES_1_EXTENSION"));
+        assertTrue(document.containsKey("OCR_0_0_CONFIDENCE"));
+        assertTrue(document.containsKey("OCR_0_1_VALUE"));
+        assertTrue(document.containsKey("OCR_1_0_NAME"));
+        assertTrue(document.containsKey("OCR_1_1_VALUE"));
     }
 
     @Test
@@ -196,5 +204,29 @@ public final class AdapterSdkSchemaObjectBuilderTest
         );
 
         assertTrue(thrown.getMessage().contains("Mandatory field 'AdapterSdkSchema.OCR.VALUE' is not set"));
+    }
+
+    @Test
+    public void testSingleDimensionMandatoryFieldNotSet()
+    {
+        System.out.println("testSingleDimensionMandatoryFieldNotSet...");
+        final Map<String, Object> document = new HashMap<String, Object>();
+        final AdapterSdkSchemaObjectBuilder documentBuilder = new AdapterSdkSchemaObjectBuilder(new MapSchemaObjectBuilder(document));
+        final IllegalArgumentException thrown = assertThrows(
+            IllegalArgumentException.class,
+            () -> documentBuilder.setMetadataFiles(Stream.of(
+                    builder -> {
+                        builder.setContent("mdf-content1");
+                        // builder.setExtension("abc"); // mandatory field not set
+                    },
+                    builder -> {
+                        builder.setContent("mdf-content2");
+                        builder.setExtension("xyz");
+                    })
+                ),
+            "Expected setMetadataFiles() to throw IllegalArgumentException, but it didn't"
+        );
+
+        assertTrue(thrown.getMessage().contains("Mandatory field 'AdapterSdkSchema.METADATA_FILES.EXTENSION' is not set"));
     }
 }
