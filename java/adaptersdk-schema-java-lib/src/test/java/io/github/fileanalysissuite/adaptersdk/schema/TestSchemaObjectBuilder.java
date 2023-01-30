@@ -933,6 +933,9 @@ public final class TestSchemaObjectBuilder {
     schemaObjectBuilder.clearField(TestSchema.TYPE);
   }
 
+  private void validate() {
+  }
+
   public static final class AccountsObjectBuilder {
     private String displayName;
 
@@ -1286,6 +1289,9 @@ public final class TestSchemaObjectBuilder {
       schemaObjectBuilder.clearField(TestSchema.ENTITIES.GRAMMAR_ID);
     }
 
+    private void validate() {
+    }
+
     public static final class MatchesListObjectBuilder {
       private final SchemaObjectBuilder schemaObjectBuilder;
 
@@ -1297,7 +1303,7 @@ public final class TestSchemaObjectBuilder {
         this.schemaObjectBuilder.setFlattenedFieldValue(null, builder -> {
             final MatchesObjectBuilder matchesObjectBuilder = new MatchesObjectBuilder(builder);
             director.accept(matchesObjectBuilder);
-            // matchesObjectBuilder.validate();
+            matchesObjectBuilder.validate();
         });
       }
 
@@ -1305,7 +1311,7 @@ public final class TestSchemaObjectBuilder {
         this.schemaObjectBuilder.setFlattenedFieldValue(null, directors.map(director -> builder -> {
             final MatchesObjectBuilder matchesObjectBuilder = new MatchesObjectBuilder(builder);
             director.accept(matchesObjectBuilder);
-            // matchesObjectBuilder.validate();
+            matchesObjectBuilder.validate();
         }));
       }
 
@@ -1320,6 +1326,8 @@ public final class TestSchemaObjectBuilder {
 
     public static final class MatchesObjectBuilder {
       private final SchemaObjectBuilder schemaObjectBuilder;
+
+      private boolean isEgrammarsbuilderSet;
 
       public MatchesObjectBuilder(final SchemaObjectBuilder schemaObjectBuilder) {
         this.schemaObjectBuilder = schemaObjectBuilder;
@@ -1358,6 +1366,7 @@ public final class TestSchemaObjectBuilder {
             final EgrammarsObjectBuilder egrammarsBuilder = new EgrammarsObjectBuilder(sBuilder);
             director.accept(egrammarsBuilder);
         });
+        isEgrammarsbuilderSet = true;
       }
 
       public void setEgrammars(final Stream<Consumer<EgrammarsObjectBuilder>> directors) {
@@ -1368,6 +1377,7 @@ public final class TestSchemaObjectBuilder {
               director.accept(egrammarsBuilder);
             };
         }));
+        isEgrammarsbuilderSet = true;
       }
 
       public void setEgrammars(final List<Consumer<EgrammarsObjectBuilder>> directors) {
@@ -1376,6 +1386,7 @@ public final class TestSchemaObjectBuilder {
 
       public void clearEgrammars() {
         schemaObjectBuilder.clearField(TestSchema.ENTITIES.MATCHES.EGRAMMARS);
+        isEgrammarsbuilderSet = false;
       }
 
       public void setScore(final Double value) {
@@ -1386,8 +1397,16 @@ public final class TestSchemaObjectBuilder {
         schemaObjectBuilder.clearField(TestSchema.ENTITIES.MATCHES.SCORE);
       }
 
+      private void validate() {
+        if (!isEgrammarsbuilderSet) {
+          throw new IllegalArgumentException("Mandatory field 'TestSchema.ENTITIES.MATCHES.EGRAMMARS' is not set");
+        }
+      }
+
       public static final class EgrammarsObjectBuilder {
         private final SchemaObjectBuilder schemaObjectBuilder;
+
+        private boolean isGcontextSet;
 
         public EgrammarsObjectBuilder(final SchemaObjectBuilder schemaObjectBuilder) {
           this.schemaObjectBuilder = schemaObjectBuilder;
@@ -1395,22 +1414,27 @@ public final class TestSchemaObjectBuilder {
 
         public void setGcontext(final String... values) {
           schemaObjectBuilder.setStringFieldValue(TestSchema.ENTITIES.MATCHES.EGRAMMARS.GCONTEXT, values);
+          isGcontextSet = true;
         }
 
         public void setGcontext(final List<String> values) {
           schemaObjectBuilder.setStringFieldValue(TestSchema.ENTITIES.MATCHES.EGRAMMARS.GCONTEXT, values);
+          isGcontextSet = true;
         }
 
         public void addGcontext(final String value) {
           schemaObjectBuilder.addStringFieldValue(TestSchema.ENTITIES.MATCHES.EGRAMMARS.GCONTEXT, value);
+          isGcontextSet = true;
         }
 
         public void setGcontext(final String value) {
           schemaObjectBuilder.setStringFieldValue(TestSchema.ENTITIES.MATCHES.EGRAMMARS.GCONTEXT, value);
+          isGcontextSet = true;
         }
 
         public void clearGcontext() {
           schemaObjectBuilder.clearField(TestSchema.ENTITIES.MATCHES.EGRAMMARS.GCONTEXT);
+          isGcontextSet = false;
         }
 
         public void setGvalue(final String value) {
@@ -1420,6 +1444,12 @@ public final class TestSchemaObjectBuilder {
         public void clearGvalue() {
           schemaObjectBuilder.clearField(TestSchema.ENTITIES.MATCHES.EGRAMMARS.GVALUE);
         }
+
+        private void validate() {
+          if (!isGcontextSet) {
+            throw new IllegalArgumentException("Mandatory field 'TestSchema.ENTITIES.MATCHES.EGRAMMARS.GCONTEXT' is not set");
+          }
+        }
       }
     }
   }
@@ -1427,24 +1457,41 @@ public final class TestSchemaObjectBuilder {
   public static final class MetadataFilesObjectBuilder {
     private final SchemaObjectBuilder schemaObjectBuilder;
 
+    private boolean isContentSet;
+
+    private boolean isExtensionSet;
+
     public MetadataFilesObjectBuilder(final SchemaObjectBuilder schemaObjectBuilder) {
       this.schemaObjectBuilder = schemaObjectBuilder;
     }
 
     public void setContent(final String value) {
       schemaObjectBuilder.setStringFieldValue(TestSchema.METADATA_FILES.CONTENT, value);
+      isContentSet = true;
     }
 
     public void clearContent() {
       schemaObjectBuilder.clearField(TestSchema.METADATA_FILES.CONTENT);
+      isContentSet = false;
     }
 
     public void setExtension(final String value) {
       schemaObjectBuilder.setStringFieldValue(TestSchema.METADATA_FILES.EXTENSION, value);
+      isExtensionSet = true;
     }
 
     public void clearExtension() {
       schemaObjectBuilder.clearField(TestSchema.METADATA_FILES.EXTENSION);
+      isExtensionSet = false;
+    }
+
+    private void validate() {
+      if (!isContentSet) {
+        throw new IllegalArgumentException("Mandatory field 'TestSchema.METADATA_FILES.CONTENT' is not set");
+      }
+      if (!isExtensionSet) {
+        throw new IllegalArgumentException("Mandatory field 'TestSchema.METADATA_FILES.EXTENSION' is not set");
+      }
     }
   }
 
@@ -1459,7 +1506,7 @@ public final class TestSchemaObjectBuilder {
       this.schemaObjectBuilder.setFlattenedFieldValue(null, builder -> {
           final OcrObjectBuilder ocrObjectBuilder = new OcrObjectBuilder(builder);
           director.accept(ocrObjectBuilder);
-          // ocrObjectBuilder.validate();
+          ocrObjectBuilder.validate();
       });
     }
 
@@ -1467,7 +1514,7 @@ public final class TestSchemaObjectBuilder {
       this.schemaObjectBuilder.setFlattenedFieldValue(null, directors.map(director -> builder -> {
           final OcrObjectBuilder ocrObjectBuilder = new OcrObjectBuilder(builder);
           director.accept(ocrObjectBuilder);
-          // ocrObjectBuilder.validate();
+          ocrObjectBuilder.validate();
       }));
     }
 
@@ -1483,16 +1530,22 @@ public final class TestSchemaObjectBuilder {
   public static final class OcrObjectBuilder {
     private final SchemaObjectBuilder schemaObjectBuilder;
 
+    private boolean isConfidenceSet;
+
+    private boolean isValueSet;
+
     public OcrObjectBuilder(final SchemaObjectBuilder schemaObjectBuilder) {
       this.schemaObjectBuilder = schemaObjectBuilder;
     }
 
     public void setConfidence(final Integer value) {
       schemaObjectBuilder.setIntegerFieldValue(TestSchema.OCR.CONFIDENCE, value);
+      isConfidenceSet = true;
     }
 
     public void clearConfidence() {
       schemaObjectBuilder.clearField(TestSchema.OCR.CONFIDENCE);
+      isConfidenceSet = false;
     }
 
     public void setName(final String value) {
@@ -1513,10 +1566,21 @@ public final class TestSchemaObjectBuilder {
 
     public void setValue(final String value) {
       schemaObjectBuilder.setStringFieldValue(TestSchema.OCR.VALUE, value);
+      isValueSet = true;
     }
 
     public void clearValue() {
       schemaObjectBuilder.clearField(TestSchema.OCR.VALUE);
+      isValueSet = false;
+    }
+
+    private void validate() {
+      if (!isConfidenceSet) {
+        throw new IllegalArgumentException("Mandatory field 'TestSchema.OCR.CONFIDENCE' is not set");
+      }
+      if (!isValueSet) {
+        throw new IllegalArgumentException("Mandatory field 'TestSchema.OCR.VALUE' is not set");
+      }
     }
   }
 
@@ -1564,6 +1628,9 @@ public final class TestSchemaObjectBuilder {
 
     public void clearTestMatches() {
       schemaObjectBuilder.clearField(TestSchema.TEST.TEST_MATCHES);
+    }
+
+    private void validate() {
     }
 
     public static final class TestMatchesObjectBuilder {

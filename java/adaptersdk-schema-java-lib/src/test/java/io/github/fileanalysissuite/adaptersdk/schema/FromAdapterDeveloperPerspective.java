@@ -32,7 +32,7 @@ public class FromAdapterDeveloperPerspective
     public static void createDataSetWithTestSchemaObjectBuilder(final Map<String, Object> document)
     {
         // Note: Error prone to make an untyped schema object this way, misspelled keys, invalid keys
-        //document.put("DATE_ARCHIVED", Instant.now());
+        // document.put("DATE_ARCHIVED", Instant.now());
 
         // Instead use typed builders
         // Here is how a Map can be built for an Adapter's DataSet (earlier known as Repository)
@@ -98,7 +98,7 @@ public class FromAdapterDeveloperPerspective
             })
         );
 
-        // 2 level Nested objects, Flattened -- not working
+        // 2 level Nested objects, Flattened
         documentBuilder.setEntities(Stream.of(
             builder -> {
                 builder.setEntityId("USA", "India");
@@ -111,11 +111,23 @@ public class FromAdapterDeveloperPerspective
                                 mbuilder.setContext("someMatchCtx");
                                 mbuilder.setValue("USA");
                                 mbuilder.setScore(99.9); //Double
+                                mbuilder.setEgrammars(
+                                    egram -> {
+                                        egram.addGcontext("gctx1");
+                                        egram.setGvalue("gval1");
+                                    }
+                                );
                             },
                             mbuilder -> {
                                 mbuilder.setContext("someMatchCtx2");
                                 mbuilder.setValue("USA2");
                                 mbuilder.setScore(33.9); //Double
+                                mbuilder.setEgrammars(
+                                    egram -> {
+                                        egram.addGcontext("gctx2");
+                                        egram.setGvalue("gval2");
+                                    }
+                                );
                             }
                         )
                     )
@@ -137,11 +149,23 @@ public class FromAdapterDeveloperPerspective
                                 mbuilder.setContext("JapanMatchCtx");
                                 mbuilder.setValue("Japan");
                                 mbuilder.setScore(70.9); //Double
+                                mbuilder.setEgrammars(
+                                    egram -> {
+                                        egram.addGcontext("gctx22");
+                                        egram.setGvalue("gval22");
+                                    }
+                                );
                             },
                             mbuilder -> {
                                 mbuilder.setContext("ChinaMatchCtx2");
                                 mbuilder.setValue("China");
                                 mbuilder.setScore(55.9); //Double
+                                mbuilder.setEgrammars(
+                                    egram -> {
+                                        egram.addGcontext("gctx32");
+                                        egram.setGvalue("gval32");
+                                    }
+                                );
                             }
                         )
                     )

@@ -271,6 +271,7 @@ final class SchemaObjectBuilderGenerator
 
         // Add setters, clear, and list object builder classes
         // "ocr[][]" // every additional dimension would need a ListBuilder
+        final String validatorSubFieldName = "is" + SchemaGeneratorHelper.toProperCase(internalBuilderVarName) + "Set";
         if(numberOfDimensions > 1) {
             addMultiDimensionalEntityTypeProperty(
                 objectBuilderClassBuilder,
@@ -280,7 +281,9 @@ final class SchemaObjectBuilderGenerator
                 fullName,
                 internalVarName,
                 numberOfDimensions,
-                isFlattened
+                isFlattened,
+                fldIsMandatory,
+                validatorSubFieldName
             );
             // Add 'clear' field method body
             clearFieldMethodBuilder
@@ -297,7 +300,9 @@ final class SchemaObjectBuilderGenerator
                     builderTypeName,
                     objBuilderClassName,
                     internalBuilderVarName,
-                    isFlattened);
+                    isFlattened,
+                    fldIsMandatory,
+                    validatorSubFieldName);
 
                 // Add entity type field 'set' function with 'Stream' param
                 addBuilderStreamParamSetterMethod(
@@ -307,7 +312,9 @@ final class SchemaObjectBuilderGenerator
                     builderTypeName,
                     objBuilderClassName,
                     internalBuilderVarName,
-                    isFlattened);
+                    isFlattened,
+                    fldIsMandatory,
+                    validatorSubFieldName);
 
                 // Add 'set' function with 'List' param
                 addBuilderListParamSetterMethod(
@@ -323,26 +330,19 @@ final class SchemaObjectBuilderGenerator
 
                 if (fldIsMandatory) {
                     // Add instance variable for checking if subField is set
-                    final String subFieldNameCheck = "is" + SchemaGeneratorHelper.toProperCase(internalBuilderVarName)+ "Set";
-                    final FieldSpec field = FieldSpec
-                        .builder(
-                            ClassName.get(Boolean.class),
-                            subFieldNameCheck)
-                        .addModifiers(new Modifier[]{Modifier.PRIVATE})
-                        .build();
-                    objectBuilderClassBuilder.addField(field);
+                    addValidateField(objectBuilderClassBuilder, validatorSubFieldName);
 
                     // TODO: Note that mandatory field is set in all the setters
                     // setSingleFieldValueMethodBuilder.addStatement("$L = true", subFieldNameCheck);
                     // Note that mandatory field is reset
-                    clearFieldMethodBuilder.addStatement("$L = false", subFieldNameCheck);
+                    clearFieldMethodBuilder.addStatement("$L = false", validatorSubFieldName);
 
                     // add field to validate method
                     checkFieldsInValidateMethod(
                         validateFunctionBuilder,
                         parentFieldName,
                         propertyName,
-                        subFieldNameCheck);
+                        validatorSubFieldName);
                 }
 
             } else {
@@ -361,7 +361,9 @@ final class SchemaObjectBuilderGenerator
                         builderTypeName,
                         objBuilderClassName,
                         internalBuilderVarName,
-                        isFlattened);
+                        isFlattened,
+                        fldIsMandatory,
+                        validatorSubFieldName);
 
                     // Add entity type property 'set' function with 'Stream' param
                     addBuilderStreamParamSetterMethod(
@@ -371,7 +373,9 @@ final class SchemaObjectBuilderGenerator
                         builderTypeName,
                         objBuilderClassName,
                         internalBuilderVarName,
-                        isFlattened);
+                        isFlattened,
+                        fldIsMandatory,
+                        validatorSubFieldName);
 
                     // Add 'clear' field method body
                     clearFieldMethodBuilder
@@ -449,6 +453,17 @@ final class SchemaObjectBuilderGenerator
         objectBuilderClassBuilder.addMethod(clearFieldMethodBuilder.build());
     }
 
+    private static void addValidateField(final TypeSpec.Builder objectBuilderClassBuilder, final String fieldNameCheck)
+    {
+        final FieldSpec validateField = FieldSpec
+            .builder(
+                TypeName.BOOLEAN,
+                fieldNameCheck)
+            .addModifiers(new Modifier[]{Modifier.PRIVATE})
+            .build();
+        objectBuilderClassBuilder.addField(validateField);
+    }
+
     private static void addMultiDimensionalEntityTypeProperty(
         final TypeSpec.Builder objectBuilderClassBuilder,
         final String objBuilderClassName,
@@ -457,7 +472,9 @@ final class SchemaObjectBuilderGenerator
         final String fullName,
         final String internalVarName,
         final int numberOfDimensions,
-        final boolean isFlattened
+        final boolean isFlattened,
+        final boolean isFieldMandatory,
+        final String validatorSubFieldName
     )
     {
         // Multi-dimensional field
@@ -485,7 +502,9 @@ final class SchemaObjectBuilderGenerator
             listBuilderTypeName,
             listObjBuilderClassName,
             internalBuilderVarName,
-            isFlattened);
+            isFlattened,
+            isFieldMandatory,
+            validatorSubFieldName);
 
         // Add 'set' function with 'Stream' param
         addBuilderStreamParamSetterMethod(
@@ -495,7 +514,9 @@ final class SchemaObjectBuilderGenerator
             listBuilderTypeName,
             listObjBuilderClassName,
             internalBuilderVarName,
-            isFlattened);
+            isFlattened,
+            isFieldMandatory,
+            validatorSubFieldName);
 
         // Add 'set' function with 'List' param
         addBuilderListParamSetterMethod(
@@ -697,13 +718,7 @@ final class SchemaObjectBuilderGenerator
 
                 if (fldIsMandatory) {
                     // Add instance variable for checking if subField is set
-                    final FieldSpec field = FieldSpec
-                        .builder(
-                            ClassName.get(Boolean.class),
-                            validatorSubFieldName)
-                        .addModifiers(new Modifier[]{Modifier.PRIVATE})
-                        .build();
-                    objectBuilderClassBuilder.addField(field);
+                    addValidateField(objectBuilderClassBuilder, validatorSubFieldName);
 
                     // Note that mandatory field is set
                     setSingleFieldValueMethodBuilder.addStatement("$L = true", validatorSubFieldName);
@@ -1020,7 +1035,9 @@ final class SchemaObjectBuilderGenerator
         final ParameterizedTypeName builderTypeName,
         final String objBuilderClassName,
         final String internalBuilderVarName,
-        final boolean isFlattened
+        final boolean isFlattened,
+        final boolean isFldMandatory,
+        final String validatorSubFieldName
     )
     {
         final ParameterSpec builderParamName = ParameterSpec
@@ -1037,6 +1054,9 @@ final class SchemaObjectBuilderGenerator
             .addStatement("    final $L $L = new $L(sBuilder)", objBuilderClassName, internalBuilderVarName, objBuilderClassName)
             .addStatement("    director.accept($L)", internalBuilderVarName)
             .addStatement("})");
+            if (isFldMandatory) {
+                setBuilderFieldValue.addStatement("$L = true", validatorSubFieldName);
+            }
         } else {
             setBuilderFieldValue
             .addStatement("final $L $L = new $L()", objBuilderClassName, internalBuilderVarName, objBuilderClassName)
@@ -1059,7 +1079,9 @@ final class SchemaObjectBuilderGenerator
         final ParameterizedTypeName builderTypeName,
         final String objBuilderClassName,
         final String internalBuilderVarName,
-        final boolean isFlattened
+        final boolean isFlattened,
+        final boolean isFldMandatory,
+        final String validatorSubFieldName
     )
     {
         final ParameterSpec streamParamFieldName = ParameterSpec
@@ -1079,6 +1101,9 @@ final class SchemaObjectBuilderGenerator
                 .addStatement("      director.accept($L)", internalBuilderVarName)
                 .addStatement("    }")
                 .addStatement("}))");
+            if (isFldMandatory) {
+                setStreamFieldValue.addStatement("$L = true", validatorSubFieldName);
+            }
         } else {
             setStreamFieldValue
                 .addCode("schemaObjectBuilder.setJsonFieldValue(\n")
