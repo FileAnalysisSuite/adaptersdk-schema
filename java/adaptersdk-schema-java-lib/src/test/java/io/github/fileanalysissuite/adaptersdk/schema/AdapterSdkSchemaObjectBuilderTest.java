@@ -228,4 +228,78 @@ public final class AdapterSdkSchemaObjectBuilderTest
 
         assertTrue(thrown.getMessage().contains("Mandatory field 'AdapterSdkSchema.METADATA_FILES.EXTENSION' is not set"));
     }
+
+    @Test
+    public void testValidAdapterSdkSchemaObject()
+    {
+        System.out.println("testValidAdapterSdkSchemaObject...");
+        final Map<String, Object> document = new HashMap<String, Object>();
+        final AdapterSdkSchemaObjectBuilder documentBuilder = new AdapterSdkSchemaObjectBuilder(new MapSchemaObjectBuilder(document));
+        documentBuilder.setFileName("test.doc");
+        documentBuilder.setHash("9876dfg");
+        documentBuilder.setMimetype("msword");
+        documentBuilder.setTitle("Test File");
+        documentBuilder.setType("323");
+        documentBuilder.validate();
+        System.out.println("-------------   Built AdapterSdkSchemaObject ---------------------\n");
+        final Map<String, Object> treeMap = new TreeMap<String, Object>(document);
+        treeMap.entrySet().forEach(e -> System.out.println(e.getKey() + " = " + e.getValue()));
+
+        assertTrue(document.containsKey("FILE_NAME"));
+        assertTrue(document.containsKey("TITLE"));
+    }
+
+    @Test
+    public void testInvalidAdapterSdkSchemaObject()
+    {
+        System.out.println("testInvalidAdapterSdkSchemaObject...");
+        final Map<String, Object> document = new HashMap<String, Object>();
+        final AdapterSdkSchemaObjectBuilder documentBuilder = new AdapterSdkSchemaObjectBuilder(new MapSchemaObjectBuilder(document));
+        documentBuilder.setFileName("test.doc");
+        documentBuilder.setHash("9876dfg");
+        //documentBuilder.setMimetype("msword"); //mandatory field not set
+        documentBuilder.setTitle("Test File");
+        documentBuilder.setType("323");
+        documentBuilder.setOcr(
+            Stream.of(
+                listBuilder -> { listBuilder.set(
+                    Stream.of(
+                        builder -> {
+                            builder.setName("Reporter");
+                            builder.setType("Name");
+                            builder.setValue("John Doe");
+                            builder.setConfidence(41);
+                        },
+                        builder -> {
+                            builder.setConfidence(42);
+                            builder.setValue("free form text from a non-templated region");
+                        }
+                    )
+                );
+                },
+                listBuilder -> { listBuilder.set(
+                    Stream.of(
+                        builder -> {
+                            builder.setName("Reporter");
+                            builder.setType("Name");
+                            builder.setValue("Jane Doe");
+                            builder.setConfidence(41);
+                        },
+                        builder -> {
+                            builder.setConfidence(44);
+                            builder.setValue("free form text from a non-templated region");
+                        }
+                    )
+                );
+                }
+                )
+            );
+        final IllegalArgumentException thrown = assertThrows(
+            IllegalArgumentException.class,
+            () -> documentBuilder.validate(),
+            "Expected validate() to throw IllegalArgumentException, but it didn't"
+        );
+
+        assertTrue(thrown.getMessage().contains("Mandatory field 'AdapterSdkSchema.MIMETYPE' is not set"));
+    }
 }
