@@ -202,7 +202,6 @@ public final class AdapterSdkSchemaObjectBuilderTest
                 ),
             "Expected setOcr() to throw IllegalArgumentException, but it didn't"
         );
-
         assertTrue(thrown.getMessage().contains("Mandatory field 'AdapterSdkSchema.OCR.VALUE' is not set"));
     }
 

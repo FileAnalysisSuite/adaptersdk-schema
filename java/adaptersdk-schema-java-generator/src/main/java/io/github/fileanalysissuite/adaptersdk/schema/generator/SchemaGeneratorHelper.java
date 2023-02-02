@@ -79,4 +79,9 @@ final class SchemaGeneratorHelper
         newPath[element.length] = extraElement;
         return newPath;
     }
+
+    static String toValidatorFieldName(final String propertyName)
+    {
+        return "is" + SchemaGeneratorHelper.toProperCase(propertyName) + "Set";
+    }
 }
