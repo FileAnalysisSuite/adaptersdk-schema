@@ -97,8 +97,9 @@ final class SchemaObjectBuilderGenerator
         final JsonNode schemaNode,
         final String[] path,
         final String parentFieldName,
-        final boolean flattenedParentField,
-        final boolean isStatic)
+        final boolean isParentFieldFlattened,
+        final boolean isStatic
+    )
     {
         final Modifier[] modifiers = isStatic
             ? new Modifier[]{Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL}
@@ -122,7 +123,7 @@ final class SchemaObjectBuilderGenerator
             schemaNode,
             path,
             parentFieldName,
-            flattenedParentField
+            isParentFieldFlattened
         );
 
         schemaClassBuilder.addMethod(validateFunctionBuilder.build());
@@ -161,7 +162,7 @@ final class SchemaObjectBuilderGenerator
         final JsonNode entityDef,
         final String[] path,
         final String parentFieldName,
-        final boolean flattenedParentField
+        final boolean isParentFieldFlattened
     )
     {
         /*
@@ -194,16 +195,16 @@ final class SchemaObjectBuilderGenerator
                 ? fieldAttributes.get("objectEncoding").textValue().equals("flattened")
                 : false;
 
-            final boolean fldIsMultiValued = fieldType.endsWith("[]");
+            final boolean isFieldMultiValued = fieldType.endsWith("[]");
 
-            final boolean fldIsMandatory
+            final boolean isFieldMandatory
                 = fieldAttributes.hasNonNull("mandatory")
                 ? fieldAttributes.get("mandatory").booleanValue()
                 : false;
 
             final String fieldFunctionName = SchemaGeneratorHelper.toProperCase(propertyName);
 
-            if (fldIsMandatory && !isEntityTypeObjectBuilderClass) {
+            if (isFieldMandatory && !isEntityTypeObjectBuilderClass) {
                 // This is a mandatory field of the main Schema
                 // Add instance variable for checking if field is set
                 final String validatorFieldName = SchemaGeneratorHelper.toValidatorFieldName(propertyName);
@@ -223,15 +224,15 @@ final class SchemaObjectBuilderGenerator
                     fieldFunctionName,
                     fieldType,
                     fieldTypeValue,
-                    fldIsMandatory,
-                    fldIsMultiValued,
+                    isFieldMandatory,
+                    isFieldMultiValued,
                     numberOfDimensions,
                     isSubfield,
                     path,
                     propertyName,
                     parentFieldName,
                     isFlattened,
-                    flattenedParentField
+                    isParentFieldFlattened
                 );
             } else {
                 // non entity type field
@@ -242,12 +243,12 @@ final class SchemaObjectBuilderGenerator
                     validateFunctionBuilder,
                     fieldFunctionName,
                     fieldTypeValue,
-                    fldIsMandatory,
-                    fldIsMultiValued,
+                    isFieldMandatory,
+                    isFieldMultiValued,
                     isSubfield,
                     propertyName,
                     parentFieldName,
-                    flattenedParentField
+                    isParentFieldFlattened
                 );
             }
         }
@@ -261,15 +262,15 @@ final class SchemaObjectBuilderGenerator
         final String fieldFunctionName,
         final String fieldType,
         final String fieldTypeValue,
-        final boolean fldIsMandatory,
-        final boolean fldIsMultiValued,
+        final boolean isFieldMandatory,
+        final boolean isFieldMultiValued,
         final int numberOfDimensions,
         final boolean isSubfield,
         final String[] path,
         final String propertyName,
         final String parentFieldName,
         final boolean isFlattened,
-        final boolean flattenedParentField
+        final boolean isParentFieldFlattened
     )
     {
         final String objBuilderClassName = fieldFunctionName + "ObjectBuilder";
@@ -304,7 +305,7 @@ final class SchemaObjectBuilderGenerator
                 internalVarName,
                 numberOfDimensions,
                 isFlattened,
-                fldIsMandatory,
+                isFieldMandatory,
                 isSubfield,
                 validatorSubFieldName
             );
@@ -325,7 +326,7 @@ final class SchemaObjectBuilderGenerator
                     objBuilderClassName,
                     internalBuilderVarName,
                     isFlattened,
-                    fldIsMandatory,
+                    isFieldMandatory,
                     isSubfield,
                     validatorSubFieldName);
 
@@ -339,7 +340,7 @@ final class SchemaObjectBuilderGenerator
                     objBuilderClassName,
                     internalBuilderVarName,
                     isFlattened,
-                    fldIsMandatory,
+                    isFieldMandatory,
                     isSubfield,
                     validatorSubFieldName);
 
@@ -353,7 +354,7 @@ final class SchemaObjectBuilderGenerator
                 clearFieldMethodBuilder
                     .addStatement("schemaObjectBuilder.clearField($L.$L)", SchemaGeneratorHelper.CLASS_NAME, fullName);
 
-                if (fldIsMandatory && isSubfield) {
+                if (isFieldMandatory && isSubfield) {
                     // Add instance variable for checking if subField is set
                     addValidateField(objectBuilderClassBuilder, validatorSubFieldName);
 
@@ -370,7 +371,7 @@ final class SchemaObjectBuilderGenerator
 
             } else {
                 // Sub entity is json encoded
-                if (flattenedParentField) {
+                if (isParentFieldFlattened) {
                     // parent is flattened, but this sub entity is not
                     buildFunctionBuilder = MethodSpec.methodBuilder("build")
                         .addModifiers(Modifier.PRIVATE)
@@ -386,7 +387,7 @@ final class SchemaObjectBuilderGenerator
                         objBuilderClassName,
                         internalBuilderVarName,
                         isFlattened,
-                        fldIsMandatory,
+                        isFieldMandatory,
                         isSubfield,
                         validatorSubFieldName);
 
@@ -400,7 +401,7 @@ final class SchemaObjectBuilderGenerator
                         objBuilderClassName,
                         internalBuilderVarName,
                         isFlattened,
-                        fldIsMandatory,
+                        isFieldMandatory,
                         isSubfield,
                         validatorSubFieldName);
 
@@ -411,7 +412,7 @@ final class SchemaObjectBuilderGenerator
                     // parent is json encoded, this sub entity is also json encoded
                     final FieldSpec entityTypeField = FieldSpec
                         .builder(
-                            fldIsMultiValued
+                            isFieldMultiValued
                                 ? ParameterizedTypeName.get(
                                     ClassName.get(List.class), ClassName.get("", objBuilderClassName))
                                 : ClassName.get("", objBuilderClassName),
@@ -448,8 +449,8 @@ final class SchemaObjectBuilderGenerator
                 writeJsonFieldsInBuildMethod(
                     buildFunctionBuilder,
                     fieldTypeValue,
-                    fldIsMandatory,
-                    fldIsMultiValued,
+                    isFieldMandatory,
+                    isFieldMultiValued,
                     parentFieldName,
                     propertyName,
                     internalVarName,
@@ -474,7 +475,7 @@ final class SchemaObjectBuilderGenerator
             fullName,
             isFlattened);
 
-        if (fldIsMandatory && !isEntityTypeObjectBuilderClass) {
+        if (isFieldMandatory && !isEntityTypeObjectBuilderClass) {
             // Note that mandatory entity-type field of main schema is cleared
             markPropertyIsCleared(clearFieldMethodBuilder, SchemaGeneratorHelper.toValidatorFieldName(propertyName));
         }
@@ -700,12 +701,13 @@ final class SchemaObjectBuilderGenerator
         final MethodSpec.Builder validateFunctionBuilder,
         final String fieldFunctionName,
         final String fieldTypeValue,
-        final boolean fldIsMandatory,
-        final boolean fldIsMultiValued,
+        final boolean isFieldMandatory,
+        final boolean isFieldMultiValued,
         final boolean isSubfield,
         final String propertyName,
         final String parentFieldName,
-        final boolean flattenedParentField)
+        final boolean isParentFieldFlattened
+    )
     {
         final Class<?> fieldType = PROPERTY_TYPES_LOOKUP.get(fieldTypeValue);
         final ParameterSpec paramSingleFieldValue = ParameterSpec
@@ -717,7 +719,7 @@ final class SchemaObjectBuilderGenerator
         final String validatorSubFieldName = SchemaGeneratorHelper.toValidatorFieldName(propertyName);
 
         // Add setter variations for multi-valued field
-        if (fldIsMultiValued) {
+        if (isFieldMultiValued) {
             // Set 'array' value
             addArrayParamSetterMethod(
                 objectBuilderClassBuilder,
@@ -727,8 +729,8 @@ final class SchemaObjectBuilderGenerator
                 fieldTypeValue,
                 isSubfield,
                 parentFieldName,
-                flattenedParentField,
-                fldIsMandatory,
+                isParentFieldFlattened,
+                isFieldMandatory,
                 validatorSubFieldName);
 
             // Set 'List' value
@@ -740,8 +742,8 @@ final class SchemaObjectBuilderGenerator
                 fieldTypeValue,
                 isSubfield,
                 parentFieldName,
-                flattenedParentField,
-                fldIsMandatory,
+                isParentFieldFlattened,
+                isFieldMandatory,
                 validatorSubFieldName);
 
             // Add 'single' value
@@ -754,8 +756,8 @@ final class SchemaObjectBuilderGenerator
                 fieldTypeValue,
                 isSubfield,
                 parentFieldName,
-                flattenedParentField,
-                fldIsMandatory,
+                isParentFieldFlattened,
+                isFieldMandatory,
                 validatorSubFieldName);
         }
 
@@ -768,7 +770,7 @@ final class SchemaObjectBuilderGenerator
 
         if (isSubfield) {
             // This is a non entity type property of an entity type property
-            if (flattenedParentField) {
+            if (isParentFieldFlattened) {
                 clearFieldMethodBuilder
                     .addStatement(
                         "schemaObjectBuilder.clearField($L.$L)",
@@ -779,7 +781,7 @@ final class SchemaObjectBuilderGenerator
                     fieldType.getSimpleName(),
                     SchemaGeneratorHelper.CLASS_NAME, parentFieldName + "." + propertyName);
 
-                if (fldIsMandatory) {
+                if (isFieldMandatory) {
                     // Add instance variable for checking if subField is set
                     addValidateField(objectBuilderClassBuilder, validatorSubFieldName);
 
@@ -799,7 +801,7 @@ final class SchemaObjectBuilderGenerator
                 // Add instance variable for subField
                 final FieldSpec field = FieldSpec
                     .builder(
-                        fldIsMultiValued
+                        isFieldMultiValued
                             ? ParameterizedTypeName.get(
                                 ClassName.get(List.class), ClassName.get(fieldType))
                             : ClassName.get(fieldType),
@@ -815,15 +817,15 @@ final class SchemaObjectBuilderGenerator
                 writeJsonFieldsInBuildMethod(
                     buildFunctionBuilder,
                     fieldTypeValue,
-                    fldIsMandatory,
-                    fldIsMultiValued,
+                    isFieldMandatory,
+                    isFieldMultiValued,
                     parentFieldName,
                     propertyName,
                     subFieldName,
                     null);
 
                 // Add setters for multi-valued subfield
-                if (fldIsMultiValued) {
+                if (isFieldMultiValued) {
                     // Add set single value function body
                     setSingleFieldValueMethodBuilder.addStatement(
                         "this.$L = new $T()",
@@ -844,7 +846,7 @@ final class SchemaObjectBuilderGenerator
                 "schemaObjectBuilder.set$LFieldValue($L.$L, value)",
                 fieldType.getSimpleName(), SchemaGeneratorHelper.CLASS_NAME, propertyName);
 
-            if (fldIsMandatory) {
+            if (isFieldMandatory) {
                 final String validatorFieldName = SchemaGeneratorHelper.toValidatorFieldName(propertyName);
                 markPropertyIsCleared(clearFieldMethodBuilder, validatorFieldName);
                 markPropertyIsSet(setSingleFieldValueMethodBuilder, validatorFieldName);
@@ -1052,7 +1054,8 @@ final class SchemaObjectBuilderGenerator
         final MethodSpec.Builder validateFunctionBuilder,
         final String parentFieldName,
         final String propertyName,
-        final String validatorSubFieldName)
+        final String validatorSubFieldName
+    )
     {
         validateFunctionBuilder
             .beginControlFlow("if (!$L)", validatorSubFieldName);
@@ -1076,15 +1079,15 @@ final class SchemaObjectBuilderGenerator
     private static void writeJsonFieldsInBuildMethod(
         final MethodSpec.Builder buildFunctionBuilder,
         final String fieldTypeValue,
-        final boolean fldIsMandatory,
-        final boolean fldIsMultiValued,
+        final boolean isFieldMandatory,
+        final boolean isFieldMultiValued,
         final String parentFieldName,
         final String propertyName,
         final String subFieldName,
         final String objBuilderClassName)
     {
         final Class<?> fieldType = PROPERTY_TYPES_LOOKUP.get(fieldTypeValue);
-        if(fldIsMandatory) {
+        if(isFieldMandatory) {
             buildFunctionBuilder
                 .beginControlFlow("if ($L == null)", subFieldName)
                 .addStatement(
@@ -1097,7 +1100,7 @@ final class SchemaObjectBuilderGenerator
         buildFunctionBuilder.addStatement(
             "jsonBuilder.writeFieldName($L.$L.$L.getFieldName())", SchemaGeneratorHelper.CLASS_NAME, parentFieldName, propertyName);
 
-        if (fldIsMultiValued) {
+        if (isFieldMultiValued) {
             // Add 'build' function body
             buildFunctionBuilder.addStatement("jsonBuilder.writeStartArray()");
 
@@ -1129,7 +1132,7 @@ final class SchemaObjectBuilderGenerator
         final String objBuilderClassName,
         final String internalBuilderVarName,
         final boolean isFlattened,
-        final boolean isFldMandatory,
+        final boolean isFieldMandatory,
         final boolean isSubField,
         final String validatorSubFieldName
     )
@@ -1148,13 +1151,13 @@ final class SchemaObjectBuilderGenerator
                 propertyName,
                 objBuilderClassName,
                 internalBuilderVarName,
-                isFldMandatory,
+                isFieldMandatory,
                 isSubField,
                 validatorSubFieldName);
         } else {
             setJsonFieldValue(setBuilderFieldValue, propertyName, objBuilderClassName, internalBuilderVarName);
         }
-        if(isFldMandatory && !isEntityTypeObjectBuilderClass) {
+        if(isFieldMandatory && !isEntityTypeObjectBuilderClass) {
             markPropertyIsSet(setBuilderFieldValue, SchemaGeneratorHelper.toValidatorFieldName(propertyName));
         }
         objectBuilderClassBuilder.addMethod(setBuilderFieldValue.build());
@@ -1169,7 +1172,7 @@ final class SchemaObjectBuilderGenerator
         final String objBuilderClassName,
         final String internalBuilderVarName,
         final boolean isFlattened,
-        final boolean isFldMandatory,
+        final boolean isFieldMandatory,
         final boolean isSubField,
         final String validatorSubFieldName
     )
@@ -1188,13 +1191,13 @@ final class SchemaObjectBuilderGenerator
                 propertyName,
                 objBuilderClassName,
                 internalBuilderVarName,
-                isFldMandatory,
+                isFieldMandatory,
                 isSubField,
                 validatorSubFieldName);
         } else {
             setJsonFieldValueStream(setStreamFieldValue, propertyName, objBuilderClassName, internalBuilderVarName);
         }
-        if(isFldMandatory && !isEntityTypeObjectBuilderClass) {
+        if(isFieldMandatory && !isEntityTypeObjectBuilderClass) {
             markPropertyIsSet(setStreamFieldValue, SchemaGeneratorHelper.toValidatorFieldName(propertyName));
         }
         objectBuilderClassBuilder.addMethod(setStreamFieldValue.build());
@@ -1202,7 +1205,8 @@ final class SchemaObjectBuilderGenerator
 
     private static void setJsonFieldValue(
         final MethodSpec.Builder setBuilderFieldValue,
-        final String propertyName, String objBuilderClassName,
+        final String propertyName,
+        final String objBuilderClassName,
         final String internalBuilderVarName
     )
     {
@@ -1219,9 +1223,10 @@ final class SchemaObjectBuilderGenerator
 
     private static void setFlattenedFieldValue(
         final MethodSpec.Builder setBuilderFieldValue,
-        final String propertyName, String objBuilderClassName,
+        final String propertyName,
+        final String objBuilderClassName,
         final String internalBuilderVarName,
-        final boolean isFldMandatory,
+        final boolean isFieldMandatory,
         final boolean isSubField,
         final String validatorSubFieldName
     )
@@ -1232,14 +1237,15 @@ final class SchemaObjectBuilderGenerator
         .addStatement("    director.accept($L)", internalBuilderVarName)
         .addStatement("    $L.validate()", internalBuilderVarName)
         .addStatement("})");
-        if (isFldMandatory && isSubField) {
+        if (isFieldMandatory && isSubField) {
             markPropertyIsSet(setBuilderFieldValue, validatorSubFieldName);
         }
     }
 
     private static void setJsonFieldValueStream(
         final MethodSpec.Builder setStreamFieldValue,
-        final String propertyName, String objBuilderClassName,
+        final String propertyName,
+        final String objBuilderClassName,
         final String internalBuilderVarName
     )
     {
@@ -1257,9 +1263,10 @@ final class SchemaObjectBuilderGenerator
 
     private static void setFlattenedFieldValueStream(
         final MethodSpec.Builder setStreamFieldValue,
-        final String propertyName, String objBuilderClassName,
+        final String propertyName,
+        final String objBuilderClassName,
         final String internalBuilderVarName,
-        final boolean isFldMandatory,
+        final boolean isFieldMandatory,
         final boolean isSubField,
         final String validatorSubFieldName
     )
@@ -1273,7 +1280,7 @@ final class SchemaObjectBuilderGenerator
         .addStatement("      $L.validate()", internalBuilderVarName)
         .addStatement("    }")
         .addStatement("}))");
-        if (isFldMandatory && isSubField) {
+        if (isFieldMandatory && isSubField) {
             markPropertyIsSet(setStreamFieldValue, validatorSubFieldName);
         }
     }
@@ -1374,8 +1381,8 @@ final class SchemaObjectBuilderGenerator
         final String fieldTypeValue,
         final boolean isSubfield,
         final String parentFieldName,
-        final boolean flattenedParentField,
-        final boolean fldIsMandatory,
+        final boolean isParentFieldFlattened,
+        final boolean isFieldMandatory,
         final String validatorSubFieldName
     )
     {
@@ -1391,12 +1398,12 @@ final class SchemaObjectBuilderGenerator
             .varargs(true);
 
         if (isSubfield) {
-            if(flattenedParentField) {
+            if(isParentFieldFlattened) {
                 setArrayFieldValue.addStatement(
                     "schemaObjectBuilder.set$LFieldValue($L.$L.$L, values)",
                     fieldType.getSimpleName(),
                     SchemaGeneratorHelper.CLASS_NAME, parentFieldName, propertyName);
-                if (fldIsMandatory) {
+                if (isFieldMandatory) {
                     // Note mandatory field has been set
                     markPropertyIsSet(setArrayFieldValue, validatorSubFieldName);
                 }
@@ -1407,7 +1414,7 @@ final class SchemaObjectBuilderGenerator
             setArrayFieldValue.addStatement(
                 "schemaObjectBuilder.set$LFieldValue($L.$L, values)",
                 fieldType.getSimpleName(), SchemaGeneratorHelper.CLASS_NAME, propertyName);
-            if (fldIsMandatory) {
+            if (isFieldMandatory) {
                 // Note mandatory field has been set
                 markPropertyIsSet(setArrayFieldValue, validatorSubFieldName);
             }
@@ -1423,8 +1430,8 @@ final class SchemaObjectBuilderGenerator
         final String fieldTypeValue,
         final boolean isSubfield,
         final String parentFieldName,
-        final boolean flattenedParentField,
-        final boolean fldIsMandatory,
+        final boolean isParentFieldFlattened,
+        final boolean isFieldMandatory,
         final String validatorSubFieldName
     )
     {
@@ -1441,12 +1448,12 @@ final class SchemaObjectBuilderGenerator
             .addParameter(listParamFieldName);
 
         if (isSubfield) {
-            if(flattenedParentField) {
+            if(isParentFieldFlattened) {
                 setListFieldValue.addStatement(
                     "schemaObjectBuilder.set$LFieldValue($L.$L.$L, values)",
                     fieldType.getSimpleName(),
                     SchemaGeneratorHelper.CLASS_NAME, parentFieldName, propertyName);
-                if (fldIsMandatory) {
+                if (isFieldMandatory) {
                     // Note mandatory field has been set
                     markPropertyIsSet(setListFieldValue, validatorSubFieldName);
                 }
@@ -1457,7 +1464,7 @@ final class SchemaObjectBuilderGenerator
             setListFieldValue.addStatement(
                 "schemaObjectBuilder.set$LFieldValue($L.$L, values)",
                 fieldType.getSimpleName(), SchemaGeneratorHelper.CLASS_NAME, propertyName);
-            if (fldIsMandatory) {
+            if (isFieldMandatory) {
                 // Note mandatory field has been set
                 markPropertyIsSet(setListFieldValue, validatorSubFieldName);
             }
@@ -1475,8 +1482,8 @@ final class SchemaObjectBuilderGenerator
         final String fieldTypeValue,
         final boolean isSubfield,
         final String parentFieldName,
-        final boolean flattenedParentField,
-        final boolean fldIsMandatory,
+        final boolean isParentFieldFlattened,
+        final boolean isFieldMandatory,
         final String validatorSubFieldName
     )
     {
@@ -1486,12 +1493,12 @@ final class SchemaObjectBuilderGenerator
             .addParameter(paramSingleFieldValue);
 
         if (isSubfield) {
-            if(flattenedParentField) {
+            if(isParentFieldFlattened) {
                 addFieldValue.addStatement(
                     "schemaObjectBuilder.add$LFieldValue($L.$L.$L, value)",
                     fieldType.getSimpleName(),
                     SchemaGeneratorHelper.CLASS_NAME, parentFieldName, propertyName);
-                if (fldIsMandatory) {
+                if (isFieldMandatory) {
                     // Note mandatory field has been set
                     markPropertyIsSet(addFieldValue, validatorSubFieldName);
                 }
@@ -1508,7 +1515,7 @@ final class SchemaObjectBuilderGenerator
             addFieldValue.addStatement(
                 "schemaObjectBuilder.add$LFieldValue($L.$L, value)",
                 fieldType.getSimpleName(), SchemaGeneratorHelper.CLASS_NAME, propertyName);
-            if (fldIsMandatory) {
+            if (isFieldMandatory) {
                 // Note mandatory field has been set
                 markPropertyIsSet(addFieldValue, validatorSubFieldName);
             }
