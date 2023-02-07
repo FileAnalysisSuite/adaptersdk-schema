@@ -26,7 +26,6 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.TypeSpec.Builder;
-
 import io.github.fileanalysissuite.adaptersdk.schema.builders.JsonBuilder;
 import io.github.fileanalysissuite.adaptersdk.schema.builders.SchemaObjectBuilder;
 import java.io.IOException;
@@ -41,7 +40,6 @@ import java.util.Map.Entry;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.Modifier;
 import org.codehaus.plexus.util.StringUtils;

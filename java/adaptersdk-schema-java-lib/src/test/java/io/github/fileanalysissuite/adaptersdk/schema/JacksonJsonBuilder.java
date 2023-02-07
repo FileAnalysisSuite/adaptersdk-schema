@@ -15,14 +15,12 @@
  */
 package io.github.fileanalysissuite.adaptersdk.schema;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import io.github.fileanalysissuite.adaptersdk.schema.builders.JsonBuilder;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.UncheckedIOException;
-
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-
-import io.github.fileanalysissuite.adaptersdk.schema.builders.JsonBuilder;
 
 public final class JacksonJsonBuilder implements JsonBuilder
 {
