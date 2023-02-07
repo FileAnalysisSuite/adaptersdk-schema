@@ -69,10 +69,10 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
     public void addStringFieldValue(final Field field, final String value)
     {
         Object currentValue = document.get(field.getFieldName());
-        if(currentValue == null) {
+        if (currentValue == null) {
             currentValue = new ArrayList<String>();
         }
-        document.put(field.getFieldName(), ((ArrayList<String>)currentValue).add(value));
+        document.put(field.getFieldName(), ((ArrayList<String>) currentValue).add(value));
     }
 
     @Override
@@ -124,10 +124,10 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
     public void addBooleanFieldValue(final Field field, final Boolean value)
     {
         Object currentValue = document.get(field.getFieldName());
-        if(currentValue == null) {
+        if (currentValue == null) {
             currentValue = new ArrayList<Boolean>();
         }
-        document.put(field.getFieldName(), ((ArrayList<Boolean>)currentValue).add(value));
+        document.put(field.getFieldName(), ((ArrayList<Boolean>) currentValue).add(value));
     }
 
     @Override
@@ -152,10 +152,10 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
     public void addDoubleFieldValue(final Field field, final Double value)
     {
         Object currentValue = document.get(field.getFieldName());
-        if(currentValue == null) {
+        if (currentValue == null) {
             currentValue = new ArrayList<Double>();
         }
-        document.put(field.getFieldName(), ((ArrayList<Double>)currentValue).add(value));
+        document.put(field.getFieldName(), ((ArrayList<Double>) currentValue).add(value));
     }
 
     @Override
@@ -174,10 +174,10 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
     public void addInstantFieldValue(final Field field, final Instant value)
     {
         Object currentValue = document.get(field.getFieldName());
-        if(currentValue == null) {
+        if (currentValue == null) {
             currentValue = new ArrayList<Instant>();
         }
-        document.put(field.getFieldName(), ((ArrayList<Instant>)currentValue).add(value));
+        document.put(field.getFieldName(), ((ArrayList<Instant>) currentValue).add(value));
     }
 
     @Override
@@ -202,10 +202,10 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
     public void addIntegerFieldValue(final Field field, final Integer value)
     {
         Object currentValue = document.get(field.getFieldName());
-        if(currentValue == null) {
+        if (currentValue == null) {
             currentValue = new ArrayList<Double>();
         }
-        document.put(field.getFieldName(), ((ArrayList<Integer>)currentValue).add(value));
+        document.put(field.getFieldName(), ((ArrayList<Integer>) currentValue).add(value));
     }
 
     @Override
@@ -230,16 +230,16 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
     public void addLongFieldValue(final Field field, final Long value)
     {
         Object currentValue = document.get(field.getFieldName());
-        if(currentValue == null) {
+        if (currentValue == null) {
             currentValue = new ArrayList<Long>();
         }
-        document.put(field.getFieldName(), ((ArrayList<Long>)currentValue).add(value));
+        document.put(field.getFieldName(), ((ArrayList<Long>) currentValue).add(value));
     }
 
     @Override
     public void setFlattenedFieldValue(final Field field, final Consumer<SchemaObjectBuilder> director)
     {
-        final String prefix = (field==null ? "" : field.getFieldName() + "_") + "0_";
+        final String prefix = (field == null ? "" : field.getFieldName() + "_") + "0_";
         putFieldValues(prefix, director);
     }
 
@@ -264,10 +264,8 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
         final MapSchemaObjectBuilder nextLevelBuilder = new MapSchemaObjectBuilder(nextLevel);
         director.accept(nextLevelBuilder);
         final Set<Entry<String, Object>> entrySet = nextLevel.entrySet();
-        for ( final Map.Entry<String,Object> entry : entrySet )
-        {
+        for (final Map.Entry<String, Object> entry : entrySet) {
             document.put(prefix + entry.getKey(), entry.getValue());
         }
     }
-
 }

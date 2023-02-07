@@ -246,5 +246,4 @@ final class SchemaGenerator
     {
         builder.addCode("default:\n").addStatement("  throw new FieldNotFoundException($L)", fieldName);
     }
-
 }

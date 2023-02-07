@@ -49,7 +49,9 @@ import org.codehaus.plexus.util.StringUtils;
 final class SchemaObjectBuilderGenerator
 {
     private static final String BUILDER_CLASS_NAME = "AdapterSdkSchemaObjectBuilder";
-    private static final Map<String, Class> PROPERTY_TYPES_LOOKUP = new HashMap<String, Class>() {
+
+    private static final Map<String, Class> PROPERTY_TYPES_LOOKUP = new HashMap<String, Class>()
+    {
         {
             put("STRING", String.class);
             put("FULLTEXT", String.class);
@@ -171,7 +173,7 @@ final class SchemaObjectBuilderGenerator
             flattened + json
             flattened + flattened + flattened + flattened + json
             json + json + json - starts with json, all nested entities have to be json
-        */
+         */
         final Iterator<Entry<String, JsonNode>> propertyIterator = entityDef.fields();
 
         final boolean isSubfield = path.length > 0;
@@ -294,7 +296,7 @@ final class SchemaObjectBuilderGenerator
         // Add setters, clear, and list object builder classes
         // "ocr[][]" // every additional dimension would need a ListBuilder
         final String validatorSubFieldName = SchemaGeneratorHelper.toValidatorFieldName(internalBuilderVarName);
-        if(numberOfDimensions > 1) {
+        if (numberOfDimensions > 1) {
             addMultiDimensionalEntityTypeProperty(
                 objectBuilderClassBuilder,
                 isEntityTypeObjectBuilderClass,
@@ -314,7 +316,7 @@ final class SchemaObjectBuilderGenerator
                 .addStatement("schemaObjectBuilder.clearField($L.$L)", SchemaGeneratorHelper.CLASS_NAME, fullName);
         } else {
             // Single dimension field
-            if(isFlattened) {
+            if (isFlattened) {
                 // Sub entity is flattened
                 // Add entity type field 'set' function with 'Builder' param
                 addBuilderParamSetterMethod(
@@ -416,7 +418,7 @@ final class SchemaObjectBuilderGenerator
                                 ? ParameterizedTypeName.get(
                                     ClassName.get(List.class), ClassName.get("", objBuilderClassName))
                                 : ClassName.get("", objBuilderClassName),
-                                internalVarName)
+                            internalVarName)
                         .addModifiers(new Modifier[]{Modifier.PRIVATE})
                         .build();
                     objectBuilderClassBuilder.addField(entityTypeField);
@@ -523,7 +525,7 @@ final class SchemaObjectBuilderGenerator
         // Add a list object builder class for property
         final String suffix = "ObjectBuilder";
         String listName = "";
-        for(int i = 0; i < numberOfDimensions - 1; i++) {
+        for (int i = 0; i < numberOfDimensions - 1; i++) {
             listName += "List";
             addListBuilderClass(
                 objectBuilderClassBuilder,
@@ -582,7 +584,7 @@ final class SchemaObjectBuilderGenerator
         final boolean isFlattened
     )
     {
-        if(isFlattened) {
+        if (isFlattened) {
             final TypeSpec.Builder fieldObjectBuilderClassBuilder
                 = createSchemaObjectBuilderClass(
                     objBuilderClassName,
@@ -601,7 +603,7 @@ final class SchemaObjectBuilderGenerator
             final TypeSpec.Builder fieldObjectBuilderClassBuilder = TypeSpec.classBuilder(objBuilderClassName)
                 .addModifiers(new Modifier[]{Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL})
                 .addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE)
-                .build());
+                    .build());
 
             // Create a 'build' method
             final MethodSpec.Builder parentBuilder = buildFunctionBuilder;
@@ -961,11 +963,11 @@ final class SchemaObjectBuilderGenerator
             .addParameter(streamParamFieldName);
 
         setStreamFieldValue
-        .addCode("this.schemaObjectBuilder.setFlattenedFieldValue(null, directors.map(director -> builder -> {\n")
-        .addStatement("    final $L $L = new $L(builder)", objBuilderClassName, varName, objBuilderClassName)
-        .addStatement("    director.accept($L)", varName)
-        .addStatement("    $L.validate()", varName)
-        .addStatement("}))");
+            .addCode("this.schemaObjectBuilder.setFlattenedFieldValue(null, directors.map(director -> builder -> {\n")
+            .addStatement("    final $L $L = new $L(builder)", objBuilderClassName, varName, objBuilderClassName)
+            .addStatement("    director.accept($L)", varName)
+            .addStatement("    $L.validate()", varName)
+            .addStatement("}))");
 
         listObjectBuilderClassBuiler.addMethod(setStreamFieldValue.build());
     }
@@ -1037,7 +1039,7 @@ final class SchemaObjectBuilderGenerator
         final MethodSpec buildFunctionBuilder = MethodSpec.methodBuilder("build")
             .addModifiers(Modifier.PRIVATE)
             .addParameter(ParameterSpec.builder(JsonBuilder.class, "jsonBuilder")
-            .addModifiers(Modifier.FINAL).build())
+                .addModifiers(Modifier.FINAL).build())
             .addStatement("jsonBuilder.writeStartArray()")
             .beginControlFlow("if ($L != null)", listName)
             .beginControlFlow("for (final $L value : $L)", objBuilderClassName, listName)
@@ -1087,7 +1089,7 @@ final class SchemaObjectBuilderGenerator
         final String objBuilderClassName)
     {
         final Class<?> fieldType = PROPERTY_TYPES_LOOKUP.get(fieldTypeValue);
-        if(isFieldMandatory) {
+        if (isFieldMandatory) {
             buildFunctionBuilder
                 .beginControlFlow("if ($L == null)", subFieldName)
                 .addStatement(
@@ -1157,7 +1159,7 @@ final class SchemaObjectBuilderGenerator
         } else {
             setJsonFieldValue(setBuilderFieldValue, propertyName, objBuilderClassName, internalBuilderVarName);
         }
-        if(isFieldMandatory && !isEntityTypeObjectBuilderClass) {
+        if (isFieldMandatory && !isEntityTypeObjectBuilderClass) {
             markPropertyIsSet(setBuilderFieldValue, SchemaGeneratorHelper.toValidatorFieldName(propertyName));
         }
         objectBuilderClassBuilder.addMethod(setBuilderFieldValue.build());
@@ -1197,7 +1199,7 @@ final class SchemaObjectBuilderGenerator
         } else {
             setJsonFieldValueStream(setStreamFieldValue, propertyName, objBuilderClassName, internalBuilderVarName);
         }
-        if(isFieldMandatory && !isEntityTypeObjectBuilderClass) {
+        if (isFieldMandatory && !isEntityTypeObjectBuilderClass) {
             markPropertyIsSet(setStreamFieldValue, SchemaGeneratorHelper.toValidatorFieldName(propertyName));
         }
         objectBuilderClassBuilder.addMethod(setStreamFieldValue.build());
@@ -1211,14 +1213,14 @@ final class SchemaObjectBuilderGenerator
     )
     {
         setBuilderFieldValue
-        .addStatement("final $L $L = new $L()", objBuilderClassName, internalBuilderVarName, objBuilderClassName)
-        .addStatement("director.accept($L)", internalBuilderVarName)
-        .addCode("schemaObjectBuilder.setJsonFieldValue(\n")
-        .addCode("  $L.$L,\n", SchemaGeneratorHelper.CLASS_NAME, propertyName)
-        .beginControlFlow("  jsonBuilder ->")
-        .addStatement("  $L.build(jsonBuilder)", internalBuilderVarName)
-        .endControlFlow()
-        .addStatement(")");
+            .addStatement("final $L $L = new $L()", objBuilderClassName, internalBuilderVarName, objBuilderClassName)
+            .addStatement("director.accept($L)", internalBuilderVarName)
+            .addCode("schemaObjectBuilder.setJsonFieldValue(\n")
+            .addCode("  $L.$L,\n", SchemaGeneratorHelper.CLASS_NAME, propertyName)
+            .beginControlFlow("  jsonBuilder ->")
+            .addStatement("  $L.build(jsonBuilder)", internalBuilderVarName)
+            .endControlFlow()
+            .addStatement(")");
     }
 
     private static void setFlattenedFieldValue(
@@ -1232,11 +1234,11 @@ final class SchemaObjectBuilderGenerator
     )
     {
         setBuilderFieldValue
-        .addCode("schemaObjectBuilder.setFlattenedFieldValue($L.$L, sBuilder-> {\n", SchemaGeneratorHelper.CLASS_NAME, propertyName)
-        .addStatement("    final $L $L = new $L(sBuilder)", objBuilderClassName, internalBuilderVarName, objBuilderClassName)
-        .addStatement("    director.accept($L)", internalBuilderVarName)
-        .addStatement("    $L.validate()", internalBuilderVarName)
-        .addStatement("})");
+            .addCode("schemaObjectBuilder.setFlattenedFieldValue($L.$L, sBuilder-> {\n", SchemaGeneratorHelper.CLASS_NAME, propertyName)
+            .addStatement("    final $L $L = new $L(sBuilder)", objBuilderClassName, internalBuilderVarName, objBuilderClassName)
+            .addStatement("    director.accept($L)", internalBuilderVarName)
+            .addStatement("    $L.validate()", internalBuilderVarName)
+            .addStatement("})");
         if (isFieldMandatory && isSubField) {
             markPropertyIsSet(setBuilderFieldValue, validatorSubFieldName);
         }
@@ -1250,15 +1252,15 @@ final class SchemaObjectBuilderGenerator
     )
     {
         setStreamFieldValue
-        .addCode("schemaObjectBuilder.setJsonFieldValue(\n")
-        .addCode("  $L.$L,\n", SchemaGeneratorHelper.CLASS_NAME, propertyName)
-        .addCode("  directors.<Consumer<JsonBuilder>>map(director -> {\n")
-        .addStatement("    final $L $L = new $L()", objBuilderClassName, internalBuilderVarName, objBuilderClassName)
-        .addStatement("    director.accept($L)", internalBuilderVarName)
-        .addCode("    return jsonBuilder -> {\n")
-        .addStatement("      $L.build(jsonBuilder)", internalBuilderVarName)
-        .addStatement("    }")
-        .addStatement("}))");
+            .addCode("schemaObjectBuilder.setJsonFieldValue(\n")
+            .addCode("  $L.$L,\n", SchemaGeneratorHelper.CLASS_NAME, propertyName)
+            .addCode("  directors.<Consumer<JsonBuilder>>map(director -> {\n")
+            .addStatement("    final $L $L = new $L()", objBuilderClassName, internalBuilderVarName, objBuilderClassName)
+            .addStatement("    director.accept($L)", internalBuilderVarName)
+            .addCode("    return jsonBuilder -> {\n")
+            .addStatement("      $L.build(jsonBuilder)", internalBuilderVarName)
+            .addStatement("    }")
+            .addStatement("}))");
     }
 
     private static void setFlattenedFieldValueStream(
@@ -1272,18 +1274,19 @@ final class SchemaObjectBuilderGenerator
     )
     {
         setStreamFieldValue
-        .addCode("  schemaObjectBuilder.setFlattenedFieldValue($L.$L,\n", SchemaGeneratorHelper.CLASS_NAME, propertyName)
-        .addCode("    directors.<Consumer<SchemaObjectBuilder>>map(director -> {\n")
-        .addCode("    return sBuilder -> {\n")
-        .addStatement("      final $L $L = new $L(sBuilder)", objBuilderClassName, internalBuilderVarName, objBuilderClassName)
-        .addStatement("      director.accept($L)", internalBuilderVarName)
-        .addStatement("      $L.validate()", internalBuilderVarName)
-        .addStatement("    }")
-        .addStatement("}))");
+            .addCode("  schemaObjectBuilder.setFlattenedFieldValue($L.$L,\n", SchemaGeneratorHelper.CLASS_NAME, propertyName)
+            .addCode("    directors.<Consumer<SchemaObjectBuilder>>map(director -> {\n")
+            .addCode("    return sBuilder -> {\n")
+            .addStatement("      final $L $L = new $L(sBuilder)", objBuilderClassName, internalBuilderVarName, objBuilderClassName)
+            .addStatement("      director.accept($L)", internalBuilderVarName)
+            .addStatement("      $L.validate()", internalBuilderVarName)
+            .addStatement("    }")
+            .addStatement("}))");
         if (isFieldMandatory && isSubField) {
             markPropertyIsSet(setStreamFieldValue, validatorSubFieldName);
         }
     }
+
     private static void addBuilderListParamSetterMethod(
         final Builder objectBuilderClassBuilder,
         final String fieldFunctionName,
@@ -1322,7 +1325,7 @@ final class SchemaObjectBuilderGenerator
         final MethodSpec.Builder setBuilderFieldValue = MethodSpec.methodBuilder("set" + fieldFunctionName)
             .addModifiers(Modifier.PUBLIC)
             .addParameter(builderParamName);
-        if(isFlattened) {
+        if (isFlattened) {
             setBuilderFieldValue
                 .addStatement(
                     "final $L $L = new $L(this.schemaObjectBuilder)",
@@ -1363,7 +1366,7 @@ final class SchemaObjectBuilderGenerator
                 objBuilderClassName, internalBuilderVarName, objBuilderClassName);
         } else {
             setStreamFieldValue.addStatement("  final $L $L = new $L()",
-                objBuilderClassName, internalBuilderVarName, objBuilderClassName);
+                                             objBuilderClassName, internalBuilderVarName, objBuilderClassName);
         }
         setStreamFieldValue
             .addStatement("  director.accept($L)", internalBuilderVarName)
@@ -1398,7 +1401,7 @@ final class SchemaObjectBuilderGenerator
             .varargs(true);
 
         if (isSubfield) {
-            if(isParentFieldFlattened) {
+            if (isParentFieldFlattened) {
                 setArrayFieldValue.addStatement(
                     "schemaObjectBuilder.set$LFieldValue($L.$L.$L, values)",
                     fieldType.getSimpleName(),
@@ -1448,7 +1451,7 @@ final class SchemaObjectBuilderGenerator
             .addParameter(listParamFieldName);
 
         if (isSubfield) {
-            if(isParentFieldFlattened) {
+            if (isParentFieldFlattened) {
                 setListFieldValue.addStatement(
                     "schemaObjectBuilder.set$LFieldValue($L.$L.$L, values)",
                     fieldType.getSimpleName(),
@@ -1493,7 +1496,7 @@ final class SchemaObjectBuilderGenerator
             .addParameter(paramSingleFieldValue);
 
         if (isSubfield) {
-            if(isParentFieldFlattened) {
+            if (isParentFieldFlattened) {
                 addFieldValue.addStatement(
                     "schemaObjectBuilder.add$LFieldValue($L.$L.$L, value)",
                     fieldType.getSimpleName(),
@@ -1523,5 +1526,4 @@ final class SchemaObjectBuilderGenerator
 
         objectBuilderClassBuilder.addMethod(addFieldValue.build());
     }
-
 }

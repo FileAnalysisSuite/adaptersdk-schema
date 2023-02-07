@@ -39,7 +39,9 @@ final class SchemaGeneratorHelper
             "STRING", "FULLTEXT", "LONG", "DOUBLE", "INTEGER", "BOOLEAN", "DATETIME",
             "STRING[]", "FULLTEXT[]", "LONG[]", "DOUBLE[]", "INTEGER[]", "BOOLEAN[]", "DATETIME[]"));
 
-    private SchemaGeneratorHelper() {}
+    private SchemaGeneratorHelper()
+    {
+    }
 
     static JsonNode parseSchemaDefinition()
     {
