@@ -206,7 +206,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 
         private void PutFieldValues(string prefix, Action<ISchemaObjectBuilder> director)
         {
-            var nextLevel = new Dictionary< string, object?> ();
+            var nextLevel = new Dictionary< string, object> ();
             var nextLevelBuilder = new DictionarySchemaObjectBuilder(nextLevel);
             director.Invoke(nextLevelBuilder);
             foreach (var entry in nextLevel)
