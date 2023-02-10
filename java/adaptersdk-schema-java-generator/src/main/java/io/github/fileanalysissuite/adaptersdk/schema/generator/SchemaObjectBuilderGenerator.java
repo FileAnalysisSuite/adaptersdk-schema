@@ -238,7 +238,6 @@ final class SchemaObjectBuilderGenerator
                 // non entity type field
                 addNonEntityTypePropertySetterMethods(
                     objectBuilderClassBuilder,
-                    isEntityTypeObjectBuilderClass,
                     buildFunctionBuilder,
                     validateFunctionBuilder,
                     fieldFunctionName,
@@ -696,7 +695,6 @@ final class SchemaObjectBuilderGenerator
 
     private static void addNonEntityTypePropertySetterMethods(
         final TypeSpec.Builder objectBuilderClassBuilder,
-        final boolean isEntityTypeObjectBuilderClass,
         final MethodSpec.Builder buildFunctionBuilder,
         final MethodSpec.Builder validateFunctionBuilder,
         final String fieldFunctionName,
