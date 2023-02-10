@@ -303,18 +303,24 @@ namespace MicroFocus.FAS.AdapterSdkSchema.Tests
             var treeMap = new SortedDictionary<string, object>(document);
             foreach (var e in treeMap)
             {
-                Console.WriteLine(
-                    e.Key
-                    + " = "
-                    + (
-                      (e.Value is IList &&
-                        e.Value.GetType().IsGenericType &&
-                        e.Value.GetType().GetGenericTypeDefinition().IsAssignableFrom(typeof(List<>))
-                      )
-                        ? string.Join(", ", e.Value)
-                        : e.Value
-                      )
-                );
+                Console.WriteLine(e.Key + " = " + PrintValue(e.Value));
+            }
+        }
+
+        private static string PrintValue(object value)
+        {
+            if (value is IList values)
+            {
+                string retVal = "";
+                foreach(var val in values)
+                {
+                    retVal += val.ToString() + ", ";
+                }
+                return retVal.Trim()[..^1];
+            }
+            else
+            {
+                return value.ToString();
             }
         }
     }
