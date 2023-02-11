@@ -83,7 +83,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 
         public void SetBooleanFieldValue(IField field, params bool[] values)
         {
-            _document.Add(field.FieldName, values.ToList());
+            _document.Add(field.FieldName, values);
         }
 
         public void SetBooleanFieldValue(IField field, IEnumerable<bool> values)
@@ -98,7 +98,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 
         public void SetDoubleFieldValue(IField field, params double[] values)
         {
-            _document.Add(field.FieldName, values.ToList());
+            _document.Add(field.FieldName, values);
         }
 
         public void SetDoubleFieldValue(IField field, IEnumerable<double> values)
@@ -113,7 +113,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 
         public void SetInstantFieldValue(IField field, params DateTime[] values)
         {
-            _document.Add(field.FieldName, values.ToList());
+            _document.Add(field.FieldName, values);
         }
 
         public void SetInstantFieldValue(IField field, IEnumerable<DateTime> values)
@@ -126,10 +126,9 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             _document.Add(field.FieldName, value);
         }
 
-        // TODO: This is the only function called when setting a single valued field
         public void SetIntegerFieldValue(IField field, params int[] values)
         {
-            _document.Add(field.FieldName, values.ToList());
+            _document.Add(field.FieldName, values);
         }
 
         public void SetIntegerFieldValue(IField field, IEnumerable<int> values)
@@ -144,7 +143,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 
         public void SetLongFieldValue(IField field, params long[] values)
         {
-            _document.Add(field.FieldName, values.ToList());
+            _document.Add(field.FieldName, values);
         }
 
         public void SetLongFieldValue(IField field, IEnumerable<long> values)
@@ -159,7 +158,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 
         public void SetStringFieldValue(IField field, params string[] values)
         {
-            _document.Add(field.FieldName, values.ToList());
+            _document.Add(field.FieldName, values);
         }
 
         public void SetStringFieldValue(IField field, IEnumerable<string> values)
@@ -169,7 +168,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 
         public void SetJsonFieldValue(IField field, Action<IJsonBuilder> builder)
         {
-            SystemJsonBuilder jsonBuilder = new SystemJsonBuilder();
+            SystemJsonBuilder jsonBuilder = new();
             builder.Invoke(jsonBuilder);
 
             _document.Add(field.FieldName, jsonBuilder.Encode());
@@ -180,7 +179,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             _document.Add(
             field.FieldName,
             builders.Select(builder => {
-                SystemJsonBuilder jsonBuilder = new SystemJsonBuilder();
+                SystemJsonBuilder jsonBuilder = new();
                 builder.Invoke(jsonBuilder);
                 return jsonBuilder.Encode();
             }).ToList());
