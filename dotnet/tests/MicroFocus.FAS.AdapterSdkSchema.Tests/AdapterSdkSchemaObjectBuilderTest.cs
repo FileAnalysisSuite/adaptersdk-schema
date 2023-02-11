@@ -291,46 +291,6 @@ namespace MicroFocus.FAS.AdapterSdkSchema.Tests
             documentBuilder.SetMimetype("msword");
             documentBuilder.SetTitle("Test File");
             documentBuilder.SetType("323");
-            documentBuilder.SetTestFlatSingle(
-                dir => {
-                    dir.SetTestId("12");
-                    dir.SetTestMatches(
-                        b => {
-                            b.SetType("xType");
-                            b.SetValue("xValue");
-                        }
-                    );
-                }
-            );
-            documentBuilder.SetTestFlatDouble(
-                listdir => {
-                    listdir.Set(dir => {
-                        dir.SetTestId("18");
-                        dir.SetTestMatches(
-                            b =>
-                            {
-                                b.SetType("yType");
-                                b.SetValue("yValue");
-                            }
-                        );
-                    });
-                }
-            );
-            documentBuilder.SetTestJsonSingle(
-                dir => {
-                    dir.SetSomeValue("JSomeValue");
-                    dir.SetSomeType("JSomeType");
-                }
-            );
-            documentBuilder.SetTestJsonDouble(
-                listdir => {
-                    listdir.Set(dir => {
-                        dir.SetSomeValue("JSomeValue");
-                        dir.SetSomeType("JSomeType");
-                    });
-                }
-            );
-            documentBuilder.SetTestMultiString("USA", "Japan");
             documentBuilder.SetAddressDisplayTo("jdoe@abc.com", "janedoe@abc.com");
             documentBuilder.ClearAddressDisplayTo();
             documentBuilder.Validate();
