@@ -1298,7 +1298,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                             .Append(parentFieldName)
                             .Append(".")
                             .Append(propertyName)
-                            .Append(")")
+                            .Append(", value)")
                             .ToString()
                          )
                     );
@@ -1746,7 +1746,16 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                 if (isParentFieldFlattened)
                 {
                     setArrayFieldValue.Statements.Add(new CodeSnippetStatement(
-                        "_schemaObjectBuilder.Set" + fieldTypeMethodName + "FieldValue(" + SchemaGeneratorHelper.CLASS_NAME + "."+ parentFieldName + "."+ propertyName + ", values);"));
+                        new StringBuilder("_schemaObjectBuilder.Set")
+                        .Append(fieldTypeMethodName)
+                        .Append("FieldValue(")
+                        .Append(SchemaGeneratorHelper.CLASS_NAME)
+                        .Append(".")
+                        .Append(parentFieldName)
+                        .Append(".")
+                        .Append(propertyName)
+                        .Append(", values);")
+                        .ToString()));
                     if (isFieldMandatory)
                     {
                         // Note mandatory field has been set
@@ -1762,7 +1771,15 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             else
             {
                 setArrayFieldValue.Statements.Add(
-                    new CodeSnippetStatement("_schemaObjectBuilder.Set" + fieldTypeMethodName + "FieldValue(" + SchemaGeneratorHelper.CLASS_NAME + "." + propertyName + ", values);"));
+                    new CodeSnippetStatement(
+                        new StringBuilder("_schemaObjectBuilder.Set")
+                        .Append(fieldTypeMethodName)
+                        .Append("FieldValue(")
+                        .Append(SchemaGeneratorHelper.CLASS_NAME)
+                        .Append(".")
+                        .Append(propertyName)
+                        .Append(", values);")
+                        .ToString()));
                 if (isFieldMandatory)
                 {
                     // Note mandatory field has been set
