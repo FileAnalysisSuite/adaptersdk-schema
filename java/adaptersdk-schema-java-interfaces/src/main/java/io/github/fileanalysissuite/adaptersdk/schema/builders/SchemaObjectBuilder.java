@@ -25,13 +25,13 @@ public interface SchemaObjectBuilder
 {
     void clearField(Field field);
 
-    void setBooleanFieldValue(Field field, Boolean value);
+    void setBooleanFieldValue(Field field, boolean value);
 
-    void setBooleanFieldValue(Field field, Boolean... values);
+    void setBooleanFieldValue(Field field, boolean... values);
 
     void setBooleanFieldValue(Field field, List<Boolean> values);
 
-    void addBooleanFieldValue(Field field, Boolean value);
+    void addBooleanFieldValue(Field field, boolean value);
 
     void setDoubleFieldValue(Field field, Double value);
 
