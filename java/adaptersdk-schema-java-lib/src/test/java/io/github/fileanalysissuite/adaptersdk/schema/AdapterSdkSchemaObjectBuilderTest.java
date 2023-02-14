@@ -258,7 +258,7 @@ public final class AdapterSdkSchemaObjectBuilderTest
         assertTrue(document.containsKey("FILE_NAME"));
         assertTrue(document.containsKey("TITLE"));
         assertFalse(document.containsKey("ADDRESS_DISPLAY_BCC"));
-        assertEquals(2, ((List<String>)document.get("ADDRESS_DISPLAY_TO")).size());
+        assertEquals(2, ((List<String>) document.get("ADDRESS_DISPLAY_TO")).size());
     }
 
     @Test

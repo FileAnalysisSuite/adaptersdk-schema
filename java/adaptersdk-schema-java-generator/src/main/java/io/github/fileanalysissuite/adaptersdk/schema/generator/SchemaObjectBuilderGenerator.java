@@ -1402,8 +1402,8 @@ final class SchemaObjectBuilderGenerator
     {
         final Class<?> boxedFieldType = PROPERTY_TYPES_LOOKUP.get(fieldTypeValue);
         final Class<?> fieldType = TypeName.get(boxedFieldType).isBoxedPrimitive()
-                                    ? PROPERTY_PRIMITIVE_TYPES_LOOKUP.get(fieldTypeValue)
-                                    : boxedFieldType;
+            ? PROPERTY_PRIMITIVE_TYPES_LOOKUP.get(fieldTypeValue)
+            : boxedFieldType;
         final String methodNameForType = boxedFieldType.getSimpleName();
         final ParameterSpec arrayParamFieldName = ParameterSpec
             .builder(ArrayTypeName.of(fieldType), "values")

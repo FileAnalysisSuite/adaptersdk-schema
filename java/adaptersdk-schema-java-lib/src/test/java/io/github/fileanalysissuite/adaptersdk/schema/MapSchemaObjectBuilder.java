@@ -77,7 +77,7 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
             list.addAll((List<? extends String>) currentValue);
             list.add(value);
         } else {
-            list.add((String)currentValue);
+            list.add((String) currentValue);
             list.add(value);
         }
         document.put(field.getFieldName(), list);
@@ -140,7 +140,7 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
             list.addAll((List<? extends Boolean>) currentValue);
             list.add(value);
         } else {
-            list.add((Boolean)currentValue);
+            list.add((Boolean) currentValue);
             list.add(value);
         }
         document.put(field.getFieldName(), list);
@@ -176,7 +176,7 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
             list.addAll((List<? extends Double>) currentValue);
             list.add(value);
         } else {
-            list.add((Double)currentValue);
+            list.add((Double) currentValue);
             list.add(value);
         }
         document.put(field.getFieldName(), list);
@@ -206,7 +206,7 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
             list.addAll((List<? extends Instant>) currentValue);
             list.add(value);
         } else {
-            list.add((Instant)currentValue);
+            list.add((Instant) currentValue);
             list.add(value);
         }
         document.put(field.getFieldName(), list);
@@ -242,7 +242,7 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
             list.addAll((List<? extends Integer>) currentValue);
             list.add(value);
         } else {
-            list.add((Integer)currentValue);
+            list.add((Integer) currentValue);
             list.add(value);
         }
         document.put(field.getFieldName(), list);
@@ -278,7 +278,7 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
             list.addAll((List<? extends Long>) currentValue);
             list.add(value);
         } else {
-            list.add((Long)currentValue);
+            list.add((Long) currentValue);
             list.add(value);
         }
         document.put(field.getFieldName(), list);
