@@ -23,7 +23,6 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
-using MicroFocus.FAS.AdapterSdkSchema;
 using Microsoft.CSharp;
 
 namespace MicroFocus.FAS.AdapterSdkSchema
@@ -340,8 +339,15 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                     validatorSubFieldName
                 );
                 // Add 'clear' field method body
-                clearFieldMethodBuilder.Statements.Add(
-                    new CodeSnippetExpression("_schemaObjectBuilder.ClearField(" + SchemaGeneratorHelper.CLASS_NAME + "." + fullName + ")"));
+                clearFieldMethodBuilder.Statements.Add(new CodeSnippetExpression(
+                        new StringBuilder("_schemaObjectBuilder.ClearField(")
+                        .Append(SchemaGeneratorHelper.CLASS_NAME)
+                        .Append(".")
+                        .Append(fullName)
+                        .Append(")")
+                        .ToString()
+                    )
+                );
             }
             else
             {
@@ -378,8 +384,15 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                         validatorSubFieldName);
 
                     // Add 'clear' field method body
-                    clearFieldMethodBuilder
-                        .Statements.Add(new CodeSnippetExpression("_schemaObjectBuilder.ClearField("+ SchemaGeneratorHelper.CLASS_NAME + "."+ fullName + ")"));
+                    clearFieldMethodBuilder.Statements.Add(new CodeSnippetExpression(
+                         new StringBuilder("_schemaObjectBuilder.ClearField(")
+                            .Append(SchemaGeneratorHelper.CLASS_NAME)
+                            .Append(".")
+                            .Append(fullName)
+                            .Append(")")
+                            .ToString()
+                        )
+                    );
 
                     if (isFieldMandatory && isSubfield)
                     {
@@ -442,8 +455,15 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                             validatorSubFieldName);
 
                         // Add 'clear' field method body
-                        clearFieldMethodBuilder.Statements.Add(
-                            new CodeSnippetExpression("_schemaObjectBuilder.ClearField("+ SchemaGeneratorHelper.CLASS_NAME + "."+ fullName + ")"));
+                        clearFieldMethodBuilder.Statements.Add(new CodeSnippetExpression(
+                                new StringBuilder("_schemaObjectBuilder.ClearField(")
+                                .Append(SchemaGeneratorHelper.CLASS_NAME)
+                                .Append(".")
+                                .Append(fullName)
+                                .Append(")")
+                                .ToString()
+                            )
+                        );
                     }
                     else
                     {
@@ -1712,7 +1732,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             string fieldTypeMethodName = PROPERTY_TYPES_METHOD_LOOKUP[fieldTypeValue];
 
             CodeParameterDeclarationExpression arrayParamFieldName = new(fieldType + "[]", "values");
-            arrayParamFieldName.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(System.ParamArrayAttribute))));
+            arrayParamFieldName.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(ParamArrayAttribute))));
 
             CodeMemberMethod setArrayFieldValue = new()
             {

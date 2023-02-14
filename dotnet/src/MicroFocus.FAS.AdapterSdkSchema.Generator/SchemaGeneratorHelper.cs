@@ -31,6 +31,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
         internal static readonly HashSet<string> PROPERTY_TYPES = new() {
             "STRING", "FULLTEXT", "LONG", "DOUBLE", "INTEGER", "BOOLEAN", "DATETIME",
             "STRING[]", "FULLTEXT[]", "LONG[]", "DOUBLE[]", "INTEGER[]", "BOOLEAN[]", "DATETIME[]"};
+        internal static readonly string[] PRIMITIVE_NULLABLE_TYPES = new[] { "LONG","DOUBLE","INTEGER","BOOLEAN"};
 
         internal static JsonNode ParseSchemaDefinition()
         {
@@ -85,7 +86,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 
         internal static bool IsPrimitiveNullableType(string fieldTypeValue)
         {
-            return new string[]{ "LONG","DOUBLE","INTEGER","BOOLEAN"}.Contains(fieldTypeValue);
+            return PRIMITIVE_NULLABLE_TYPES.Contains(fieldTypeValue);
         }
     }
 }
