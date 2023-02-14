@@ -61,7 +61,7 @@ final class SchemaObjectBuilderGenerator
         }
     };
 
-    private static final Map<String, Class> PROPERTY_BOXED_TYPES_LOOKUP = new HashMap<String, Class>()
+    private static final Map<String, Class> PROPERTY_PRIMITIVE_TYPES_LOOKUP = new HashMap<String, Class>()
     {
         {
             put("LONG", long.class);
@@ -717,11 +717,11 @@ final class SchemaObjectBuilderGenerator
         final boolean isParentFieldFlattened
     )
     {
-        final Class<?> unboxedFieldType = PROPERTY_TYPES_LOOKUP.get(fieldTypeValue);
-        final Class<?> fieldType = unboxedFieldType.isPrimitive()
-            ? PROPERTY_BOXED_TYPES_LOOKUP.get(fieldTypeValue)
-            : unboxedFieldType;
-        final String methodNameForType = unboxedFieldType.getSimpleName();
+        final Class<?> boxedFieldType = PROPERTY_TYPES_LOOKUP.get(fieldTypeValue);
+        final Class<?> fieldType = TypeName.get(boxedFieldType).isBoxedPrimitive()
+            ? PROPERTY_PRIMITIVE_TYPES_LOOKUP.get(fieldTypeValue)
+            : boxedFieldType;
+        final String methodNameForType = boxedFieldType.getSimpleName();
 
         final ParameterSpec paramSingleFieldValue = ParameterSpec
             .builder(fieldType, "value")
@@ -817,7 +817,7 @@ final class SchemaObjectBuilderGenerator
                         isFieldMultiValued
                             ? ParameterizedTypeName.get(
                                 ClassName.get(List.class), ClassName.get(fieldType))
-                            : ClassName.get(unboxedFieldType),
+                            : ClassName.get(boxedFieldType),
                         subFieldName)
                     .addModifiers(new Modifier[]{Modifier.PRIVATE})
                     .build();
@@ -1400,11 +1400,11 @@ final class SchemaObjectBuilderGenerator
         final String validatorSubFieldName
     )
     {
-        final Class<?> unboxedFieldType = PROPERTY_TYPES_LOOKUP.get(fieldTypeValue);
-        final Class<?> fieldType = unboxedFieldType.isPrimitive()
-                                    ? PROPERTY_BOXED_TYPES_LOOKUP.get(fieldTypeValue)
-                                    : unboxedFieldType;
-        final String methodNameForType = unboxedFieldType.getSimpleName();
+        final Class<?> boxedFieldType = PROPERTY_TYPES_LOOKUP.get(fieldTypeValue);
+        final Class<?> fieldType = TypeName.get(boxedFieldType).isBoxedPrimitive()
+                                    ? PROPERTY_PRIMITIVE_TYPES_LOOKUP.get(fieldTypeValue)
+                                    : boxedFieldType;
+        final String methodNameForType = boxedFieldType.getSimpleName();
         final ParameterSpec arrayParamFieldName = ParameterSpec
             .builder(ArrayTypeName.of(fieldType), "values")
             .addModifiers(Modifier.FINAL)
@@ -1506,11 +1506,11 @@ final class SchemaObjectBuilderGenerator
         final String validatorSubFieldName
     )
     {
-        final Class<?> unboxedFieldType = PROPERTY_TYPES_LOOKUP.get(fieldTypeValue);
-        final Class<?> fieldType = unboxedFieldType.isPrimitive()
-            ? PROPERTY_BOXED_TYPES_LOOKUP.get(fieldTypeValue)
-            : unboxedFieldType;
-        final String methodNameForType = unboxedFieldType.getSimpleName();
+        final Class<?> boxedFieldType = PROPERTY_TYPES_LOOKUP.get(fieldTypeValue);
+        final Class<?> fieldType = TypeName.get(boxedFieldType).isBoxedPrimitive()
+            ? PROPERTY_PRIMITIVE_TYPES_LOOKUP.get(fieldTypeValue)
+            : boxedFieldType;
+        final String methodNameForType = boxedFieldType.getSimpleName();
         final MethodSpec.Builder addFieldValue = MethodSpec.methodBuilder("add" + fieldFunctionName)
             .addModifiers(Modifier.PUBLIC)
             .addParameter(paramSingleFieldValue);
