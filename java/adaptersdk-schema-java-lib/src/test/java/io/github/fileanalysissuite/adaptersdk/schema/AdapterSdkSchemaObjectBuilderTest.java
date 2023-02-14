@@ -17,9 +17,12 @@ package io.github.fileanalysissuite.adaptersdk.schema;
 
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Stream;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
@@ -231,6 +234,7 @@ public final class AdapterSdkSchemaObjectBuilderTest
         assertTrue(thrown.getMessage().contains("Mandatory field 'AdapterSdkSchema.METADATA_FILES.EXTENSION' is not set"));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testValidAdapterSdkSchemaObject()
     {
@@ -242,6 +246,10 @@ public final class AdapterSdkSchemaObjectBuilderTest
         documentBuilder.setMimetype("msword");
         documentBuilder.setTitle("Test File");
         documentBuilder.setType("323");
+        documentBuilder.setAddressDisplayBcc("abc", "def");
+        documentBuilder.setAddressDisplayTo("toAddress1");
+        documentBuilder.clearAddressDisplayBcc();
+        documentBuilder.addAddressDisplayTo("toAddress2");
         documentBuilder.validate();
         System.out.println("-------------   Built AdapterSdkSchemaObject ---------------------\n");
         final Map<String, Object> treeMap = new TreeMap<String, Object>(document);
@@ -249,6 +257,8 @@ public final class AdapterSdkSchemaObjectBuilderTest
 
         assertTrue(document.containsKey("FILE_NAME"));
         assertTrue(document.containsKey("TITLE"));
+        assertFalse(document.containsKey("ADDRESS_DISPLAY_BCC"));
+        assertEquals(2, ((List<String>)document.get("ADDRESS_DISPLAY_TO")).size());
     }
 
     @Test
