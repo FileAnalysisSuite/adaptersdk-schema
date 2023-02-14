@@ -65,14 +65,22 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
         document.put(field.getFieldName(), values);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void addStringFieldValue(final Field field, final String value)
     {
-        Object currentValue = document.get(field.getFieldName());
+        final Object currentValue = document.get(field.getFieldName());
+        final List<String> list = new ArrayList<String>();
         if (currentValue == null) {
-            currentValue = new ArrayList<String>();
+            list.add(value);
+        } else if (currentValue instanceof List) {
+            list.addAll((List<? extends String>) currentValue);
+            list.add(value);
+        } else {
+            list.add((String)currentValue);
+            list.add(value);
         }
-        document.put(field.getFieldName(), ((ArrayList<String>) currentValue).add(value));
+        document.put(field.getFieldName(), list);
     }
 
     @Override
@@ -120,14 +128,22 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
         document.put(field.getFieldName(), values);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void addBooleanFieldValue(final Field field, final boolean value)
     {
-        Object currentValue = document.get(field.getFieldName());
+        final Object currentValue = document.get(field.getFieldName());
+        final List<Boolean> list = new ArrayList<Boolean>();
         if (currentValue == null) {
-            currentValue = new ArrayList<Boolean>();
+            list.add(value);
+        } else if (currentValue instanceof List) {
+            list.addAll((List<? extends Boolean>) currentValue);
+            list.add(value);
+        } else {
+            list.add((Boolean)currentValue);
+            list.add(value);
         }
-        document.put(field.getFieldName(), ((ArrayList<Boolean>) currentValue).add(value));
+        document.put(field.getFieldName(), list);
     }
 
     @Override
@@ -148,14 +164,22 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
         document.put(field.getFieldName(), values);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void addDoubleFieldValue(final Field field, final double value)
     {
-        Object currentValue = document.get(field.getFieldName());
+        final Object currentValue = document.get(field.getFieldName());
+        final List<Double> list = new ArrayList<Double>();
         if (currentValue == null) {
-            currentValue = new ArrayList<Double>();
+            list.add(value);
+        } else if (currentValue instanceof List) {
+            list.addAll((List<? extends Double>) currentValue);
+            list.add(value);
+        } else {
+            list.add((Double)currentValue);
+            list.add(value);
         }
-        document.put(field.getFieldName(), ((ArrayList<Double>) currentValue).add(value));
+        document.put(field.getFieldName(), list);
     }
 
     @Override
@@ -170,14 +194,22 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
         document.put(field.getFieldName(), values);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void addInstantFieldValue(final Field field, final Instant value)
     {
-        Object currentValue = document.get(field.getFieldName());
+        final Object currentValue = document.get(field.getFieldName());
+        final List<Instant> list = new ArrayList<Instant>();
         if (currentValue == null) {
-            currentValue = new ArrayList<Instant>();
+            list.add(value);
+        } else if (currentValue instanceof List) {
+            list.addAll((List<? extends Instant>) currentValue);
+            list.add(value);
+        } else {
+            list.add((Instant)currentValue);
+            list.add(value);
         }
-        document.put(field.getFieldName(), ((ArrayList<Instant>) currentValue).add(value));
+        document.put(field.getFieldName(), list);
     }
 
     @Override
@@ -198,14 +230,22 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
         document.put(field.getFieldName(), values);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void addIntegerFieldValue(final Field field, final int value)
     {
-        Object currentValue = document.get(field.getFieldName());
+        final Object currentValue = document.get(field.getFieldName());
+        final List<Integer> list = new ArrayList<Integer>();
         if (currentValue == null) {
-            currentValue = new ArrayList<Double>();
+            list.add(value);
+        } else if (currentValue instanceof List) {
+            list.addAll((List<? extends Integer>) currentValue);
+            list.add(value);
+        } else {
+            list.add((Integer)currentValue);
+            list.add(value);
         }
-        document.put(field.getFieldName(), ((ArrayList<Integer>) currentValue).add(value));
+        document.put(field.getFieldName(), list);
     }
 
     @Override
@@ -226,14 +266,22 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
         document.put(field.getFieldName(), values);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void addLongFieldValue(final Field field, final long value)
     {
-        Object currentValue = document.get(field.getFieldName());
+        final Object currentValue = document.get(field.getFieldName());
+        final List<Long> list = new ArrayList<Long>();
         if (currentValue == null) {
-            currentValue = new ArrayList<Long>();
+            list.add(value);
+        } else if (currentValue instanceof List) {
+            list.addAll((List<? extends Long>) currentValue);
+            list.add(value);
+        } else {
+            list.add((Long)currentValue);
+            list.add(value);
         }
-        document.put(field.getFieldName(), ((ArrayList<Long>) currentValue).add(value));
+        document.put(field.getFieldName(), list);
     }
 
     @Override
