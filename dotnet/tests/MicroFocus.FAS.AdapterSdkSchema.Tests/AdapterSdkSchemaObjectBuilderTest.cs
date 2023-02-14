@@ -291,13 +291,16 @@ namespace MicroFocus.FAS.AdapterSdkSchema.Tests
             documentBuilder.SetMimetype("msword");
             documentBuilder.SetTitle("Test File");
             documentBuilder.SetType("323");
-            documentBuilder.SetAddressDisplayTo("jdoe@abc.com", "janedoe@abc.com");
-            documentBuilder.ClearAddressDisplayTo();
+            documentBuilder.SetAddressDisplayBcc("jdoe@abc.com", "janedoe@abc.com");
+            documentBuilder.SetAddressDisplayTo("toAddress1");
+            documentBuilder.ClearAddressDisplayBcc();
+            documentBuilder.AddAddressDisplayTo("toAddress2");
             documentBuilder.Validate();
             PrintDocument(document);
             Assert.True(document.ContainsKey("FILE_NAME"));
             Assert.True(document.ContainsKey("TITLE"));
-            Assert.False(document.ContainsKey("ADDRESS_DISPLAY_TO"));
+            Assert.False(document.ContainsKey("ADDRESS_DISPLAY_BCC"));
+            Assert.Equal(2, ((IList)document["ADDRESS_DISPLAY_TO"]).Count);
         }
 
         private static void PrintDocument(Dictionary<string, object> document)

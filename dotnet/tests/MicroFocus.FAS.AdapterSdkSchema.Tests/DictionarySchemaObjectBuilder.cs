@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using System.Collections;
+
 namespace MicroFocus.FAS.AdapterSdkSchema
 {
     internal sealed class DictionarySchemaObjectBuilder : ISchemaObjectBuilder
@@ -26,49 +28,128 @@ namespace MicroFocus.FAS.AdapterSdkSchema
         public void AddBooleanFieldValue(IField field, bool value)
         {
             object? currentValue = _document.GetValueOrDefault(field.FieldName);
-            currentValue ??= new List<bool>();
-            ((List<bool>)currentValue).Add(value);
-            _document.Add(field.FieldName, currentValue);
+            List<bool> list = new();
+            if (currentValue == null)
+            {
+                list.Add(value);
+            }
+            else if (currentValue is IList)
+            {
+                list.AddRange((IList<bool>) currentValue);
+                list.Add(value);
+            }
+            else
+            {
+                list.Add((bool)currentValue);
+                list.Add(value);
+            }
+            _document[field.FieldName] = list;
+
         }
 
         public void AddDoubleFieldValue(IField field, double value)
         {
             object? currentValue = _document.GetValueOrDefault(field.FieldName);
-            currentValue ??= new List<double>();
-            ((List<double>)currentValue).Add(value);
-            _document.Add(field.FieldName, currentValue);
+            List<double> list = new();
+            if (currentValue == null)
+            {
+                list.Add(value);
+            }
+            else if (currentValue is IList)
+            {
+                list.AddRange((IList<double>)currentValue);
+                list.Add(value);
+            }
+            else
+            {
+                list.Add((double)currentValue);
+                list.Add(value);
+            }
+            _document[field.FieldName] = list;
         }
 
         public void AddInstantFieldValue(IField field, DateTime value)
         {
             object? currentValue = _document.GetValueOrDefault(field.FieldName);
-            currentValue ??= new List<DateTime>();
-            ((List<DateTime>)currentValue).Add(value);
-            _document.Add(field.FieldName, currentValue);
+            List<DateTime> list = new();
+            if (currentValue == null)
+            {
+                list.Add(value);
+            }
+            else if (currentValue is IList)
+            {
+                list.AddRange((IList<DateTime>)currentValue);
+                list.Add(value);
+            }
+            else
+            {
+                list.Add((DateTime)currentValue);
+                list.Add(value);
+            }
+            _document[field.FieldName] = list;
         }
 
         public void AddIntegerFieldValue(IField field, int value)
         {
             object? currentValue = _document.GetValueOrDefault(field.FieldName);
-            currentValue ??= new List<int>();
-            ((List<int>)currentValue).Add(value);
-            _document.Add(field.FieldName, currentValue);
+            List<int> list = new();
+            if (currentValue == null)
+            {
+                list.Add(value);
+            }
+            else if (currentValue is IList)
+            {
+                list.AddRange((IList<int>)currentValue);
+                list.Add(value);
+            }
+            else
+            {
+                list.Add((int)currentValue);
+                list.Add(value);
+            }
+            _document[field.FieldName] = list;
         }
 
         public void AddLongFieldValue(IField field, long value)
         {
             object? currentValue = _document.GetValueOrDefault(field.FieldName);
-            currentValue ??= new List<long>();
-            ((List<long>)currentValue).Add(value);
-            _document.Add(field.FieldName, currentValue);
+            List<long> list = new();
+            if (currentValue == null)
+            {
+                list.Add(value);
+            }
+            else if (currentValue is IList)
+            {
+                list.AddRange((IList<long>)currentValue);
+                list.Add(value);
+            }
+            else
+            {
+                list.Add((long)currentValue);
+                list.Add(value);
+            }
+            _document[field.FieldName] = list;
         }
 
         public void AddStringFieldValue(IField field, string value)
         {
             object? currentValue = _document.GetValueOrDefault(field.FieldName);
-            currentValue ??= new List<string>();
-            ((List<string>)currentValue).Add(value);
-            _document.Add(field.FieldName, currentValue);
+            List<string> list = new();
+            if (currentValue == null)
+            {
+                list.Add(value);
+            }
+            else if (currentValue is IList)
+            {
+                list.AddRange((IList<string>)currentValue);
+                list.Add(value);
+            }
+            else
+            {
+                list.Add((string)currentValue);
+                list.Add(value);
+            }
+            _document[field.FieldName] = list;
         }
 
         public void ClearField(IField field)
