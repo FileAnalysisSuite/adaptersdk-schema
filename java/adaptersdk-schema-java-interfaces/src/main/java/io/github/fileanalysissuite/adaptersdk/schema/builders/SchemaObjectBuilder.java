@@ -33,21 +33,21 @@ public interface SchemaObjectBuilder
 
     void addBooleanFieldValue(Field field, boolean value);
 
-    void setDoubleFieldValue(Field field, Double value);
+    void setDoubleFieldValue(Field field, double value);
 
-    void setDoubleFieldValue(Field field, Double... values);
+    void setDoubleFieldValue(Field field, double... values);
 
     void setDoubleFieldValue(Field field, List<Double> values);
 
-    void addDoubleFieldValue(Field field, Double value);
+    void addDoubleFieldValue(Field field, double value);
 
-    void setIntegerFieldValue(Field field, Integer value);
+    void setIntegerFieldValue(Field field, int value);
 
-    void setIntegerFieldValue(Field field, Integer... values);
+    void setIntegerFieldValue(Field field, int... values);
 
     void setIntegerFieldValue(Field field, List<Integer> values);
 
-    void addIntegerFieldValue(Field field, Integer value);
+    void addIntegerFieldValue(Field field, int value);
 
     void setInstantFieldValue(Field field, Instant value);
 
@@ -57,13 +57,13 @@ public interface SchemaObjectBuilder
 
     void addInstantFieldValue(Field field, Instant value);
 
-    void setLongFieldValue(Field field, Long value);
+    void setLongFieldValue(Field field, long value);
 
-    void setLongFieldValue(Field field, Long... values);
+    void setLongFieldValue(Field field, long... values);
 
     void setLongFieldValue(Field field, List<Long> values);
 
-    void addLongFieldValue(Field field, Long value);
+    void addLongFieldValue(Field field, long value);
 
     void setStringFieldValue(Field field, String value);
 

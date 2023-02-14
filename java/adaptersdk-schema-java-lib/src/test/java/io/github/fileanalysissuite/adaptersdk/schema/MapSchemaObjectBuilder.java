@@ -103,13 +103,13 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
     }
 
     @Override
-    public void setBooleanFieldValue(final Field field, final Boolean value)
+    public void setBooleanFieldValue(final Field field, final boolean value)
     {
         document.put(field.getFieldName(), value);
     }
 
     @Override
-    public void setBooleanFieldValue(final Field field, final Boolean... values)
+    public void setBooleanFieldValue(final Field field, final boolean... values)
     {
         document.put(field.getFieldName(), Arrays.asList(values));
     }
@@ -121,7 +121,7 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
     }
 
     @Override
-    public void addBooleanFieldValue(final Field field, final Boolean value)
+    public void addBooleanFieldValue(final Field field, final boolean value)
     {
         Object currentValue = document.get(field.getFieldName());
         if (currentValue == null) {
@@ -131,13 +131,13 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
     }
 
     @Override
-    public void setDoubleFieldValue(final Field field, final Double value)
+    public void setDoubleFieldValue(final Field field, final double value)
     {
         document.put(field.getFieldName(), value);
     }
 
     @Override
-    public void setDoubleFieldValue(final Field field, final Double... values)
+    public void setDoubleFieldValue(final Field field, final double... values)
     {
         document.put(field.getFieldName(), Arrays.asList(values));
     }
@@ -149,7 +149,7 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
     }
 
     @Override
-    public void addDoubleFieldValue(final Field field, final Double value)
+    public void addDoubleFieldValue(final Field field, final double value)
     {
         Object currentValue = document.get(field.getFieldName());
         if (currentValue == null) {
@@ -181,13 +181,13 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
     }
 
     @Override
-    public void setIntegerFieldValue(final Field field, final Integer value)
+    public void setIntegerFieldValue(final Field field, final int value)
     {
         document.put(field.getFieldName(), value);
     }
 
     @Override
-    public void setIntegerFieldValue(final Field field, final Integer... values)
+    public void setIntegerFieldValue(final Field field, final int... values)
     {
         document.put(field.getFieldName(), Arrays.asList(values));
     }
@@ -199,7 +199,7 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
     }
 
     @Override
-    public void addIntegerFieldValue(final Field field, final Integer value)
+    public void addIntegerFieldValue(final Field field, final int value)
     {
         Object currentValue = document.get(field.getFieldName());
         if (currentValue == null) {
@@ -209,13 +209,13 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
     }
 
     @Override
-    public void setLongFieldValue(final Field field, final Long value)
+    public void setLongFieldValue(final Field field, final long value)
     {
         document.put(field.getFieldName(), value);
     }
 
     @Override
-    public void setLongFieldValue(final Field field, final Long... values)
+    public void setLongFieldValue(final Field field, final long... values)
     {
         document.put(field.getFieldName(), Arrays.asList(values));
     }
@@ -227,7 +227,7 @@ public final class MapSchemaObjectBuilder implements SchemaObjectBuilder
     }
 
     @Override
-    public void addLongFieldValue(final Field field, final Long value)
+    public void addLongFieldValue(final Field field, final long value)
     {
         Object currentValue = document.get(field.getFieldName());
         if (currentValue == null) {

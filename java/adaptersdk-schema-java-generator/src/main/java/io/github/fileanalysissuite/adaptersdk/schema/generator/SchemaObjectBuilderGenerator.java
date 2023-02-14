@@ -61,6 +61,16 @@ final class SchemaObjectBuilderGenerator
         }
     };
 
+    private static final Map<String, Class> PROPERTY_BOXED_TYPES_LOOKUP = new HashMap<String, Class>()
+    {
+        {
+            put("LONG", long.class);
+            put("DOUBLE", double.class);
+            put("INTEGER", int.class);
+            put("BOOLEAN", boolean.class);
+        }
+    };
+
     private final Filer filer;
     private final JsonNode schemaNode;
     private final JsonNode typesNode;
@@ -707,7 +717,12 @@ final class SchemaObjectBuilderGenerator
         final boolean isParentFieldFlattened
     )
     {
-        final Class<?> fieldType = PROPERTY_TYPES_LOOKUP.get(fieldTypeValue);
+        final Class<?> unboxedFieldType = PROPERTY_TYPES_LOOKUP.get(fieldTypeValue);
+        final Class<?> fieldType = unboxedFieldType.isPrimitive()
+            ? PROPERTY_BOXED_TYPES_LOOKUP.get(fieldTypeValue)
+            : unboxedFieldType;
+        final String methodNameForType = unboxedFieldType.getSimpleName();
+
         final ParameterSpec paramSingleFieldValue = ParameterSpec
             .builder(fieldType, "value")
             .addModifiers(Modifier.FINAL)
@@ -776,7 +791,7 @@ final class SchemaObjectBuilderGenerator
 
                 setSingleFieldValueMethodBuilder.addStatement(
                     "schemaObjectBuilder.set$LFieldValue($L.$L, value)",
-                    fieldType.getSimpleName(),
+                    methodNameForType,
                     SchemaGeneratorHelper.CLASS_NAME, parentFieldName + "." + propertyName);
 
                 if (isFieldMandatory) {
@@ -802,7 +817,7 @@ final class SchemaObjectBuilderGenerator
                         isFieldMultiValued
                             ? ParameterizedTypeName.get(
                                 ClassName.get(List.class), ClassName.get(fieldType))
-                            : ClassName.get(fieldType),
+                            : ClassName.get(unboxedFieldType),
                         subFieldName)
                     .addModifiers(new Modifier[]{Modifier.PRIVATE})
                     .build();
@@ -842,7 +857,7 @@ final class SchemaObjectBuilderGenerator
 
             setSingleFieldValueMethodBuilder.addStatement(
                 "schemaObjectBuilder.set$LFieldValue($L.$L, value)",
-                fieldType.getSimpleName(), SchemaGeneratorHelper.CLASS_NAME, propertyName);
+                methodNameForType, SchemaGeneratorHelper.CLASS_NAME, propertyName);
 
             if (isFieldMandatory) {
                 final String validatorFieldName = SchemaGeneratorHelper.toValidatorFieldName(propertyName);
@@ -1385,7 +1400,11 @@ final class SchemaObjectBuilderGenerator
         final String validatorSubFieldName
     )
     {
-        final Class<?> fieldType = PROPERTY_TYPES_LOOKUP.get(fieldTypeValue);
+        final Class<?> unboxedFieldType = PROPERTY_TYPES_LOOKUP.get(fieldTypeValue);
+        final Class<?> fieldType = unboxedFieldType.isPrimitive()
+                                    ? PROPERTY_BOXED_TYPES_LOOKUP.get(fieldTypeValue)
+                                    : unboxedFieldType;
+        final String methodNameForType = unboxedFieldType.getSimpleName();
         final ParameterSpec arrayParamFieldName = ParameterSpec
             .builder(ArrayTypeName.of(fieldType), "values")
             .addModifiers(Modifier.FINAL)
@@ -1400,7 +1419,7 @@ final class SchemaObjectBuilderGenerator
             if (isParentFieldFlattened) {
                 setArrayFieldValue.addStatement(
                     "schemaObjectBuilder.set$LFieldValue($L.$L.$L, values)",
-                    fieldType.getSimpleName(),
+                    methodNameForType,
                     SchemaGeneratorHelper.CLASS_NAME, parentFieldName, propertyName);
                 if (isFieldMandatory) {
                     // Note mandatory field has been set
@@ -1412,7 +1431,7 @@ final class SchemaObjectBuilderGenerator
         } else {
             setArrayFieldValue.addStatement(
                 "schemaObjectBuilder.set$LFieldValue($L.$L, values)",
-                fieldType.getSimpleName(), SchemaGeneratorHelper.CLASS_NAME, propertyName);
+                methodNameForType, SchemaGeneratorHelper.CLASS_NAME, propertyName);
             if (isFieldMandatory) {
                 // Note mandatory field has been set
                 markPropertyIsSet(setArrayFieldValue, validatorSubFieldName);
@@ -1435,6 +1454,7 @@ final class SchemaObjectBuilderGenerator
     )
     {
         final Class<?> fieldType = PROPERTY_TYPES_LOOKUP.get(fieldTypeValue);
+        final String methodNameForType = fieldType.getSimpleName();
         final ParameterSpec listParamFieldName = ParameterSpec
             .builder(
                 ParameterizedTypeName.get(ClassName.get(List.class), TypeName.get(fieldType)),
@@ -1450,7 +1470,7 @@ final class SchemaObjectBuilderGenerator
             if (isParentFieldFlattened) {
                 setListFieldValue.addStatement(
                     "schemaObjectBuilder.set$LFieldValue($L.$L.$L, values)",
-                    fieldType.getSimpleName(),
+                    methodNameForType,
                     SchemaGeneratorHelper.CLASS_NAME, parentFieldName, propertyName);
                 if (isFieldMandatory) {
                     // Note mandatory field has been set
@@ -1462,7 +1482,7 @@ final class SchemaObjectBuilderGenerator
         } else {
             setListFieldValue.addStatement(
                 "schemaObjectBuilder.set$LFieldValue($L.$L, values)",
-                fieldType.getSimpleName(), SchemaGeneratorHelper.CLASS_NAME, propertyName);
+                methodNameForType, SchemaGeneratorHelper.CLASS_NAME, propertyName);
             if (isFieldMandatory) {
                 // Note mandatory field has been set
                 markPropertyIsSet(setListFieldValue, validatorSubFieldName);
@@ -1486,7 +1506,11 @@ final class SchemaObjectBuilderGenerator
         final String validatorSubFieldName
     )
     {
-        final Class<?> fieldType = PROPERTY_TYPES_LOOKUP.get(fieldTypeValue);
+        final Class<?> unboxedFieldType = PROPERTY_TYPES_LOOKUP.get(fieldTypeValue);
+        final Class<?> fieldType = unboxedFieldType.isPrimitive()
+            ? PROPERTY_BOXED_TYPES_LOOKUP.get(fieldTypeValue)
+            : unboxedFieldType;
+        final String methodNameForType = unboxedFieldType.getSimpleName();
         final MethodSpec.Builder addFieldValue = MethodSpec.methodBuilder("add" + fieldFunctionName)
             .addModifiers(Modifier.PUBLIC)
             .addParameter(paramSingleFieldValue);
@@ -1495,7 +1519,7 @@ final class SchemaObjectBuilderGenerator
             if (isParentFieldFlattened) {
                 addFieldValue.addStatement(
                     "schemaObjectBuilder.add$LFieldValue($L.$L.$L, value)",
-                    fieldType.getSimpleName(),
+                    methodNameForType,
                     SchemaGeneratorHelper.CLASS_NAME, parentFieldName, propertyName);
                 if (isFieldMandatory) {
                     // Note mandatory field has been set
@@ -1513,7 +1537,7 @@ final class SchemaObjectBuilderGenerator
         } else {
             addFieldValue.addStatement(
                 "schemaObjectBuilder.add$LFieldValue($L.$L, value)",
-                fieldType.getSimpleName(), SchemaGeneratorHelper.CLASS_NAME, propertyName);
+                methodNameForType, SchemaGeneratorHelper.CLASS_NAME, propertyName);
             if (isFieldMandatory) {
                 // Note mandatory field has been set
                 markPropertyIsSet(addFieldValue, validatorSubFieldName);
