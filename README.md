@@ -73,7 +73,8 @@ Create a **Java** `AdapterSdkSchemaObject` using the `AdapterSdkSchemaObjectBuil
 
 ```
     final Map<String, Object> document = new HashMap<String, Object>();
-    final AdapterSdkSchemaObjectBuilder documentBuilder = new AdapterSdkSchemaObjectBuilder(new MapSchemaObjectBuilder(document));
+    final AdapterSdkSchemaObjectBuilder documentBuilder
+        = new AdapterSdkSchemaObjectBuilder(new MapSchemaObjectBuilder(document));
 ```
 
 - Set field values by calling the appropriate setter methods
