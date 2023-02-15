@@ -124,8 +124,8 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 
             validateFunctionBuilder = new()
             {
-                    Name = "Validate",
-                    Attributes = MemberAttributes.Public | MemberAttributes.Final
+                Name = "Validate",
+                Attributes = MemberAttributes.Public | MemberAttributes.Final
             };
 
             // Add property setters
@@ -162,7 +162,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             schemaClassBuilder.Members.Add(field);
 
             CodeParameterDeclarationExpression ctorParam = new(new CodeTypeReference("ISchemaObjectBuilder"), "schemaObjectBuilder");
-            CodeConstructor constructor = new ()
+            CodeConstructor constructor = new()
             {
                 Attributes = MemberAttributes.Public
             };
@@ -176,7 +176,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 
             schemaClassBuilder.Members.Add(constructor);
         }
-    
+
         private void AddPropertySetters(
             CodeTypeDeclaration objectBuilderClassBuilder,
             bool isEntityTypeObjectBuilderClass,
@@ -309,7 +309,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 
             // Add clear field method body
             CodeMemberMethod clearFieldMethodBuilder = new()
-            { 
+            {
                 Name = "Clear" + fieldFunctionName,
                 Attributes = MemberAttributes.Public | MemberAttributes.Final
             };
@@ -711,7 +711,8 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 
                 buildFunctionBuilder.Statements.Add(new CodeSnippetExpression("jsonBuilder.WriteEndObject()"));
                 fieldObjectBuilderClassBuilder.Members.Add(buildFunctionBuilder);
-                if (parentBuilder != null) {
+                if (parentBuilder != null)
+                {
                     buildFunctionBuilder = parentBuilder;
                 }
                 objectBuilderClassBuilder.Members.Add(fieldObjectBuilderClassBuilder);
@@ -846,7 +847,8 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             };
             setStreamFieldValue.Parameters.Add(streamParamFieldName);
 
-            if (isFlattened) {
+            if (isFlattened)
+            {
                 SetFlattenedFieldValueStream(
                     setStreamFieldValue,
                     propertyName,
@@ -1089,7 +1091,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             setStreamFieldValue.Statements.Add(
                 new CodeSnippetStatement(
                     "this._schemaObjectBuilder.SetFlattenedFieldValue(null, directors.Select<Action<"
-                    + objBuilderClassName 
+                    + objBuilderClassName
                     + ">, Action<ISchemaObjectBuilder>>(director => builder => {"));
             setStreamFieldValue.Statements.Add(new CodeSnippetStatement(
                 new StringBuilder("    ")
@@ -1229,10 +1231,10 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             string listName
         )
         {
-            CodeMemberMethod buildFunctionBuilder = new ()
-                {
-                    Name = "Build",
-                    Attributes = MemberAttributes.Assembly
+            CodeMemberMethod buildFunctionBuilder = new()
+            {
+                Name = "Build",
+                Attributes = MemberAttributes.Assembly
             };
             CodeParameterDeclarationExpression buildMethodParam = new(new CodeTypeReference("IJsonBuilder"), "jsonBuilder");
             buildFunctionBuilder.Parameters.Add(buildMethodParam);
@@ -1549,7 +1551,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                     Condition = nullCheckExpression
                 };
                 ifStatement.TrueStatements.Add(writeFieldNameExpn);
-                foreach(var stmt in writeFieldValueStatements)
+                foreach (var stmt in writeFieldValueStatements)
                 {
                     ifStatement.TrueStatements.Add(stmt);
                 }
@@ -1631,7 +1633,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 
         private void MarkPropertyIsSet(CodeMemberMethod setFieldMethodBuilder, string validatorFieldName)
         {
-            setFieldMethodBuilder.Statements.Add(new CodeSnippetExpression(validatorFieldName +" = true"));
+            setFieldMethodBuilder.Statements.Add(new CodeSnippetExpression(validatorFieldName + " = true"));
         }
 
         private void MarkPropertyIsCleared(CodeMemberMethod clearFieldMethodBuilder, string validatorFieldName)
@@ -1657,7 +1659,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 
             CodeMemberMethod addFieldValue = new()
             {
-                Name= "Add" + fieldFunctionName,
+                Name = "Add" + fieldFunctionName,
                 Attributes = MemberAttributes.Public | MemberAttributes.Final
             };
             addFieldValue.Parameters.Add(paramSingleFieldValue);
@@ -1759,8 +1761,10 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             };
             setListFieldValue.Parameters.Add(listParamFieldName);
 
-            if (isSubfield) {
-                if(isParentFieldFlattened) {
+            if (isSubfield)
+            {
+                if (isParentFieldFlattened)
+                {
                     setListFieldValue.Statements.Add(
                         new CodeSnippetExpression(
                             new StringBuilder("_schemaObjectBuilder.Set")
@@ -1775,7 +1779,8 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                             .ToString()
                         )
                     );
-                    if (isFieldMandatory) {
+                    if (isFieldMandatory)
+                    {
                         // Note mandatory field has been set
                         MarkPropertyIsSet(setListFieldValue, validatorSubFieldName);
                     }
