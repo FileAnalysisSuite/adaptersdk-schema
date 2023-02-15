@@ -555,16 +555,37 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             if (isFlattened)
             {
                 setBuilderFieldValue.Statements.Add(
-                    new CodeSnippetExpression(objBuilderClassName + " "+ internalBuilderVarName + " = new "+ objBuilderClassName + "(this._schemaObjectBuilder)"));
+                    new CodeSnippetExpression(
+                        new StringBuilder(objBuilderClassName)
+                        .Append(" ")
+                        .Append(internalBuilderVarName)
+                        .Append(" = new ")
+                        .Append(objBuilderClassName)
+                        .Append("(this._schemaObjectBuilder)")
+                        .ToString()
+                    )
+                );
             }
             else
             {
                 setBuilderFieldValue.Statements.Add(
-                    new CodeSnippetExpression(objBuilderClassName + " "+ internalBuilderVarName + " = new "+ objBuilderClassName + "()"));
+                    new CodeSnippetExpression(
+                        new StringBuilder(objBuilderClassName)
+                        .Append(" ")
+                        .Append(internalBuilderVarName)
+                        .Append(" = new ")
+                        .Append(objBuilderClassName)
+                        .Append("()")
+                        .ToString()
+                    )
+                );
             }
-            setBuilderFieldValue.Statements.Add(new CodeSnippetExpression("director.Invoke(" + internalBuilderVarName + ")"));
-            setBuilderFieldValue.Statements.Add(new CodeSnippetExpression(internalVarName + " = new List<" + objBuilderClassName  + ">()"));
-            setBuilderFieldValue.Statements.Add(new CodeSnippetExpression(internalVarName + ".Add("+ internalBuilderVarName + ")"));
+            setBuilderFieldValue.Statements.Add(new CodeSnippetExpression(
+                new StringBuilder("director.Invoke(").Append(internalBuilderVarName).Append(")").ToString()));
+            setBuilderFieldValue.Statements.Add(new CodeSnippetExpression(
+                new StringBuilder(internalVarName).Append(" = new List<").Append(objBuilderClassName).Append(">()").ToString()));
+            setBuilderFieldValue.Statements.Add(new CodeSnippetExpression(
+                new StringBuilder(internalVarName).Append(".Add(").Append(internalBuilderVarName).Append(")").ToString()));
 
             objectBuilderClassBuilder.Members.Add(setBuilderFieldValue);
         }
@@ -587,21 +608,40 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             setStreamFieldValue.Parameters.Add(streamParamFieldName);
 
             setStreamFieldValue.Statements.Add(
-                    //new CodeSnippetStatement(internalVarName + " = directors.Select<Action<" + objBuilderClassName + ">, Action<ISchemaObjectBuilder>>(director => {"));
                     new CodeSnippetStatement(internalVarName + " = directors.Select(director => {"));
             if (isFlattened)
             {
                 setStreamFieldValue.Statements.Add(
-                    new CodeSnippetStatement(objBuilderClassName + " " + internalBuilderVarName + " = new " + objBuilderClassName + "(this._schemaObjectBuilder);"));
+                    new CodeSnippetStatement(
+                        new StringBuilder(objBuilderClassName)
+                        .Append(" ")
+                        .Append(internalBuilderVarName)
+                        .Append(" = new ")
+                        .Append(objBuilderClassName)
+                        .Append("(this._schemaObjectBuilder);")
+                        .ToString()
+                    )
+                );
             }
             else
             {
                 setStreamFieldValue.Statements.Add(
-                    new CodeSnippetStatement(objBuilderClassName + " " + internalBuilderVarName + " = new " + objBuilderClassName + "();"));
+                    new CodeSnippetStatement(
+                        new StringBuilder(objBuilderClassName)
+                        .Append(" ")
+                        .Append(internalBuilderVarName)
+                        .Append(" = new ")
+                        .Append(objBuilderClassName)
+                        .Append("();")
+                        .ToString()
+                    )
+                );
             }
 
-            setStreamFieldValue.Statements.Add(new CodeSnippetStatement("  director.Invoke(" + internalBuilderVarName + ");"));
-            setStreamFieldValue.Statements.Add(new CodeSnippetStatement("  return " + internalBuilderVarName + ";"));
+            setStreamFieldValue.Statements.Add(new CodeSnippetStatement(
+                new StringBuilder("  director.Invoke(").Append(internalBuilderVarName).Append(");").ToString()));
+            setStreamFieldValue.Statements.Add(new CodeSnippetStatement(
+                new StringBuilder("  return ").Append(internalBuilderVarName).Append(";").ToString()));
             setStreamFieldValue.Statements.Add(new CodeSnippetStatement("}).ToList();"));
 
             objectBuilderClassBuilder.Members.Add(setStreamFieldValue);
@@ -835,11 +875,12 @@ namespace MicroFocus.FAS.AdapterSdkSchema
         )
         {
             setBuilderFieldValue.Statements.Add(
-                new CodeSnippetStatement(objBuilderClassName + " " + internalBuilderVarName + " = new " + objBuilderClassName + "();"));
-            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement("director.Invoke(" + internalBuilderVarName + ");"));
+                new CodeSnippetStatement(
+                    new StringBuilder(objBuilderClassName).Append(" ").Append(internalBuilderVarName).Append(" = new ").Append(objBuilderClassName).Append("();").ToString()));
+            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement(new StringBuilder("director.Invoke(").Append(internalBuilderVarName).Append(");").ToString()));
             setBuilderFieldValue.Statements.Add(new CodeSnippetStatement("_schemaObjectBuilder.SetJsonFieldValue("));
-            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement("  " + SchemaGeneratorHelper.CLASS_NAME + "." + propertyName + ",jsonBuilder => {"));
-            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement("  " + internalBuilderVarName + ".Build(jsonBuilder);"));
+            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement(new StringBuilder("  ").Append(SchemaGeneratorHelper.CLASS_NAME).Append(".").Append(propertyName).Append(",jsonBuilder => {").ToString()));
+            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement(new StringBuilder("  ").Append(internalBuilderVarName).Append(".Build(jsonBuilder);").ToString()));
             setBuilderFieldValue.Statements.Add(new CodeSnippetStatement("}"));
             setBuilderFieldValue.Statements.Add(new CodeSnippetStatement(");"));
         }
@@ -855,11 +896,11 @@ namespace MicroFocus.FAS.AdapterSdkSchema
         )
         {
             setBuilderFieldValue.Statements.Add(
-                new CodeSnippetStatement("_schemaObjectBuilder.SetFlattenedFieldValue(" + SchemaGeneratorHelper.CLASS_NAME + "." + propertyName + ", sBuilder => {"));
+                new CodeSnippetStatement(new StringBuilder("_schemaObjectBuilder.SetFlattenedFieldValue(").Append(SchemaGeneratorHelper.CLASS_NAME).Append(".").Append(propertyName).Append(", sBuilder => {").ToString()));
             setBuilderFieldValue.Statements.Add(
-                new CodeSnippetStatement("    " + objBuilderClassName + " " + internalBuilderVarName + " = new " + objBuilderClassName + "(sBuilder);"));
-            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement("    director.Invoke(" + internalBuilderVarName + ");"));
-            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement("    " + internalBuilderVarName + ".Validate();"));
+                new CodeSnippetStatement(new StringBuilder("    ").Append(objBuilderClassName).Append(" ").Append(internalBuilderVarName).Append(" = new ").Append(objBuilderClassName).Append("(sBuilder);").ToString()));
+            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement(new StringBuilder("    director.Invoke(").Append(internalBuilderVarName).Append(");").ToString()));
+            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement(new StringBuilder("    ").Append(internalBuilderVarName).Append(".Validate();").ToString()));
             setBuilderFieldValue.Statements.Add(new CodeSnippetStatement("});"));
             if (isFieldMandatory && isSubField)
             {
@@ -877,14 +918,14 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             setBuilderFieldValue.Statements.Add(
                 new CodeSnippetStatement("_schemaObjectBuilder.SetJsonFieldValue("));
             setBuilderFieldValue.Statements.Add(
-                new CodeSnippetStatement(SchemaGeneratorHelper.CLASS_NAME + "." + propertyName + ","));
+                new CodeSnippetStatement(new StringBuilder(SchemaGeneratorHelper.CLASS_NAME).Append(".").Append(propertyName).Append(",").ToString()));
             setBuilderFieldValue.Statements.Add(
-                new CodeSnippetStatement("  directors.Select<Action<" + objBuilderClassName + ">, Action<IJsonBuilder>>(director => {"));
+                new CodeSnippetStatement(new StringBuilder("  directors.Select<Action<").Append(objBuilderClassName).Append(">, Action<IJsonBuilder>>(director => {").ToString()));
             setBuilderFieldValue.Statements.Add(
-                new CodeSnippetStatement(objBuilderClassName + " " + internalBuilderVarName + " = new " + objBuilderClassName + "();"));
-            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement("director.Invoke(" + internalBuilderVarName + ");"));
+                new CodeSnippetStatement(new StringBuilder(objBuilderClassName).Append(" ").Append(internalBuilderVarName).Append(" = new ").Append(objBuilderClassName).Append("();").ToString()));
+            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement(new StringBuilder("director.Invoke(").Append(internalBuilderVarName).Append(");").ToString()));
             setBuilderFieldValue.Statements.Add(new CodeSnippetStatement("  return jsonBuilder => {"));
-            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement("  " + internalBuilderVarName + ".Build(jsonBuilder);"));
+            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement(new StringBuilder("  ").Append(internalBuilderVarName).Append(".Build(jsonBuilder);").ToString()));
             setBuilderFieldValue.Statements.Add(new CodeSnippetStatement("};"));
             setBuilderFieldValue.Statements.Add(new CodeSnippetStatement("}));"));
         }
@@ -900,15 +941,15 @@ namespace MicroFocus.FAS.AdapterSdkSchema
         )
         {
             setBuilderFieldValue.Statements.Add(
-                new CodeSnippetStatement("_schemaObjectBuilder.SetFlattenedFieldValue(" + SchemaGeneratorHelper.CLASS_NAME + "." + propertyName + ","));
+                new CodeSnippetStatement(new StringBuilder("_schemaObjectBuilder.SetFlattenedFieldValue(").Append(SchemaGeneratorHelper.CLASS_NAME).Append(".").Append(propertyName).Append(",").ToString()));
             setBuilderFieldValue.Statements.Add(
-                new CodeSnippetStatement("    directors.Select<Action<"+ objBuilderClassName + ">, Action<ISchemaObjectBuilder>>(director => {"));
+                new CodeSnippetStatement(new StringBuilder("    directors.Select<Action<").Append(objBuilderClassName).Append(">, Action<ISchemaObjectBuilder>>(director => {").ToString()));
             setBuilderFieldValue.Statements.Add(
                 new CodeSnippetStatement("    return sBuilder => {"));
             setBuilderFieldValue.Statements.Add(
-                new CodeSnippetStatement("    " + objBuilderClassName + " " + internalBuilderVarName + " = new " + objBuilderClassName + "(sBuilder);"));
-            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement("    director.Invoke(" + internalBuilderVarName + ");"));
-            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement("    " + internalBuilderVarName + ".Validate();"));
+                new CodeSnippetStatement(new StringBuilder("    ").Append(objBuilderClassName).Append(" ").Append(internalBuilderVarName).Append(" = new ").Append(objBuilderClassName).Append("(sBuilder);").ToString()));
+            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement(new StringBuilder("    director.Invoke(").Append(internalBuilderVarName).Append(");").ToString()));
+            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement(new StringBuilder("    ").Append(internalBuilderVarName).Append(".Validate();").ToString()));
             setBuilderFieldValue.Statements.Add(new CodeSnippetStatement("    };"));
             setBuilderFieldValue.Statements.Add(new CodeSnippetStatement("}));"));
             if (isFieldMandatory && isSubField)
@@ -1006,9 +1047,21 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             setBuilderFieldValue.Parameters.Add(builderParamName);
 
             setBuilderFieldValue.Statements.Add(new CodeSnippetStatement("this._schemaObjectBuilder.SetFlattenedFieldValue(null, builder => {"));
-            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement("    " + objBuilderClassName + " " + varName + " = new " + objBuilderClassName + "(builder);"));
-            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement("    director.Invoke(" + varName + ");"));
-            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement("    " + varName + ".Validate();"));
+            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement(
+                new StringBuilder("    ")
+                .Append(objBuilderClassName)
+                .Append(" ")
+                .Append(varName)
+                .Append(" = new ")
+                .Append(objBuilderClassName)
+                .Append("(builder);")
+                .ToString()
+                )
+            );
+            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement(
+                new StringBuilder("    director.Invoke(").Append(varName).Append(");").ToString()));
+            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement(
+                new StringBuilder("    ").Append(varName).Append(".Validate();").ToString()));
             setBuilderFieldValue.Statements.Add(new CodeSnippetStatement("});"));
 
             listObjectBuilderClassBuiler.Members.Add(setBuilderFieldValue);
@@ -1038,10 +1091,21 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                     "this._schemaObjectBuilder.SetFlattenedFieldValue(null, directors.Select<Action<"
                     + objBuilderClassName 
                     + ">, Action<ISchemaObjectBuilder>>(director => builder => {"));
-            setStreamFieldValue.Statements.Add
-                (new CodeSnippetStatement("    " + objBuilderClassName + " "+ varName + " = new "+ objBuilderClassName + "(builder);"));
-            setStreamFieldValue.Statements.Add(new CodeSnippetStatement("    director.Invoke(" + varName + ");"));
-            setStreamFieldValue.Statements.Add(new CodeSnippetStatement("    " + varName + ".Validate();"));
+            setStreamFieldValue.Statements.Add(new CodeSnippetStatement(
+                new StringBuilder("    ")
+                .Append(objBuilderClassName)
+                .Append(" ")
+                .Append(varName)
+                .Append(" = new ")
+                .Append(objBuilderClassName)
+                .Append("(builder);")
+                .ToString()
+                )
+            );
+            setStreamFieldValue.Statements.Add(new CodeSnippetStatement(
+                new StringBuilder("    director.Invoke(").Append(varName).Append(");").ToString()));
+            setStreamFieldValue.Statements.Add(new CodeSnippetStatement(
+                new StringBuilder("    ").Append(varName).Append(".Validate();").ToString()));
             setStreamFieldValue.Statements.Add(new CodeSnippetStatement("}));"));
 
             listObjectBuilderClassBuiler.Members.Add(setStreamFieldValue);
@@ -1087,10 +1151,21 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 
             setBuilderFieldValue.Parameters.Add(builderParamName);
 
-            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement(objBuilderClassName + " " + varName + " = new " + objBuilderClassName + "();"));
-            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement("director.Invoke("+ varName + ");"));
-            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement(listName + " = new List<" + objBuilderClassName + ">();"));
-            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement(listName + ".Add("+ varName + ");"));
+            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement(
+                new StringBuilder(objBuilderClassName + " ")
+                .Append(varName)
+                .Append(" = new ")
+                .Append(objBuilderClassName)
+                .Append("();")
+                .ToString()
+                )
+            );
+            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement(
+                new StringBuilder("director.Invoke(").Append(varName).Append(");").ToString()));
+            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement(
+                new StringBuilder(listName).Append(" = new List<").Append(objBuilderClassName).Append(">();").ToString()));
+            setBuilderFieldValue.Statements.Add(new CodeSnippetStatement(
+                new StringBuilder(listName).Append(".Add(").Append(varName).Append(");").ToString()));
 
             listObjectBuilderClassBuiler.Members.Add(setBuilderFieldValue);
         }
@@ -1114,9 +1189,21 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             setStreamFieldValue.Parameters.Add(streamParamFieldName);
 
             setStreamFieldValue.Statements.Add(new CodeSnippetStatement(listName + " = directors.Select(director => {"));
-            setStreamFieldValue.Statements.Add(new CodeSnippetStatement("  " + objBuilderClassName + " "+ varName + " = new "+ objBuilderClassName + "();"));
-            setStreamFieldValue.Statements.Add(new CodeSnippetStatement("  director.Invoke(" + varName + ");"));
-            setStreamFieldValue.Statements.Add(new CodeSnippetStatement("  return " + varName + ";"));
+            setStreamFieldValue.Statements.Add(new CodeSnippetStatement(
+                new StringBuilder("  ")
+                .Append(objBuilderClassName)
+                .Append(" ")
+                .Append(varName)
+                .Append(" = new ")
+                .Append(objBuilderClassName)
+                .Append("();")
+                .ToString()
+                )
+            );
+            setStreamFieldValue.Statements.Add(new CodeSnippetStatement(
+                new StringBuilder("  director.Invoke(").Append(varName).Append(");").ToString()));
+            setStreamFieldValue.Statements.Add(new CodeSnippetStatement(
+                new StringBuilder("  return ").Append(varName).Append(";").ToString()));
             setStreamFieldValue.Statements.Add(new CodeSnippetStatement("}).ToList();"));
 
             listObjectBuilderClassBuiler.Members.Add(setStreamFieldValue);
@@ -1156,7 +1243,15 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             {
                 Condition = new CodeSnippetExpression(listName + " != null")
             };
-            ifStatement.TrueStatements.Add(new CodeSnippetStatement("foreach ("+ objBuilderClassName + " value in "+ listName + ")"));
+            ifStatement.TrueStatements.Add(new CodeSnippetStatement(
+                new StringBuilder("foreach (")
+                .Append(objBuilderClassName)
+                .Append(" value in ")
+                .Append(listName)
+                .Append(")")
+                .ToString()
+                )
+            );
             ifStatement.TrueStatements.Add(new CodeSnippetStatement("{"));
             ifStatement.TrueStatements.Add(new CodeSnippetStatement("  value.Build(jsonBuilder);"));
             ifStatement.TrueStatements.Add(new CodeSnippetStatement("}"));
@@ -1337,11 +1432,13 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                                 .ToString()
                             )
                         );
-                        setSingleFieldValueMethodBuilder.Statements.Add(new CodeSnippetExpression("this." + subFieldName + ".Add(value)" ));
+                        setSingleFieldValueMethodBuilder.Statements.Add(new CodeSnippetExpression(
+                            new StringBuilder("this.").Append(subFieldName).Append(".Add(value)").ToString()));
                     }
                     else
                     {
-                        setSingleFieldValueMethodBuilder.Statements.Add(new CodeSnippetExpression("this." + subFieldName  + " = value"));
+                        setSingleFieldValueMethodBuilder.Statements.Add(new CodeSnippetExpression(
+                            new StringBuilder("this.").Append(subFieldName).Append(" = value").ToString()));
                     }
                 }
             }
@@ -1476,13 +1573,35 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                 if (objBuilderClassName == null)
                 {
                     string fieldTypeMethodName = PROPERTY_TYPES_METHOD_LOOKUP[fieldTypeValue];
-                    statements.Add(new CodeSnippetStatement("foreach(" + fieldTypeMethodName + " value in " + subFieldName + ")"));
+                    statements.Add(new CodeSnippetStatement(
+                        new StringBuilder("foreach(")
+                        .Append(fieldTypeMethodName)
+                        .Append(" value in ")
+                        .Append(subFieldName)
+                        .Append(")")
+                        .ToString()
+                        )
+                    );
                     statements.Add(new CodeSnippetStatement("{"));
-                    statements.Add(new CodeSnippetStatement("jsonBuilder.Write" + fieldTypeMethodName + "(value);"));
+                    statements.Add(new CodeSnippetStatement(
+                        new StringBuilder("jsonBuilder.Write")
+                        .Append(fieldTypeMethodName)
+                        .Append("(value);")
+                        .ToString()
+                        )
+                    );
                 }
                 else
                 {
-                    statements.Add(new CodeSnippetStatement("foreach(" + objBuilderClassName + " value in " + subFieldName + ")"));
+                    statements.Add(new CodeSnippetStatement(
+                        new StringBuilder("foreach(")
+                        .Append(objBuilderClassName)
+                        .Append(" value in ")
+                        .Append(subFieldName)
+                        .Append(")")
+                        .ToString()
+                        )
+                    );
                     statements.Add(new CodeSnippetStatement("{"));
                     statements.Add(new CodeSnippetStatement("value.Build(jsonBuilder);"));
                 }
@@ -1497,7 +1616,14 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                     ? subFieldName + ".Value"
                     : subFieldName;
                 statements.Add(
-                    new CodeSnippetStatement("jsonBuilder.Write" + fieldTypeMethodName + "(" + subFieldValue + ");")
+                    new CodeSnippetStatement(
+                        new StringBuilder("jsonBuilder.Write")
+                        .Append(fieldTypeMethodName)
+                        .Append("(")
+                        .Append(subFieldValue)
+                        .Append(");")
+                        .ToString()
+                    )
                 );
             }
             return statements;
@@ -1569,7 +1695,8 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                     CodeAssignStatement assignmentStmt = new()
                     {
                         Left = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), subFieldName),
-                        Right = new CodeSnippetExpression("new List<" + fieldType.Name + ">()")
+                        Right = new CodeSnippetExpression(
+                            new StringBuilder("new List<").Append(fieldType.Name).Append(">()").ToString())
                     };
                     ifStatement.TrueStatements.Add(assignmentStmt);
 
@@ -1655,7 +1782,8 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                 }
                 else
                 {
-                    setListFieldValue.Statements.Add(new CodeSnippetExpression("this." + subFieldName + " = values"));
+                    setListFieldValue.Statements.Add(new CodeSnippetExpression(
+                        new StringBuilder("this.").Append(subFieldName).Append(" = values").ToString()));
                 }
             }
             else
@@ -1731,7 +1859,13 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                 else
                 {
                     setArrayFieldValue.Statements.Add(
-                        new CodeSnippetStatement("this."+ subFieldName + " = values.ToList();"));
+                        new CodeSnippetStatement(
+                            new StringBuilder("this.")
+                            .Append(subFieldName)
+                            .Append(" = values.ToList();")
+                            .ToString()
+                        )
+                    );
                 }
             }
             else
