@@ -69,7 +69,7 @@ To use the **.NET** version of the schema add the `MicroFocus.FAS.AdapterSdkSche
 
 Create a **Java** `AdapterSdkSchemaObject` using the `AdapterSdkSchemaObjectBuilder`
 
-- Create an instance of the `AdapterSdkSchemaObjectBuilder` passing in an instance of a `SchemaObjectBuilder`
+- Create a `AdapterSdkSchemaObjectBuilder` passing in an instance of a `SchemaObjectBuilder`
 
 ```
     final Map<String, Object> document = new HashMap<String, Object>();
@@ -107,7 +107,7 @@ Create a **Java** `AdapterSdkSchemaObject` using the `AdapterSdkSchemaObjectBuil
 
 Create a **.NET** `AdapterSdkSchemaObject` using the `AdapterSdkSchemaObjectBuilder`
 
-- Create an instance of the `AdapterSdkSchemaObjectBuilder` passing in an instance of a `ISchemaObjectBuilder`
+- Create a `AdapterSdkSchemaObjectBuilder` passing in an instance of a `ISchemaObjectBuilder`
 
 ```
     var document = new Dictionary<string, object>();
@@ -140,4 +140,67 @@ Create a **.NET** `AdapterSdkSchemaObject` using the `AdapterSdkSchemaObjectBuil
 
 ```
     documentBuilder.Validate();
+```
+
+The SchemaObjectBuilder encodes field values as **json** or **flattened**
+
+Here is an example of a **json** encoded field:
+```
+COLUMNS =
+{
+   "GRAMMAR_MATCHES":[
+      {
+         "RULES":[
+            "RuleA-1",
+            "RuleA-2"
+         ],
+         "WEIGHT":50
+      }
+   ],
+   "NAME":"ColumnA",
+   "REVIEWED_BY":"somebody",
+   "REVIEWER_COMMENTS":"LGTM",
+   "SELECTED_GRAMMAR_RULE":"GrammarRuleA",
+   "STATUS":"REVIEWED",
+   "TYPE":"TypeA"
+},
+{
+   "GRAMMAR_MATCHES":[
+      {
+         "RULES":[
+            "RuleB-1",
+            "RuleB-2"
+         ],
+         "WEIGHT":30
+      }
+   ],
+   "NAME":"ColumnB",
+   "REVIEWED_BY":"somebody",
+   "REVIEWER_COMMENTS":"Needs changes",
+   "SELECTED_GRAMMAR_RULE":"GrammarRuleB",
+   "STATUS":"REVIEWED",
+   "TYPE":"TypeB"
+}
+```
+Here is an example of a single dimensional **flattened** field:
+```
+METADATA_FILES_0_CONTENT = mdf-content1
+METADATA_FILES_0_EXTENSION = abc
+METADATA_FILES_1_CONTENT = mdf-content2
+METADATA_FILES_1_EXTENSION = xyz
+```
+Here is an example of a two dimensional **flattened** field:
+```
+OCR_0_0_CONFIDENCE = 41
+OCR_0_0_NAME = Reporter
+OCR_0_0_TYPE = Name
+OCR_0_0_VALUE = John Doe
+OCR_0_1_CONFIDENCE = 42
+OCR_0_1_VALUE = free form text from a non-templated region
+OCR_1_0_CONFIDENCE = 41
+OCR_1_0_NAME = Reporter
+OCR_1_0_TYPE = Name
+OCR_1_0_VALUE = Jane Doe
+OCR_1_1_CONFIDENCE = 44
+OCR_1_1_VALUE = free form text from a non-templated region
 ```
