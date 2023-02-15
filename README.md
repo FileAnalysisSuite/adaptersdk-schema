@@ -7,6 +7,9 @@ This repository has code that auto generates schema definition libraries in mult
 
 These libraries provide classes that expose the schema fields to Adapter implementations.
 
+The libraries also include builder classes to make it easy to set fields in custom Adapters.
+The builder classes have type safe methods to `set` or `clear` fields and a `validate` method to ensure all mandatory fields have been set.
+
 ## Usage
 Here are some ways to use the `AdapterSdkSchema` to get details about a `Field`
 
@@ -63,3 +66,77 @@ To use the **.NET** version of the schema add the `MicroFocus.FAS.AdapterSdkSche
 - Check the field's type:  
 
     `AdapterSdkSchema.GetField("TITLE").FieldType;`
+
+Create a **Java** `AdapterSdkSchemaObject` using the `AdapterSdkSchemaObjectBuilder`
+
+- Create an instance of the `AdapterSdkSchemaObjectBuilder` passing in an instance of a `SchemaObjectBuilder`
+
+```
+    final Map<String, Object> document = new HashMap<String, Object>();
+    final AdapterSdkSchemaObjectBuilder documentBuilder = new AdapterSdkSchemaObjectBuilder(new MapSchemaObjectBuilder(document));
+```
+
+- Set field values by calling the appropriate setter methods
+
+```
+    documentBuilder.setFileName("test.doc");
+    documentBuilder.setMimetype("msword");
+
+    documentBuilder.setAddressDisplayBcc("person1@abc.com", "person2@abc.com");
+    documentBuilder.setAddressDisplayTo("johnDoe@abc.com");
+```
+
+- Clear a field
+
+```
+    documentBuilder.clearAddressDisplayBcc();
+```
+
+- Add more values to a field
+
+```
+    documentBuilder.addAddressDisplayTo("janeDoe@abc.com");
+```
+
+- Check if all mandatory fields have been set and a valid `AdapterSdkSchemaObject` has been created
+
+```
+    documentBuilder.validate();
+```
+
+Create a **.NET** `AdapterSdkSchemaObject` using the `AdapterSdkSchemaObjectBuilder`
+
+- Create an instance of the `AdapterSdkSchemaObjectBuilder` passing in an instance of a `ISchemaObjectBuilder`
+
+```
+    var document = new Dictionary<string, object>();
+    AdapterSdkSchemaObjectBuilder documentBuilder = new(new DictionarySchemaObjectBuilder(document));
+```
+
+- Set field values by calling the appropriate setter methods
+
+```
+    documentBuilder.SetFileName("test.doc");
+    documentBuilder.SetMimetype("msword");
+
+    documentBuilder.SetAddressDisplayBcc("person1@abc.com", "person2@abc.com");
+    documentBuilder.SetAddressDisplayTo("johnDoe@abc.com");
+```
+
+- Clear a field
+
+```
+    documentBuilder.ClearAddressDisplayBcc();
+```
+
+- Add more values to a field
+
+```
+    documentBuilder.AddAddressDisplayTo("janeDoe@abc.com");
+```
+
+- Check if all mandatory fields have been set and a valid `AdapterSdkSchemaObject` has been created
+
+```
+    documentBuilder.Validate();
+```
