@@ -39,7 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\MicroFocus.FAS.AdapterSdkSchema\MicroFocus.FAS.AdapterSdkSchema.csproj" />
+    <PackageReference Include="MicroFocus.FAS.AdapterSdkSchema" Version="1.0.0-SNAPSHOT"/>
   </ItemGroup>
 
 </Project>
