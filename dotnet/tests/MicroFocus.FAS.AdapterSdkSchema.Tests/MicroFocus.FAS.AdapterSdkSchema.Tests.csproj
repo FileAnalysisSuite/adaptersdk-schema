@@ -39,7 +39,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MicroFocus.FAS.AdapterSdkSchema" Version="1.0.0-SNAPSHOT"/>
+    <PackageReference Include="MicroFocus.FAS.AdapterSdkSchema" Version="1.0.0-SNAPSHOT">
+      <Properties>SkipValidatePackageReferences=true</Properties>
+    </PackageReference>
   </ItemGroup>
 
 </Project>
