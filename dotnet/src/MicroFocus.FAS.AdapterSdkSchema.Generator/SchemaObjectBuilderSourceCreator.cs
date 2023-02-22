@@ -117,7 +117,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                 TypeAttributes = typeAttrs
             };
 
-            AddSchemaObjectBuilderFieldAndCtor(schemaClassBuilder);
+            AddSchemaObjectBuilderFieldAndCtor(schemaClassBuilder, isMainClass);
 
             // Create a 'validate' method
             CodeMemberMethod parentValidator = validateFunctionBuilder;
@@ -150,7 +150,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             return schemaClassBuilder;
         }
 
-        private static void AddSchemaObjectBuilderFieldAndCtor(CodeTypeDeclaration schemaClassBuilder)
+        private static void AddSchemaObjectBuilderFieldAndCtor(CodeTypeDeclaration schemaClassBuilder, bool isMainClass)
         {
             CodeMemberField field = new()
             {
@@ -162,9 +162,12 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             schemaClassBuilder.Members.Add(field);
 
             CodeParameterDeclarationExpression ctorParam = new(new CodeTypeReference("ISchemaObjectBuilder"), "schemaObjectBuilder");
+            MemberAttributes ctorAttrs = isMainClass
+                ? MemberAttributes.Public | MemberAttributes.Final
+                : MemberAttributes.Assembly | MemberAttributes.Final;
             CodeConstructor constructor = new()
             {
-                Attributes = MemberAttributes.Public | MemberAttributes.Final
+                Attributes = ctorAttrs
             };
             constructor.Parameters.Add(ctorParam);
             CodeAssignStatement ctorBodyFieldInit = new()
@@ -671,7 +674,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                         newPath,
                         fullName,
                         true,
-                        true);
+                        false);
 
                 objectBuilderClassBuilder.Members.Add(fieldObjectBuilderClassBuilder);
             }
@@ -1042,7 +1045,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             // flattened does not need 'build' function and instance/state variables
             if (isFlattened)
             {
-                AddSchemaObjectBuilderFieldAndCtor(fieldListObjectBuilderClassBuiler);
+                AddSchemaObjectBuilderFieldAndCtor(fieldListObjectBuilderClassBuiler, false);
 
                 // Add 'set' function with 'Builder' param
                 AddFieldListObjectBuilderBuilderParamSetterMethod(
