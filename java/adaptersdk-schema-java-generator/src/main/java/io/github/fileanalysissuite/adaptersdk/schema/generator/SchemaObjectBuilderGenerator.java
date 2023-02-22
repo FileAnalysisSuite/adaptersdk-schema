@@ -117,7 +117,7 @@ final class SchemaObjectBuilderGenerator
         final TypeSpec.Builder schemaClassBuilder = TypeSpec.classBuilder(builderClassName)
             .addModifiers(modifiers);
 
-        addSchemaObjectBuilderFieldAndCtor(schemaClassBuilder);
+        addSchemaObjectBuilderFieldAndCtor(schemaClassBuilder, isStatic);
 
         // Create a 'validate' method
         final MethodSpec.Builder parentValidator = validateFunctionBuilder;
@@ -145,7 +145,10 @@ final class SchemaObjectBuilderGenerator
         return schemaClassBuilder;
     }
 
-    private static void addSchemaObjectBuilderFieldAndCtor(final TypeSpec.Builder schemaClassBuilder)
+    private static void addSchemaObjectBuilderFieldAndCtor(
+        final TypeSpec.Builder schemaClassBuilder,
+        final boolean isStaticClass
+    )
     {
         final FieldSpec field = FieldSpec
             .builder(SchemaObjectBuilder.class, "schemaObjectBuilder")
@@ -154,9 +157,12 @@ final class SchemaObjectBuilderGenerator
 
         schemaClassBuilder.addField(field);
 
+        final Modifier ctorModifier = isStaticClass
+            ? Modifier.PRIVATE
+            : Modifier.PUBLIC;
         final MethodSpec constructor = MethodSpec
             .constructorBuilder()
-            .addModifiers(Modifier.PUBLIC)
+            .addModifiers(ctorModifier)
             .addParameter(SchemaObjectBuilder.class, "schemaObjectBuilder", Modifier.FINAL)
             .addStatement("this.schemaObjectBuilder = schemaObjectBuilder")
             .build();
@@ -651,7 +657,7 @@ final class SchemaObjectBuilderGenerator
             .addModifiers(new Modifier[]{Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL});
         // flattened does not need 'build' function and instance/state variables
         if (isFlattened) {
-            addSchemaObjectBuilderFieldAndCtor(fieldListObjectBuilderClassBuiler);
+            addSchemaObjectBuilderFieldAndCtor(fieldListObjectBuilderClassBuiler, true);
 
             // Add 'set' function with 'Builder' param
             addFieldListObjectBuilderBuilderParamSetterMethod(
