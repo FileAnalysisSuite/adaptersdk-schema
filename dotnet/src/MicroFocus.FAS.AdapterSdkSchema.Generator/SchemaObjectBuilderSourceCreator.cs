@@ -1131,6 +1131,10 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                 AddFieldListObjectBuilderBuilderParamSetterMethod(
                     fieldListObjectBuilderClassBuiler, objBuilderClassName, internalVarName, listName);
 
+                // Add 'set' function with array of 'Builder' param
+                AddFieldListObjectBuilderBuilderArrayParamSetterMethod(
+                    fieldListObjectBuilderClassBuiler, objBuilderClassName);
+
                 // Add 'set' function with 'List' param
                 AddFieldListObjectBuilderListParamSetterMethod(
                     fieldListObjectBuilderClassBuiler, objBuilderClassName, internalVarName, listName);
