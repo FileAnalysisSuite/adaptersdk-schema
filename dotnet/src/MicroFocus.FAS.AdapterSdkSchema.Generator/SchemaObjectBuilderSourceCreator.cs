@@ -164,7 +164,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             CodeParameterDeclarationExpression ctorParam = new(new CodeTypeReference("ISchemaObjectBuilder"), "schemaObjectBuilder");
             CodeConstructor constructor = new()
             {
-                Attributes = MemberAttributes.Public
+                Attributes = MemberAttributes.Public | MemberAttributes.Final
             };
             constructor.Parameters.Add(ctorParam);
             CodeAssignStatement ctorBodyFieldInit = new()
@@ -414,7 +414,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                         buildFunctionBuilder = new()
                         {
                             Name = "Build",
-                            Attributes = MemberAttributes.Assembly
+                            Attributes = MemberAttributes.Assembly | MemberAttributes.Final
                         };
 
                         CodeParameterDeclarationExpression buildMethodParam = new(new CodeTypeReference("IJsonBuilder"), "jsonBuilder");
@@ -680,11 +680,11 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                 // This class will have instance variables for each property and a 'build' function to write json values
                 CodeTypeDeclaration fieldObjectBuilderClassBuilder = new(objBuilderClassName)
                 {
-                    TypeAttributes = TypeAttributes.Public | TypeAttributes.Class
+                    TypeAttributes = TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.Sealed
                 };
                 CodeConstructor defaultCtor = new()
                 {
-                    Attributes = MemberAttributes.Assembly
+                    Attributes = MemberAttributes.Public
                 };
                 fieldObjectBuilderClassBuilder.Members.Add(defaultCtor);
 
@@ -693,7 +693,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                 buildFunctionBuilder = new()
                 {
                     Name = "Build",
-                    Attributes = MemberAttributes.Assembly
+                    Attributes = MemberAttributes.Assembly | MemberAttributes.Final
                 };
                 CodeParameterDeclarationExpression buildMethodParam = new(new CodeTypeReference("IJsonBuilder"), "jsonBuilder");
                 buildFunctionBuilder.Parameters.Add(buildMethodParam);
@@ -1063,7 +1063,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                 // Json encoded
                 CodeConstructor defaultCtor = new()
                 {
-                    Attributes = MemberAttributes.Assembly
+                    Attributes = MemberAttributes.Assembly | MemberAttributes.Final
                 };
                 fieldListObjectBuilderClassBuiler.Members.Add(defaultCtor);
 
@@ -1197,7 +1197,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             CodeMemberMethod validateMethod = new()
             {
                 Name = "Validate",
-                Attributes = MemberAttributes.Assembly
+                Attributes = MemberAttributes.Assembly | MemberAttributes.Final
             };
 
             listObjectBuilderClassBuiler.Members.Add(validateMethod);
@@ -1303,7 +1303,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             CodeMemberMethod buildFunctionBuilder = new()
             {
                 Name = "Build",
-                Attributes = MemberAttributes.Assembly
+                Attributes = MemberAttributes.Assembly | MemberAttributes.Final
             };
             CodeParameterDeclarationExpression buildMethodParam = new(new CodeTypeReference("IJsonBuilder"), "jsonBuilder");
             buildFunctionBuilder.Parameters.Add(buildMethodParam);
