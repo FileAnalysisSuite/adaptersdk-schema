@@ -684,7 +684,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                 };
                 CodeConstructor defaultCtor = new()
                 {
-                    Attributes = MemberAttributes.Public
+                    Attributes = MemberAttributes.Assembly
                 };
                 fieldObjectBuilderClassBuilder.Members.Add(defaultCtor);
 
