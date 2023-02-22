@@ -363,6 +363,12 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                         isSubfield,
                         validatorSubFieldName);
 
+                    // Add 'set' function with 'array' param
+                    AddBuilderArrayParamSetterMethod(
+                        objectBuilderClassBuilder,
+                        fieldFunctionName,
+                        builderTypeName);
+
                     // Add 'set' function with 'List' param
                     AddBuilderListParamSetterMethod(
                         objectBuilderClassBuilder,
@@ -434,6 +440,12 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                             isSubfield,
                             validatorSubFieldName);
 
+                        // Add entity type property 'set' function with 'array' param
+                        AddBuilderArrayParamSetterMethod(
+                            objectBuilderClassBuilder,
+                            fieldFunctionName,
+                            builderTypeName);
+
                         // Add entity type property 'set' function with 'List' param
                         AddBuilderListParamSetterMethod(
                             objectBuilderClassBuilder,
@@ -485,6 +497,12 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                             objBuilderClassName,
                             internalBuilderVarName,
                             isFlattened);
+
+                        // Add entity type property 'set' function with 'array' param
+                        AddBuilderArrayParamSetterMethod(
+                            objectBuilderClassBuilder,
+                            fieldFunctionName,
+                            builderTypeName);
 
                         // Add entity type property 'set' function with 'List' param
                         AddNestedObjectBuilderListParamSetterMethod(
@@ -765,6 +783,12 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                 isSubField,
                 validatorSubFieldName);
 
+            // Add 'set' function with 'array' param
+            AddBuilderArrayParamSetterMethod(
+                objectBuilderClassBuilder,
+                fieldFunctionName,
+                listBuilderTypeName);
+
             // Add 'set' function with 'List' param
             AddBuilderListParamSetterMethod(
                 objectBuilderClassBuilder,
@@ -823,6 +847,27 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             }
             objectBuilderClassBuilder.Members.Add(setBuilderFieldValue);
 
+        }
+
+        private void AddBuilderArrayParamSetterMethod(
+            CodeTypeDeclaration objectBuilderClassBuilder,
+            string fieldFunctionName,
+            string builderTypeName
+        )
+        {
+            CodeParameterDeclarationExpression arrayParamFieldName = new(builderTypeName + "[]", "directors");
+            arrayParamFieldName.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(ParamArrayAttribute))));
+
+            CodeMemberMethod setStreamFieldValue = new()
+            {
+                Name = "Set" + fieldFunctionName,
+                Attributes = MemberAttributes.Public | MemberAttributes.Final
+            };
+            setStreamFieldValue.Parameters.Add(arrayParamFieldName);
+
+            setStreamFieldValue.Statements.Add(new CodeSnippetStatement("Set" + fieldFunctionName + "(directors.ToList());"));
+
+            objectBuilderClassBuilder.Members.Add(setStreamFieldValue);
         }
 
         private void AddBuilderListParamSetterMethod(
@@ -1047,6 +1092,10 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                 AddFieldListObjectBuilderBuilderParamSetterMethod(
                     fieldListObjectBuilderClassBuiler, objBuilderClassName, internalVarName);
 
+                // Add 'set' function with array of 'Builder' param
+                AddFieldListObjectBuilderBuilderArrayParamSetterMethod(
+                    fieldListObjectBuilderClassBuiler, objBuilderClassName);
+
                 // Add 'set' function with 'List' param
                 AddFieldListObjectBuilderListParamSetterMethod(
                     fieldListObjectBuilderClassBuiler, objBuilderClassName, internalVarName);
@@ -1134,6 +1183,27 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             setBuilderFieldValue.Statements.Add(new CodeSnippetStatement("});"));
 
             listObjectBuilderClassBuiler.Members.Add(setBuilderFieldValue);
+        }
+
+        private void AddFieldListObjectBuilderBuilderArrayParamSetterMethod(
+            CodeTypeDeclaration listObjectBuilderClassBuiler,
+            string objBuilderClassName
+        )
+        {
+            CodeParameterDeclarationExpression arrayParamFieldName = new("Action < " + objBuilderClassName + " >[]", "directors");
+            arrayParamFieldName.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(ParamArrayAttribute))));
+
+            CodeMemberMethod setStreamFieldValue = new()
+            {
+                Name = "Set",
+                Attributes = MemberAttributes.Public | MemberAttributes.Final
+            };
+
+            setStreamFieldValue.Parameters.Add(arrayParamFieldName);
+
+            setStreamFieldValue.Statements.Add(new CodeSnippetStatement("Set(directors.ToList());"));
+
+            listObjectBuilderClassBuiler.Members.Add(setStreamFieldValue);
         }
 
         private void AddFieldListObjectBuilderListParamSetterMethod(

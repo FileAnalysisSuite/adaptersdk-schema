@@ -160,6 +160,129 @@ namespace MicroFocus.FAS.AdapterSdkSchema.Tests
         }
 
         [Fact]
+        public void TestCreateDataSetWithSchemaObjectBuilderArrayVersion()
+        {
+            Console.WriteLine("TestCreateDataSetWithSchemaObjectBuilderArrayVersion...");
+            var document = new Dictionary<string, object>();
+            AdapterSdkSchemaObjectBuilder documentBuilder = new(new DictionarySchemaObjectBuilder(document));
+            // Integer
+            documentBuilder.SetColumnCount(3);
+            // Long
+            documentBuilder.SetRootFileSize(418);
+            // Boolean
+            documentBuilder.SetHasAttachments(false);
+            // Datetime
+            documentBuilder.SetDateArchived(DateTime.Now);
+            // Single-valued string
+            documentBuilder.SetAddressBcc("jdoe@gmail.com");
+            // Multi-valued string
+            documentBuilder.SetAddressTo("person1@gmail.com", "person2@there.com");
+
+            // Multi-valued Nested object, Json encoded
+            documentBuilder.SetAccounts(
+                builder => {
+                    builder.SetDisplayName("J Doe");
+                    builder.SetIdentifier("jdoe");
+                    builder.SetHandles("handle1", "handle2");
+                },
+                builder => {
+                    builder.SetDisplayName("foo");
+                    builder.SetIdentifier("fooId");
+                    builder.SetSender(false);
+                }
+            );
+
+            // multi- level Nested objects, Json encoded
+            documentBuilder.SetColumns(
+                builder => {
+                    builder.SetName("ColumnA");
+                    builder.SetReviewedBy("somebody");
+                    builder.SetReviewerComments("LGTM");
+                    builder.SetSelectedGrammarRule("GrammarRuleA");
+                    builder.SetStatus("REVIEWED");
+                    builder.SetType("TypeA");
+                    builder.SetGrammarMatches(
+                        mbuilder => {
+                            mbuilder.SetRules("RuleA-1", "RuleA-2");
+                            mbuilder.SetWeight(50);
+                        }
+                    );
+                },
+                    builder => {
+                        builder.SetName("ColumnB");
+                        builder.SetReviewedBy("somebody");
+                        builder.SetReviewerComments("Needs changes");
+                        builder.SetSelectedGrammarRule("GrammarRuleB");
+                        builder.SetStatus("REVIEWED");
+                        builder.SetType("TypeB");
+                        builder.SetGrammarMatches(
+                            mbuilder => {
+                                mbuilder.SetRules("RuleB-1", "RuleB-2");
+                                mbuilder.SetWeight(30);
+                            }
+                        );
+                    }
+            );
+
+            // multi-values Nested object, single-dimension - flattened
+            //Setting multiple values for single-dimension multi-valued Nested object
+            documentBuilder.SetMetadataFiles(
+                builder => {
+                    builder.SetContent("mdf-content1");
+                    builder.SetExtension("abc");
+                },
+                builder => {
+                    builder.SetContent("mdf-content2");
+                    builder.SetExtension("xyz");
+                }
+            );
+
+            // multi-values Nested object, multi-dimension - flattened
+            // Setting single value for multi-valued Nested object, multi-dimension - flattened
+            documentBuilder.SetOcr(
+                listBuilder => {
+                    listBuilder.Set(
+                        builder => {
+                            builder.SetName("Reporter");
+                            builder.SetType("Name");
+                            builder.SetValue("John Doe");
+                            builder.SetConfidence(41);
+                        },
+                        builder => {
+                            builder.SetConfidence(42);
+                            builder.SetValue("free form text from a non-templated region");
+                        }
+                    );
+                },
+                listBuilder => {
+                    listBuilder.Set(
+                        builder => {
+                            builder.SetName("Reporter");
+                            builder.SetType("Name");
+                            builder.SetValue("Jane Doe");
+                            builder.SetConfidence(41);
+                        },
+                        builder => {
+                            builder.SetConfidence(44);
+                            builder.SetValue("free form text from a non-templated region");
+                        }
+                    );
+                }
+            );
+
+            PrintDocument(document);
+
+            Assert.True(document.ContainsKey("ACCOUNTS"));
+            Assert.True(document.ContainsKey("COLUMNS"));
+            Assert.True(document.ContainsKey("METADATA_FILES_0_CONTENT"));
+            Assert.True(document.ContainsKey("METADATA_FILES_1_EXTENSION"));
+            Assert.True(document.ContainsKey("OCR_0_0_CONFIDENCE"));
+            Assert.True(document.ContainsKey("OCR_0_1_VALUE"));
+            Assert.True(document.ContainsKey("OCR_1_0_NAME"));
+            Assert.True(document.ContainsKey("OCR_1_1_VALUE"));
+        }
+
+        [Fact]
         public void TestInvalidAdapterSdkSchemaObject()
         {
             Console.WriteLine("TestInvalidAdapterSdkSchemaObject...");
