@@ -108,13 +108,9 @@ namespace MicroFocus.FAS.AdapterSdkSchema
         )
         {
             // Define the schema object builder class
-            var typeAttrs = isMainClass
-                ? TypeAttributes.Public | TypeAttributes.Sealed | TypeAttributes.Class
-                : TypeAttributes.Public | TypeAttributes.Class;
-
             CodeTypeDeclaration schemaClassBuilder = new(builderClassName)
             {
-                TypeAttributes = typeAttrs
+                TypeAttributes = TypeAttributes.Public | TypeAttributes.Sealed | TypeAttributes.Class
             };
 
             AddSchemaObjectBuilderFieldAndCtor(schemaClassBuilder, isMainClass);
