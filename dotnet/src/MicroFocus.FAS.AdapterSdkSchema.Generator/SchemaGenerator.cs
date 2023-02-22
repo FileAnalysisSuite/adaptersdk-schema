@@ -48,6 +48,21 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             context.AddSource(
                 "AdapterSdkSchemaGenerated.g.cs",
                 SourceText.From(formattedSchemaSource, Encoding.UTF8));
+
+            var schemaObjectBuilderSource = SchemaObjectBuilderSourceCreator.Create();
+
+            var formattedSchemaObjectBuilderSource = CSharpSyntaxTree
+                .ParseText(schemaObjectBuilderSource)
+                .GetRoot()
+                .NormalizeWhitespace()
+                .ToFullString();
+
+            Debug.WriteLine("schema object builder source : " + formattedSchemaObjectBuilderSource);
+
+            // Inject the created object builder source into the compilation
+            context.AddSource(
+                "AdapterSdkSchemaObjectBuilderGenerated.g.cs",
+                SourceText.From(formattedSchemaObjectBuilderSource, Encoding.UTF8));
         }
     }
 }
