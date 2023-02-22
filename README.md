@@ -136,6 +136,91 @@ Create a **.NET** `AdapterSdkSchemaObject` using the `AdapterSdkSchemaObjectBuil
     documentBuilder.AddAddressDisplayTo("janeDoe@abc.com");
 ```
 
+- Add a nested field values
+
+```
+	documentBuilder.SetColumns(
+		builder => {
+			builder.SetName("ColumnA");
+			builder.SetReviewedBy("somebody");
+			builder.SetReviewerComments("LGTM");
+			builder.SetSelectedGrammarRule("GrammarRuleA");
+			builder.SetStatus("REVIEWED");
+			builder.SetType("TypeA");
+			builder.SetGrammarMatches(
+				mbuilder => {
+					mbuilder.SetRules("RuleA-1", "RuleA-2");
+					mbuilder.SetWeight(50);
+				}
+			);
+		},
+		builder => {
+			builder.SetName("ColumnB");
+			builder.SetReviewedBy("somebody");
+			builder.SetReviewerComments("Needs changes");
+			builder.SetSelectedGrammarRule("GrammarRuleB");
+			builder.SetStatus("REVIEWED");
+			builder.SetType("TypeB");
+			builder.SetGrammarMatches(
+				mbuilder => {
+					mbuilder.SetRules("RuleB-1", "RuleB-2");
+					mbuilder.SetWeight(30);
+				}
+			);
+		}
+	);
+```
+
+- Set multiple values for single-dimensional multi-valued nested object
+
+```
+	documentBuilder.SetMetadataFiles(
+		builder => {
+			builder.SetContent("mdf-content1");
+			builder.SetExtension("abc");
+		},
+		builder => {
+			builder.SetContent("mdf-content2");
+			builder.SetExtension("xyz");
+		}
+	);
+```
+
+- Set values for multi-dimensional multi-valued nested object 
+
+```
+	documentBuilder.SetOcr(
+		listBuilder => {
+			listBuilder.Set(
+				builder => {
+					builder.SetName("Reporter");
+					builder.SetType("Name");
+					builder.SetValue("John Doe");
+					builder.SetConfidence(41);
+				},
+				builder => {
+					builder.SetConfidence(42);
+					builder.SetValue("free form text from a non-templated region");
+				}
+			);
+		},
+		listBuilder => {
+			listBuilder.Set(
+				builder => {
+					builder.SetName("Reporter");
+					builder.SetType("Name");
+					builder.SetValue("Jane Doe");
+					builder.SetConfidence(41);
+				},
+				builder => {
+					builder.SetConfidence(44);
+					builder.SetValue("free form text from a non-templated region");
+				}
+			);
+		}
+	);
+```
+
 - Check if all mandatory fields have been set and a valid `AdapterSdkSchemaObject` has been created
 
 ```
