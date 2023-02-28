@@ -247,19 +247,19 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             _document.Add(field.FieldName, values);
         }
 
-        public void SetJsonFieldValue(IField field, Action<IJsonBuilder> builder)
+        public void SetJsonFieldValue(IField field, Action<IJsonBuilder> director)
         {
             SystemJsonBuilder jsonBuilder = new();
-            builder.Invoke(jsonBuilder);
+            director.Invoke(jsonBuilder);
 
             _document.Add(field.FieldName, jsonBuilder.Encode());
         }
 
-        public void SetJsonFieldValue(IField field, IEnumerable<Action<IJsonBuilder>> builders)
+        public void SetJsonFieldValue(IField field, IEnumerable<Action<IJsonBuilder>> directors)
         {
             _document.Add(
             field.FieldName,
-            builders.Select(builder => {
+            directors.Select(builder => {
                 SystemJsonBuilder jsonBuilder = new();
                 builder.Invoke(jsonBuilder);
                 return jsonBuilder.Encode();

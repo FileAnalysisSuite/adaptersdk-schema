@@ -70,12 +70,12 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 
         void AddStringFieldValue(IField field, string value);
 
-        void SetJsonFieldValue(IField field, Action<IJsonBuilder> builder);
+        void SetJsonFieldValue(IField field, Action<IJsonBuilder> director);
 
-        void SetJsonFieldValue(IField field, IEnumerable<Action<IJsonBuilder>> builders);
+        void SetJsonFieldValue(IField field, IEnumerable<Action<IJsonBuilder>> directors);
 
-        void SetFlattenedFieldValue(IField field, Action<ISchemaObjectBuilder> builder);
+        void SetFlattenedFieldValue(IField field, Action<ISchemaObjectBuilder> director);
 
-        void SetFlattenedFieldValue(IField field, IEnumerable<Action<ISchemaObjectBuilder>> builders);
+        void SetFlattenedFieldValue(IField field, IEnumerable<Action<ISchemaObjectBuilder>> directors);
     }
 }

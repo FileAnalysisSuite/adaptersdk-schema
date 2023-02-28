@@ -73,11 +73,11 @@ public interface SchemaObjectBuilder
 
     void addStringFieldValue(Field field, String value);
 
-    void setJsonFieldValue(Field field, Consumer<JsonBuilder> builder);
+    void setJsonFieldValue(Field field, Consumer<JsonBuilder> director);
 
-    void setJsonFieldValue(Field field, Stream<Consumer<JsonBuilder>> builders);
+    void setJsonFieldValue(Field field, Stream<Consumer<JsonBuilder>> directors);
 
-    void setFlattenedFieldValue(Field field, Consumer<SchemaObjectBuilder> builder);
+    void setFlattenedFieldValue(Field field, Consumer<SchemaObjectBuilder> director);
 
-    void setFlattenedFieldValue(Field field, Stream<Consumer<SchemaObjectBuilder>> builders);
+    void setFlattenedFieldValue(Field field, Stream<Consumer<SchemaObjectBuilder>> directors);
 }
