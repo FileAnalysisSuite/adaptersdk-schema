@@ -27,6 +27,6 @@ final class InstantFunctions
     @Nonnull
     public static String toEpochSecondsString(final Instant value)
     {
-        return Long.toString(value.toEpochMilli() / 1000);
+        return Long.toString(value.getEpochSecond());
     }
 }
