@@ -15,6 +15,8 @@
  */
 package io.github.fileanalysissuite.adaptersdk.schema;
 
+import io.github.fileanalysissuite.adaptersdk.schema.jsonbuilders.jackson.JacksonJsonStringBuilder;
+import io.github.fileanalysissuite.adaptersdk.schema.schemaobjectbuilders.StringMapSchemaObjectBuilder;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
@@ -33,8 +35,9 @@ public final class AdapterSdkSchemaObjectBuilderTest
     public void testCreateDataSetWithSchemaObjectBuilder()
     {
         System.out.println("testCreateDataSetWithSchemaObjectBuilder...");
-        final Map<String, Object> document = new HashMap<String, Object>();
-        final AdapterSdkSchemaObjectBuilder documentBuilder = new AdapterSdkSchemaObjectBuilder(new MapSchemaObjectBuilder(document));
+        final Map<String, List<String>> document = new HashMap<>();
+        final AdapterSdkSchemaObjectBuilder documentBuilder
+            = new AdapterSdkSchemaObjectBuilder(StringMapSchemaObjectBuilder.create(document, JacksonJsonStringBuilder::buildJsonString));
 
         // Integer
         documentBuilder.setColumnCount(3);
@@ -165,8 +168,9 @@ public final class AdapterSdkSchemaObjectBuilderTest
     public void testMandatoryFieldNotSet()
     {
         System.out.println("testMandatoryFieldNotSet...");
-        final Map<String, Object> document = new HashMap<String, Object>();
-        final AdapterSdkSchemaObjectBuilder documentBuilder = new AdapterSdkSchemaObjectBuilder(new MapSchemaObjectBuilder(document));
+        final Map<String, List<String>> document = new HashMap<>();
+        final AdapterSdkSchemaObjectBuilder documentBuilder
+            = new AdapterSdkSchemaObjectBuilder(StringMapSchemaObjectBuilder.create(document, JacksonJsonStringBuilder::buildJsonString));
         final IllegalArgumentException thrown = assertThrows(
             IllegalArgumentException.class,
             () -> documentBuilder.setOcr(
@@ -214,8 +218,9 @@ public final class AdapterSdkSchemaObjectBuilderTest
     public void testSingleDimensionMandatoryFieldNotSet()
     {
         System.out.println("testSingleDimensionMandatoryFieldNotSet...");
-        final Map<String, Object> document = new HashMap<String, Object>();
-        final AdapterSdkSchemaObjectBuilder documentBuilder = new AdapterSdkSchemaObjectBuilder(new MapSchemaObjectBuilder(document));
+        final Map<String, List<String>> document = new HashMap<>();
+        final AdapterSdkSchemaObjectBuilder documentBuilder
+            = new AdapterSdkSchemaObjectBuilder(StringMapSchemaObjectBuilder.create(document, JacksonJsonStringBuilder::buildJsonString));
         final IllegalArgumentException thrown = assertThrows(
             IllegalArgumentException.class,
             () -> documentBuilder.setMetadataFiles(Stream.of(
@@ -239,8 +244,9 @@ public final class AdapterSdkSchemaObjectBuilderTest
     public void testValidAdapterSdkSchemaObject()
     {
         System.out.println("testValidAdapterSdkSchemaObject...");
-        final Map<String, Object> document = new HashMap<String, Object>();
-        final AdapterSdkSchemaObjectBuilder documentBuilder = new AdapterSdkSchemaObjectBuilder(new MapSchemaObjectBuilder(document));
+        final Map<String, List<String>> document = new HashMap<>();
+        final AdapterSdkSchemaObjectBuilder documentBuilder
+            = new AdapterSdkSchemaObjectBuilder(StringMapSchemaObjectBuilder.create(document, JacksonJsonStringBuilder::buildJsonString));
         documentBuilder.setFileName("test.doc");
         documentBuilder.setHash("9876dfg");
         documentBuilder.setMimetype("msword");
@@ -265,8 +271,9 @@ public final class AdapterSdkSchemaObjectBuilderTest
     public void testInvalidAdapterSdkSchemaObject()
     {
         System.out.println("testInvalidAdapterSdkSchemaObject...");
-        final Map<String, Object> document = new HashMap<String, Object>();
-        final AdapterSdkSchemaObjectBuilder documentBuilder = new AdapterSdkSchemaObjectBuilder(new MapSchemaObjectBuilder(document));
+        final Map<String, List<String>> document = new HashMap<>();
+        final AdapterSdkSchemaObjectBuilder documentBuilder
+            = new AdapterSdkSchemaObjectBuilder(StringMapSchemaObjectBuilder.create(document, JacksonJsonStringBuilder::buildJsonString));
         documentBuilder.setFileName("test.doc");
         documentBuilder.setHash("9876dfg");
         //documentBuilder.setMimetype("msword"); //mandatory field not set

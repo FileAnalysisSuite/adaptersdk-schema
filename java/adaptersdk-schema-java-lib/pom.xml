@@ -39,8 +39,8 @@
             <artifactId>adaptersdk-schema-java-interfaces</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
+            <groupId>io.github.fileanalysissuite.adaptersdk.schema</groupId>
+            <artifactId>adaptersdk-schema-java-jsonbuilder-jackson</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
