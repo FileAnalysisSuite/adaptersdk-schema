@@ -15,6 +15,8 @@
  */
 package io.github.fileanalysissuite.adaptersdk.schema;
 
+import io.github.fileanalysissuite.adaptersdk.schema.jsonbuilders.jackson.JacksonJsonStringBuilder;
+import io.github.fileanalysissuite.adaptersdk.schema.schemaobjectbuilders.StringMapSchemaObjectBuilder;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
@@ -26,9 +28,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
-
-import io.github.fileanalysissuite.adaptersdk.schema.jsonbuilders.jackson.JacksonJsonStringBuilder;
-import io.github.fileanalysissuite.adaptersdk.schema.schemaobjectbuilders.StringMapSchemaObjectBuilder;
 
 public final class AdapterSdkSchemaObjectBuilderTest
 {
