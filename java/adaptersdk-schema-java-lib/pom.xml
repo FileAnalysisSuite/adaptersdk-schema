@@ -31,6 +31,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.github.fileanalysissuite.adaptersdk.schema</groupId>
             <artifactId>adaptersdk-schema-java-interfaces</artifactId>
         </dependency>
