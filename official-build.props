@@ -1,4 +1,4 @@
-SEPG_BUILD_ENV_IMAGE=cafapi/prereleases:buildenv-dotnet-1.1.0-SNAPSHOT
+SEPG_BUILD_ENV_IMAGE=cafapi/buildenv-dotnet:1.2.0
 GENERIC_CUSTOM_COMMIT_COMMENT_FOR_GIT=Generated files from schema
 
 GENERIC_1_ARTIFACTS=dotnet/artifacts/MicroFocus.FAS.AdapterSdkSchema/obj/GeneratedFiles/MicroFocus.FAS.AdapterSdkSchema.Generator/MicroFocus.FAS.AdapterSdkSchema.SchemaGenerator/AdapterSdkSchemaGenerated.g.cs
