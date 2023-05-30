@@ -39,7 +39,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\MicroFocus.FAS.AdapterSdkSchema.JsonBuilders.System\MicroFocus.FAS.AdapterSdkSchema.JsonBuilders.System.csproj" />
     <ProjectReference Include="..\..\src\MicroFocus.FAS.AdapterSdkSchema\MicroFocus.FAS.AdapterSdkSchema.csproj" />
+    <ProjectReference Include="..\..\src\MicroFocus.FAS.AdapterSdkSchema.SchemaObjectBuilders\MicroFocus.FAS.AdapterSdkSchema.SchemaObjectBuilders.csproj" />
   </ItemGroup>
 
 </Project>
