@@ -56,7 +56,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema.SchemaObjectBuilders
 
         public void AddInstantFieldValue(IField field, DateTime value)
         {
-            AddStringFieldValueImpl(field, value.ToString());
+            AddStringFieldValueImpl(field, DateTimeFunctions.ToEpochSecondsString(value));
         }
 
         public void AddIntegerFieldValue(IField field, int value)
@@ -121,17 +121,17 @@ namespace MicroFocus.FAS.AdapterSdkSchema.SchemaObjectBuilders
 
         public void SetInstantFieldValue(IField field, DateTime value)
         {
-            _metadata.Add(GetMetadataKey(field), new[] { value.ToString() });
+            _metadata.Add(GetMetadataKey(field), new[] { DateTimeFunctions.ToEpochSecondsString(value) });
         }
 
         public void SetInstantFieldValue(IField field, params DateTime[] values)
         {
-            _metadata.Add(GetMetadataKey(field), values.Select(value => value.ToString()).ToList());
+            _metadata.Add(GetMetadataKey(field), values.Select(value => DateTimeFunctions.ToEpochSecondsString(value)).ToList());
         }
 
         public void SetInstantFieldValue(IField field, IEnumerable<DateTime> values)
         {
-            _metadata.Add(GetMetadataKey(field), values.Select(value => value.ToString()).ToList());
+            _metadata.Add(GetMetadataKey(field), values.Select(value => DateTimeFunctions.ToEpochSecondsString(value)).ToList());
         }
 
         public void SetIntegerFieldValue(IField field, int value)
@@ -248,5 +248,6 @@ namespace MicroFocus.FAS.AdapterSdkSchema.SchemaObjectBuilders
                 _metadata[metadataKey] = newList;
             }
         }
+
     }
 }
