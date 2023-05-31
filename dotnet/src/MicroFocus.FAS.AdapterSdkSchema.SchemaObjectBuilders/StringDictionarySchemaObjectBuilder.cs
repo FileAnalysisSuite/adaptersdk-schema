@@ -17,12 +17,8 @@ using System.Collections.Generic;
 
 namespace MicroFocus.FAS.AdapterSdkSchema.SchemaObjectBuilders
 {
-    public sealed class StringDictionarySchemaObjectBuilder
+    public static class StringDictionarySchemaObjectBuilder
     {
-        private StringDictionarySchemaObjectBuilder()
-        {
-        }
-
         public static ISchemaObjectBuilder Create(Dictionary<string, IList<string>> metadata, IJsonStringBuilder jsonStringBuilder)
         {
             return new StringDictionarySchemaObjectBuilderImpl(metadata, jsonStringBuilder);
