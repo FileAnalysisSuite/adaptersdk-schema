@@ -22,7 +22,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema.SchemaObjectBuilders
         internal static string ToEpochSecondsString(DateTime value)
         {
             TimeSpan t = value - new DateTime(1970, 1, 1);
-            int secondsSinceEpoch = (int)t.TotalSeconds;
+            long secondsSinceEpoch = (long)t.TotalSeconds;
             return secondsSinceEpoch.ToString();
         }
 
