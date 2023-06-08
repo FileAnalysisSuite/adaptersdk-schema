@@ -25,6 +25,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema.JsonBuilders.System
         {
             _jsonWriter = jsonWriter;
         }
+
         public void WriteBoolean(bool value)
         {
             _jsonWriter.WriteBooleanValue(value);
@@ -79,6 +80,5 @@ namespace MicroFocus.FAS.AdapterSdkSchema.JsonBuilders.System
         {
             _jsonWriter.WriteStartObject();
         }
-
     }
 }

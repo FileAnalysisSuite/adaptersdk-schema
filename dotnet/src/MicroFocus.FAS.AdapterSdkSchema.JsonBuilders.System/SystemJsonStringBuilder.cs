@@ -17,25 +17,22 @@ using System;
 using System.IO;
 using System.Text;
 using System.Text.Json;
-using MicroFocus.FAS.AdapterSdkSchema.SchemaObjectBuilders;
 
 namespace MicroFocus.FAS.AdapterSdkSchema.JsonBuilders.System
 {
-    public sealed class SystemJsonStringBuilder : IJsonStringBuilder
+    public static class SystemJsonStringBuilder
     {
-        public SystemJsonStringBuilder()
+        public static string BuildJsonString(Action<IJsonBuilder> director)
         {
-        }
-
-        public string BuildJsonString(Action<IJsonBuilder> director)
-        {
-            using (MemoryStream stream = new MemoryStream())
-            using (Utf8JsonWriter jsonWriter = new Utf8JsonWriter(stream))
+            using (MemoryStream memoryStream = new MemoryStream())
             {
-                SystemJsonBuilder jsonBuilder = new SystemJsonBuilder(jsonWriter);
-                director.Invoke(jsonBuilder);
-                jsonWriter.Flush();
-                return Encoding.UTF8.GetString(stream.ToArray());
+                using (Utf8JsonWriter jsonWriter = new Utf8JsonWriter(memoryStream))
+                {
+                    SystemJsonBuilder jsonBuilder = new SystemJsonBuilder(jsonWriter);
+                    director.Invoke(jsonBuilder);
+                }
+
+                return Encoding.UTF8.GetString(memoryStream.ToArray());
             }
         }
     }

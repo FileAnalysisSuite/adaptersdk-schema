@@ -16,62 +16,32 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 
 namespace MicroFocus.FAS.AdapterSdkSchema.SchemaObjectBuilders
 {
     internal sealed class StringDictionarySchemaObjectBuilderImpl : ISchemaObjectBuilder
     {
-        private readonly Dictionary<string, IList<string>> _metadata;
-        private readonly IJsonStringBuilder _jsonStringBuilder;
+        private readonly IDictionary<string, IEnumerable<string>> _metadata;
+        private readonly JsonStringBuilder _jsonStringBuilder;
         private readonly string _prefix;
 
         public StringDictionarySchemaObjectBuilderImpl(
-            Dictionary<string, IList<string>> metadata,
-            IJsonStringBuilder jsonStringBuilder
-        ) : this(metadata, jsonStringBuilder, "")
+            IDictionary<string, IEnumerable<string>> metadata,
+            JsonStringBuilder jsonStringBuilder)
+                : this(metadata, jsonStringBuilder, "")
         {
         }
 
         private StringDictionarySchemaObjectBuilderImpl(
-            Dictionary<string, IList<string>> metadata,
-            IJsonStringBuilder jsonStringBuilder,
-            string prefix
-        )
+            IDictionary<string, IEnumerable<string>> metadata,
+            JsonStringBuilder jsonStringBuilder,
+            string prefix)
         {
             _metadata = metadata;
             _jsonStringBuilder = jsonStringBuilder;
             _prefix = prefix;
-        }
-
-        public void AddBooleanFieldValue(IField field, bool value)
-        {
-            AddStringFieldValueImpl(field, value.ToString());
-        }
-
-        public void AddDoubleFieldValue(IField field, double value)
-        {
-            AddStringFieldValueImpl(field, value.ToString());
-        }
-
-        public void AddInstantFieldValue(IField field, DateTime value)
-        {
-            AddStringFieldValueImpl(field, DateTimeFunctions.ToEpochSecondsString(value));
-        }
-
-        public void AddIntegerFieldValue(IField field, int value)
-        {
-            AddStringFieldValueImpl(field, value.ToString());
-        }
-
-        public void AddLongFieldValue(IField field, long value)
-        {
-            AddStringFieldValueImpl(field, value.ToString());
-        }
-
-        public void AddStringFieldValue(IField field, string value)
-        {
-            AddStringFieldValueImpl(field, value);
         }
 
         public void ClearField(IField field)
@@ -80,7 +50,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema.SchemaObjectBuilders
 
             if (field.ObjectEncoding == ObjectEncoding.Flattened)
             {
-                List<string> keysToRemove = _metadata.Keys.Where(key => key.StartsWith(metadataKey + "_")).ToList();
+                var keysToRemove = _metadata.Keys.Where(key => key.StartsWith(metadataKey + "_")).ToList();
                 keysToRemove.ForEach(key => _metadata.Remove(key));
             }
             else
@@ -91,104 +61,132 @@ namespace MicroFocus.FAS.AdapterSdkSchema.SchemaObjectBuilders
 
         public void SetBooleanFieldValue(IField field, bool value)
         {
-            _metadata.Add(GetMetadataKey(field), new[] { value.ToString() });
+            _metadata[GetMetadataKey(field)] = new[] { value.ToLowerCaseString() };
         }
 
         public void SetBooleanFieldValue(IField field, params bool[] values)
         {
-            _metadata.Add(GetMetadataKey(field), values.Select(value => value.ToString()).ToList());
+            _metadata[GetMetadataKey(field)] = values.Select(BooleanExtension.ToLowerCaseString).ToList();
         }
 
         public void SetBooleanFieldValue(IField field, IEnumerable<bool> values)
         {
-            _metadata.Add(GetMetadataKey(field), values.Select(value => value.ToString()).ToList());
+            _metadata[GetMetadataKey(field)] = values.Select(BooleanExtension.ToLowerCaseString).ToList();
+        }
+
+        public void AddBooleanFieldValue(IField field, bool value)
+        {
+            AddStringFieldValueImpl(field, value.ToLowerCaseString());
         }
 
         public void SetDoubleFieldValue(IField field, double value)
         {
-            _metadata.Add(GetMetadataKey(field), new[] { value.ToString() });
+            _metadata[GetMetadataKey(field)] = new[] { value.ToString(NumberFormatInfo.InvariantInfo) };
         }
 
         public void SetDoubleFieldValue(IField field, params double[] values)
         {
-            _metadata.Add(GetMetadataKey(field), values.Select(value => value.ToString()).ToList());
+            _metadata[GetMetadataKey(field)] = values.Select(value => value.ToString(NumberFormatInfo.InvariantInfo)).ToList();
         }
 
         public void SetDoubleFieldValue(IField field, IEnumerable<double> values)
         {
-            _metadata.Add(GetMetadataKey(field), values.Select(value => value.ToString()).ToList());
+            _metadata[GetMetadataKey(field)] = values.Select(value => value.ToString(NumberFormatInfo.InvariantInfo)).ToList();
         }
 
-        public void SetInstantFieldValue(IField field, DateTime value)
+        public void AddDoubleFieldValue(IField field, double value)
         {
-            _metadata.Add(GetMetadataKey(field), new[] { DateTimeFunctions.ToEpochSecondsString(value) });
-        }
-
-        public void SetInstantFieldValue(IField field, params DateTime[] values)
-        {
-            _metadata.Add(GetMetadataKey(field), values.Select(value => DateTimeFunctions.ToEpochSecondsString(value)).ToList());
-        }
-
-        public void SetInstantFieldValue(IField field, IEnumerable<DateTime> values)
-        {
-            _metadata.Add(GetMetadataKey(field), values.Select(value => DateTimeFunctions.ToEpochSecondsString(value)).ToList());
+            AddStringFieldValueImpl(field, value.ToString(NumberFormatInfo.InvariantInfo));
         }
 
         public void SetIntegerFieldValue(IField field, int value)
         {
-            _metadata.Add(GetMetadataKey(field), new[] { value.ToString() });
+            _metadata[GetMetadataKey(field)] = new[] { value.ToString(NumberFormatInfo.InvariantInfo) };
         }
 
         public void SetIntegerFieldValue(IField field, params int[] values)
         {
-            _metadata.Add(GetMetadataKey(field), values.Select(value => value.ToString()).ToList());
+            _metadata[GetMetadataKey(field)] = values.Select(value => value.ToString(NumberFormatInfo.InvariantInfo)).ToList();
         }
 
         public void SetIntegerFieldValue(IField field, IEnumerable<int> values)
         {
-            _metadata.Add(GetMetadataKey(field), values.Select(value => value.ToString()).ToList());
+            _metadata[GetMetadataKey(field)] = values.Select(value => value.ToString(NumberFormatInfo.InvariantInfo)).ToList();
+        }
+
+        public void AddIntegerFieldValue(IField field, int value)
+        {
+            AddStringFieldValueImpl(field, value.ToString(NumberFormatInfo.InvariantInfo));
+        }
+
+        public void SetInstantFieldValue(IField field, DateTime value)
+        {
+            _metadata[GetMetadataKey(field)] = new[] { DateTimeFunctions.ToEpochSecondsString(value) };
+        }
+
+        public void SetInstantFieldValue(IField field, params DateTime[] values)
+        {
+            _metadata[GetMetadataKey(field)] = values.Select(DateTimeFunctions.ToEpochSecondsString).ToList();
+        }
+
+        public void SetInstantFieldValue(IField field, IEnumerable<DateTime> values)
+        {
+            _metadata[GetMetadataKey(field)] = values.Select(DateTimeFunctions.ToEpochSecondsString).ToList();
+        }
+
+        public void AddInstantFieldValue(IField field, DateTime value)
+        {
+            AddStringFieldValueImpl(field, DateTimeFunctions.ToEpochSecondsString(value));
         }
 
         public void SetLongFieldValue(IField field, long value)
         {
-            _metadata.Add(GetMetadataKey(field), new[] { value.ToString() });
+            _metadata[GetMetadataKey(field)] = new[] { value.ToString(NumberFormatInfo.InvariantInfo) };
         }
 
         public void SetLongFieldValue(IField field, params long[] values)
         {
-            _metadata.Add(GetMetadataKey(field), values.Select(value => value.ToString()).ToList());
+            _metadata[GetMetadataKey(field)] = values.Select(value => value.ToString(NumberFormatInfo.InvariantInfo)).ToList();
         }
 
         public void SetLongFieldValue(IField field, IEnumerable<long> values)
         {
-            _metadata.Add(GetMetadataKey(field), values.Select(value => value.ToString()).ToList());
+            _metadata[GetMetadataKey(field)] = values.Select(value => value.ToString(NumberFormatInfo.InvariantInfo)).ToList();
+        }
+
+        public void AddLongFieldValue(IField field, long value)
+        {
+            AddStringFieldValueImpl(field, value.ToString(NumberFormatInfo.InvariantInfo));
         }
 
         public void SetStringFieldValue(IField field, string value)
         {
-            _metadata.Add(GetMetadataKey(field), new[] { value });
+            _metadata[GetMetadataKey(field)] = new[] { value };
         }
 
         public void SetStringFieldValue(IField field, params string[] values)
         {
-            _metadata.Add(GetMetadataKey(field), values.ToList());
+            _metadata[GetMetadataKey(field)] = values.ToList();
         }
 
         public void SetStringFieldValue(IField field, IEnumerable<string> values)
         {
-            _metadata.Add(GetMetadataKey(field), values.ToList());
+            _metadata[GetMetadataKey(field)] = values.ToList();
+        }
+
+        public void AddStringFieldValue(IField field, string value)
+        {
+            AddStringFieldValueImpl(field, value);
         }
 
         public void SetJsonFieldValue(IField field, Action<IJsonBuilder> director)
         {
-            _metadata.Add(GetMetadataKey(field), new []{ _jsonStringBuilder.BuildJsonString(director) });
+            _metadata[GetMetadataKey(field)] = new[] { _jsonStringBuilder.Invoke(director) };
         }
 
         public void SetJsonFieldValue(IField field, IEnumerable<Action<IJsonBuilder>> directors)
         {
-            _metadata.Add(
-                GetMetadataKey(field),
-                directors.Select(builder => _jsonStringBuilder.BuildJsonString(builder)).ToList());
+            _metadata[GetMetadataKey(field)] = directors.Select(_jsonStringBuilder.Invoke).ToList();
         }
 
         public void SetFlattenedFieldValue(IField field, Action<ISchemaObjectBuilder> director)
@@ -205,8 +203,9 @@ namespace MicroFocus.FAS.AdapterSdkSchema.SchemaObjectBuilders
             string basePrefix = (field == null)
                 ? _prefix
                 : _prefix + field.FieldName + "_";
+
             int i = 0;
-            foreach (Action< ISchemaObjectBuilder > director in directors)
+            foreach (var director in directors)
             {
                 string nextLevelPrefix = basePrefix + i + "_";
                 director.Invoke(new StringDictionarySchemaObjectBuilderImpl(_metadata, _jsonStringBuilder, nextLevelPrefix));
@@ -231,23 +230,22 @@ namespace MicroFocus.FAS.AdapterSdkSchema.SchemaObjectBuilders
         private void AddStringFieldValueImpl(IField field, string newValue)
         {
             string metadataKey = GetMetadataKey(field);
-            IList<string> currentList = _metadata[metadataKey];
+            _metadata.TryGetValue(metadataKey, out IEnumerable<string> currentValues);
 
-            if (currentList is List<string>)
+            if (currentValues is List<string> currentList)
             {
                 currentList.Add(newValue);
             }
             else
             {
-                IList<string> newList = (currentList == null)
+                var newList = (currentValues == null)
                     ? new List<string>()
-                    : new List<string>(currentList);
+                    : new List<string>(currentValues);
 
                 newList.Add(newValue);
 
                 _metadata[metadataKey] = newList;
             }
         }
-
     }
 }

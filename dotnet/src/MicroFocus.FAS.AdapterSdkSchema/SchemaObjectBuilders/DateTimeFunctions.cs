@@ -14,11 +14,16 @@
  * limitations under the License.
  */
 using System;
+using System.Globalization;
 
 namespace MicroFocus.FAS.AdapterSdkSchema.SchemaObjectBuilders
 {
-    public interface IJsonStringBuilder
+    internal static class DateTimeFunctions
     {
-        string BuildJsonString(Action<IJsonBuilder> director);
+        internal static string ToEpochSecondsString(DateTime value)
+        {
+            return new DateTimeOffset(value).ToUnixTimeSeconds()
+                .ToString(NumberFormatInfo.InvariantInfo);
+        }
     }
 }

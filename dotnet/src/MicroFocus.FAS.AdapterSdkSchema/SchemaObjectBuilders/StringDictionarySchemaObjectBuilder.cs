@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System;
+using System.Collections.Generic;
 
 namespace MicroFocus.FAS.AdapterSdkSchema.SchemaObjectBuilders
 {
-    internal static class DateTimeFunctions
+    public static class StringDictionarySchemaObjectBuilder
     {
-        internal static string ToEpochSecondsString(DateTime value)
+        public static ISchemaObjectBuilder Create(
+            IDictionary<string, IEnumerable<string>> metadata,
+            JsonStringBuilder jsonStringBuilder)
         {
-            return new DateTimeOffset(value).ToUnixTimeSeconds().ToString();
+            return new StringDictionarySchemaObjectBuilderImpl(metadata, jsonStringBuilder);
         }
-
     }
 }

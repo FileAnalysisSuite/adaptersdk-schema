@@ -26,8 +26,10 @@ namespace MicroFocus.FAS.AdapterSdkSchema.Tests
         public void TestCreateDataSetWithSchemaObjectBuilder()
         {
             Console.WriteLine("TestCreateDataSetWithSchemaObjectBuilder...");
-            var document = new Dictionary<string, IList<string>>();
-            AdapterSdkSchemaObjectBuilder documentBuilder = new(StringDictionarySchemaObjectBuilder.Create(document, new SystemJsonStringBuilder()));
+            var document = new Dictionary<string, IEnumerable<string>>();
+            AdapterSdkSchemaObjectBuilder documentBuilder = new(
+                StringDictionarySchemaObjectBuilder.Create(document, SystemJsonStringBuilder.BuildJsonString));
+
             // Integer
             documentBuilder.SetColumnCount(3);
             // Long
@@ -165,8 +167,10 @@ namespace MicroFocus.FAS.AdapterSdkSchema.Tests
         public void TestCreateDataSetWithSchemaObjectBuilderArrayVersion()
         {
             Console.WriteLine("TestCreateDataSetWithSchemaObjectBuilderArrayVersion...");
-            var document = new Dictionary<string, IList<string>>();
-            AdapterSdkSchemaObjectBuilder documentBuilder = new(StringDictionarySchemaObjectBuilder.Create(document, new SystemJsonStringBuilder()));
+            var document = new Dictionary<string, IEnumerable<string>>();
+            AdapterSdkSchemaObjectBuilder documentBuilder = new(
+                StringDictionarySchemaObjectBuilder.Create(document, SystemJsonStringBuilder.BuildJsonString));
+
             // Integer
             documentBuilder.SetColumnCount(3);
             // Long
@@ -288,8 +292,10 @@ namespace MicroFocus.FAS.AdapterSdkSchema.Tests
         public void TestInvalidAdapterSdkSchemaObject()
         {
             Console.WriteLine("TestInvalidAdapterSdkSchemaObject...");
-            var document = new Dictionary<string, IList<string>>();
-            AdapterSdkSchemaObjectBuilder documentBuilder = new(StringDictionarySchemaObjectBuilder.Create(document, new SystemJsonStringBuilder()));
+            var document = new Dictionary<string, IEnumerable<string>>();
+            AdapterSdkSchemaObjectBuilder documentBuilder = new(
+                StringDictionarySchemaObjectBuilder.Create(document, SystemJsonStringBuilder.BuildJsonString));
+
             documentBuilder.SetFileName("test.doc");
             documentBuilder.SetHash("9876dfg");
             //documentBuilder.SetMimetype("msword"); //mandatory field not set
@@ -339,8 +345,10 @@ namespace MicroFocus.FAS.AdapterSdkSchema.Tests
         public void TestMandatoryFieldNotSet()
         {
             Console.WriteLine("TestMandatoryFieldNotSet...");
-            var document = new Dictionary<string, IList<string>>();
-            AdapterSdkSchemaObjectBuilder documentBuilder = new(StringDictionarySchemaObjectBuilder.Create(document, new SystemJsonStringBuilder()));
+            var document = new Dictionary<string, IEnumerable<string>>();
+            AdapterSdkSchemaObjectBuilder documentBuilder = new(
+                StringDictionarySchemaObjectBuilder.Create(document, SystemJsonStringBuilder.BuildJsonString));
+
             var thrown = Assert.Throws<ArgumentException>(
                 () => documentBuilder.SetOcr(
                     new List<Action<AdapterSdkSchemaObjectBuilder.OcrListObjectBuilder>> {
@@ -386,8 +394,10 @@ namespace MicroFocus.FAS.AdapterSdkSchema.Tests
         public void TestSingleDimensionMandatoryFieldNotSet()
         {
             Console.WriteLine("TestSingleDimensionMandatoryFieldNotSet...");
-            var document = new Dictionary<string, IList<string>>();
-            AdapterSdkSchemaObjectBuilder documentBuilder = new(StringDictionarySchemaObjectBuilder.Create(document, new SystemJsonStringBuilder()));
+            var document = new Dictionary<string, IEnumerable<string>>();
+            AdapterSdkSchemaObjectBuilder documentBuilder = new(
+                StringDictionarySchemaObjectBuilder.Create(document, SystemJsonStringBuilder.BuildJsonString));
+
             var thrown = Assert.Throws<ArgumentException>(
                 () => documentBuilder.SetMetadataFiles(
                     new List<Action<AdapterSdkSchemaObjectBuilder.MetadataFilesObjectBuilder>> {
@@ -409,8 +419,10 @@ namespace MicroFocus.FAS.AdapterSdkSchema.Tests
         public void TestValidAdapterSdkSchemaObject()
         {
             Console.WriteLine("TestValidAdapterSdkSchemaObject...");
-            var document = new Dictionary<string, IList<string>>();
-            AdapterSdkSchemaObjectBuilder documentBuilder = new(StringDictionarySchemaObjectBuilder.Create(document, new SystemJsonStringBuilder()));
+            var document = new Dictionary<string, IEnumerable<string>>();
+            AdapterSdkSchemaObjectBuilder documentBuilder = new(
+                StringDictionarySchemaObjectBuilder.Create(document, SystemJsonStringBuilder.BuildJsonString));
+
             documentBuilder.SetFileName("test.doc");
             documentBuilder.SetHash("9876dfg");
             documentBuilder.SetMimetype("msword");
@@ -428,17 +440,17 @@ namespace MicroFocus.FAS.AdapterSdkSchema.Tests
             Assert.Equal(2, ((IList)document["ADDRESS_DISPLAY_TO"]).Count);
         }
 
-        private static void PrintDocument(Dictionary<string, IList<string>> document)
+        private static void PrintDocument(Dictionary<string, IEnumerable<string>> document)
         {
             Console.WriteLine("-------------   Built AdapterSdkSchemaObject ---------------------\n");
-            var treeMap = new SortedDictionary<string, IList<string>>(document);
+            var treeMap = new SortedDictionary<string, IEnumerable<string>>(document);
             foreach (var e in treeMap)
             {
                 Console.WriteLine(e.Key + " = " + PrintValue(e.Value));
             }
         }
 
-        private static string PrintValue(object value)
+        private static string? PrintValue(object? value)
         {
             if (value is IList values)
             {
@@ -451,7 +463,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema.Tests
             }
             else
             {
-                return value.ToString();
+                return value?.ToString();
             }
         }
     }
