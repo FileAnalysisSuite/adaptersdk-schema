@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System.Text;
 using System.Text.Json;
 
-namespace MicroFocus.FAS.AdapterSdkSchema
+namespace MicroFocus.FAS.AdapterSdkSchema.JsonBuilders.System
 {
     internal sealed class SystemJsonBuilder : IJsonBuilder
     {
-        private readonly MemoryStream _stream;
         private readonly Utf8JsonWriter _jsonWriter;
 
-        public SystemJsonBuilder()
+        public SystemJsonBuilder(Utf8JsonWriter jsonWriter)
         {
-            _stream = new MemoryStream();
-            _jsonWriter = new Utf8JsonWriter(_stream);
+            _jsonWriter = jsonWriter;
         }
+
         public void WriteBoolean(bool value)
         {
             _jsonWriter.WriteBooleanValue(value);
@@ -81,12 +79,6 @@ namespace MicroFocus.FAS.AdapterSdkSchema
         public void WriteStartObject()
         {
             _jsonWriter.WriteStartObject();
-        }
-
-        public string Encode()
-        {
-            _jsonWriter.Flush();
-            return Encoding.UTF8.GetString(_stream.ToArray());
         }
     }
 }
