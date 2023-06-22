@@ -24,7 +24,7 @@
     <parent>
         <groupId>io.github.fileanalysissuite.adaptersdk.schema</groupId>
         <artifactId>adaptersdk-schema-java</artifactId>
-        <version>1.1.0-SNAPSHOT</version>
+        <version>1.1.0-152</version>
     </parent>
 
     <artifactId>adaptersdk-schema-java-generator</artifactId>
