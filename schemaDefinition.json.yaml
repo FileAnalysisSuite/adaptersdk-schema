@@ -335,10 +335,6 @@
         "TO": {
             "type": "STRING"
         },
-        "TYPE": {
-            "mandatory": true,
-            "type": "STRING"
-        },
         "UNIQUE_ID": {
             "type": "STRING"
         }
