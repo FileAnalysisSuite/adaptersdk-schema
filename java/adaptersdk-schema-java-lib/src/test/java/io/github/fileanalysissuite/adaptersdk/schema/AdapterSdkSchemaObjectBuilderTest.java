@@ -251,7 +251,6 @@ public final class AdapterSdkSchemaObjectBuilderTest
         documentBuilder.setHash("9876dfg");
         documentBuilder.setMimetype("msword");
         documentBuilder.setTitle("Test File");
-        documentBuilder.setType("323");
         documentBuilder.setAddressDisplayBcc("abc", "def");
         documentBuilder.setAddressDisplayTo("toAddress1");
         documentBuilder.clearAddressDisplayBcc();
@@ -278,7 +277,6 @@ public final class AdapterSdkSchemaObjectBuilderTest
         documentBuilder.setHash("9876dfg");
         //documentBuilder.setMimetype("msword"); //mandatory field not set
         documentBuilder.setTitle("Test File");
-        documentBuilder.setType("323");
         documentBuilder.setOcr(
             Stream.of(
                 listBuilder -> {

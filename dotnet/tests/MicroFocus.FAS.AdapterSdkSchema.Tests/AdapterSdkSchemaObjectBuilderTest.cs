@@ -300,7 +300,6 @@ namespace MicroFocus.FAS.AdapterSdkSchema.Tests
             documentBuilder.SetHash("9876dfg");
             //documentBuilder.SetMimetype("msword"); //mandatory field not set
             documentBuilder.SetTitle("Test File");
-            documentBuilder.SetType("323");
             documentBuilder.SetOcr(
                 new List<Action<AdapterSdkSchemaObjectBuilder.OcrListObjectBuilder>> {
                     listBuilder => {
@@ -427,7 +426,6 @@ namespace MicroFocus.FAS.AdapterSdkSchema.Tests
             documentBuilder.SetHash("9876dfg");
             documentBuilder.SetMimetype("msword");
             documentBuilder.SetTitle("Test File");
-            documentBuilder.SetType("323");
             documentBuilder.SetAddressDisplayBcc("jdoe@abc.com", "janedoe@abc.com");
             documentBuilder.SetAddressDisplayTo("toAddress1");
             documentBuilder.ClearAddressDisplayBcc();
