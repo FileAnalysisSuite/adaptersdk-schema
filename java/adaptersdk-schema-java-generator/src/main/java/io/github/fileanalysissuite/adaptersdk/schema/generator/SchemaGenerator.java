@@ -27,14 +27,14 @@ import io.github.fileanalysissuite.adaptersdk.schema.model.Field;
 import io.github.fileanalysissuite.adaptersdk.schema.model.StructuredField;
 import io.github.fileanalysissuite.adaptersdk.schema.model.StructuredSubfield;
 import io.github.fileanalysissuite.adaptersdk.schema.model.Subfield;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.processing.Filer;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
-import javax.annotation.Nonnull;
-import javax.annotation.processing.Filer;
 import javax.lang.model.element.Modifier;
 
 final class SchemaGenerator

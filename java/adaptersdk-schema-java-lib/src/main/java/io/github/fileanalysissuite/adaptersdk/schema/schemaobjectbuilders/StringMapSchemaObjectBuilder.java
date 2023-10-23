@@ -16,9 +16,9 @@
 package io.github.fileanalysissuite.adaptersdk.schema.schemaobjectbuilders;
 
 import io.github.fileanalysissuite.adaptersdk.schema.builders.SchemaObjectBuilder;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.Nonnull;
 
 public final class StringMapSchemaObjectBuilder
 {

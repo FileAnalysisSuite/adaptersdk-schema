@@ -18,6 +18,7 @@ package io.github.fileanalysissuite.adaptersdk.schema.schemaobjectbuilders;
 import io.github.fileanalysissuite.adaptersdk.schema.builders.JsonBuilder;
 import io.github.fileanalysissuite.adaptersdk.schema.builders.SchemaObjectBuilder;
 import io.github.fileanalysissuite.adaptersdk.schema.model.Field;
+import jakarta.annotation.Nonnull;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,7 +28,6 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.annotation.Nonnull;
 
 final class StringMapSchemaObjectBuilderImpl implements SchemaObjectBuilder
 {

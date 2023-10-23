@@ -15,7 +15,7 @@
  */
 package io.github.fileanalysissuite.adaptersdk.schema.model;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface Field
 {

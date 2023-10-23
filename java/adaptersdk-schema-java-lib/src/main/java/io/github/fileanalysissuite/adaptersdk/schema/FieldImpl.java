@@ -16,7 +16,7 @@
 package io.github.fileanalysissuite.adaptersdk.schema;
 
 import io.github.fileanalysissuite.adaptersdk.schema.model.Field;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 class FieldImpl implements Field
 {

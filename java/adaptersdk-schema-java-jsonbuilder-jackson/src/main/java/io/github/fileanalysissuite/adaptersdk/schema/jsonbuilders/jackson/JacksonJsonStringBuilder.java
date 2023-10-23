@@ -16,9 +16,9 @@
 package io.github.fileanalysissuite.adaptersdk.schema.jsonbuilders.jackson;
 
 import io.github.fileanalysissuite.adaptersdk.schema.builders.JsonBuilder;
+import jakarta.annotation.Nonnull;
 import java.io.StringWriter;
 import java.util.function.Consumer;
-import javax.annotation.Nonnull;
 
 public final class JacksonJsonStringBuilder
 {

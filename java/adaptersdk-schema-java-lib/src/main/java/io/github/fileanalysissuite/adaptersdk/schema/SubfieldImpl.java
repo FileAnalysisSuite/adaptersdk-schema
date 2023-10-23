@@ -17,7 +17,7 @@ package io.github.fileanalysissuite.adaptersdk.schema;
 
 import io.github.fileanalysissuite.adaptersdk.schema.model.Field;
 import io.github.fileanalysissuite.adaptersdk.schema.model.Subfield;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 class SubfieldImpl extends FieldImpl implements Subfield
 {

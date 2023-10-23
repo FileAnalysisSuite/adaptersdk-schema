@@ -15,8 +15,8 @@
  */
 package io.github.fileanalysissuite.adaptersdk.schema.schemaobjectbuilders;
 
+import jakarta.annotation.Nonnull;
 import java.time.Instant;
-import javax.annotation.Nonnull;
 
 final class InstantFunctions
 {

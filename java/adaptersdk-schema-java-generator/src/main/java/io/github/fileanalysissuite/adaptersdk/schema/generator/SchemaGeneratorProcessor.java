@@ -16,11 +16,11 @@
 package io.github.fileanalysissuite.adaptersdk.schema.generator;
 
 import com.google.auto.service.AutoService;
+import jakarta.annotation.processing.AbstractProcessor;
+import jakarta.annotation.processing.Processor;
+import jakarta.annotation.processing.RoundEnvironment;
+import jakarta.annotation.processing.SupportedAnnotationTypes;
 import java.util.Set;
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.Processor;
-import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.element.TypeElement;
 
 @AutoService(Processor.class)

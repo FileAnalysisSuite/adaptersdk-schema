@@ -40,7 +40,7 @@ import java.util.Map.Entry;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.annotation.processing.Filer;
+import jakarta.annotation.processing.Filer;
 import javax.lang.model.element.Modifier;
 import org.codehaus.plexus.util.StringUtils;
 

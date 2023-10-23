@@ -16,8 +16,8 @@
 package io.github.fileanalysissuite.adaptersdk.schema.schemaobjectbuilders;
 
 import io.github.fileanalysissuite.adaptersdk.schema.builders.JsonBuilder;
+import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
-import javax.annotation.Nonnull;
 
 @FunctionalInterface
 public interface JsonStringBuilder

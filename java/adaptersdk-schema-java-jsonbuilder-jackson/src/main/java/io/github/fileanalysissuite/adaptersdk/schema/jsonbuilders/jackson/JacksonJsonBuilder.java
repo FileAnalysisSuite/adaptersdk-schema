@@ -18,12 +18,12 @@ package io.github.fileanalysissuite.adaptersdk.schema.jsonbuilders.jackson;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import io.github.fileanalysissuite.adaptersdk.schema.builders.JsonBuilder;
+import jakarta.annotation.Nonnull;
 import java.io.Closeable;
 import java.io.Flushable;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.io.Writer;
-import javax.annotation.Nonnull;
 
 final class JacksonJsonBuilder implements Closeable, Flushable, JsonBuilder
 {
