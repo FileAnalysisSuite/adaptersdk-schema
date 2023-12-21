@@ -367,9 +367,9 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                     {
                         // Add 'set' function with 'array' param
                         AddBuilderArrayParamSetterMethod(
-                        objectBuilderClassBuilder,
-                        fieldFunctionName,
-                        builderTypeName);
+                            objectBuilderClassBuilder,
+                            fieldFunctionName,
+                            builderTypeName);
 
                         // Add 'set' function with 'List' param
                         AddBuilderListParamSetterMethod(

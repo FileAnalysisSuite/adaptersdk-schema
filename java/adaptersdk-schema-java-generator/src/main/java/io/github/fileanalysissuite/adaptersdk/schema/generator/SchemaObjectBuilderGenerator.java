@@ -406,8 +406,7 @@ final class SchemaObjectBuilderGenerator
                         isFieldMandatory,
                         isSubfield,
                         validatorSubFieldName);
-                    if (isFieldMultiValued)
-                    {
+                    if (isFieldMultiValued) {
                         // Add entity type property 'set' function with 'Stream' param
                         addBuilderStreamParamSetterMethod(
                             objectBuilderClassBuilder,
@@ -448,8 +447,7 @@ final class SchemaObjectBuilderGenerator
                         internalBuilderVarName,
                         isFlattened);
 
-                    if (isFieldMultiValued)
-                    {
+                    if (isFieldMultiValued) {
                         // Add entity type property 'set' function with 'Stream' param
                         addNestedObjectBuilderStreamParamSetterMethod(
                             objectBuilderClassBuilder,
@@ -475,8 +473,7 @@ final class SchemaObjectBuilderGenerator
                     internalVarName,
                     objBuilderClassName);
 
-                if (isFieldMultiValued)
-                {
+                if (isFieldMultiValued) {
                     // Add set function with List param
                     addBuilderListParamSetterMethod(
                         objectBuilderClassBuilder,
