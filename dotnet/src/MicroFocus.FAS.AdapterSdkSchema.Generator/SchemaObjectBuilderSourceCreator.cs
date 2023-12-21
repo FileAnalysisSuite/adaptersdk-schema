@@ -363,26 +363,28 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                         isSubfield,
                         validatorSubFieldName);
 
-                    // Add 'set' function with 'array' param
-                    AddBuilderArrayParamSetterMethod(
+                    if (numberOfDimensions > 0)
+                    {
+                        // Add 'set' function with 'array' param
+                        AddBuilderArrayParamSetterMethod(
                         objectBuilderClassBuilder,
                         fieldFunctionName,
                         builderTypeName);
 
-                    // Add 'set' function with 'List' param
-                    AddBuilderListParamSetterMethod(
-                        objectBuilderClassBuilder,
-                        isEntityTypeObjectBuilderClass,
-                        fieldFunctionName,
-                        fullName,
-                        builderTypeName,
-                        objBuilderClassName,
-                        internalBuilderVarName,
-                        isFlattened,
-                        isFieldMandatory,
-                        isSubfield,
-                        validatorSubFieldName);
-
+                        // Add 'set' function with 'List' param
+                        AddBuilderListParamSetterMethod(
+                            objectBuilderClassBuilder,
+                            isEntityTypeObjectBuilderClass,
+                            fieldFunctionName,
+                            fullName,
+                            builderTypeName,
+                            objBuilderClassName,
+                            internalBuilderVarName,
+                            isFlattened,
+                            isFieldMandatory,
+                            isSubfield,
+                            validatorSubFieldName);
+                    }
                     // Add 'clear' field method body
                     clearFieldMethodBuilder.Statements.Add(new CodeSnippetExpression(
                          new StringBuilder("_schemaObjectBuilder.ClearField(")
@@ -440,26 +442,28 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                             isSubfield,
                             validatorSubFieldName);
 
-                        // Add entity type property 'set' function with 'array' param
-                        AddBuilderArrayParamSetterMethod(
-                            objectBuilderClassBuilder,
-                            fieldFunctionName,
-                            builderTypeName);
+                        if (isFieldMultiValued)
+                        {
+                            // Add entity type property 'set' function with 'array' param
+                            AddBuilderArrayParamSetterMethod(
+                                objectBuilderClassBuilder,
+                                fieldFunctionName,
+                                builderTypeName);
 
-                        // Add entity type property 'set' function with 'List' param
-                        AddBuilderListParamSetterMethod(
-                            objectBuilderClassBuilder,
-                            isEntityTypeObjectBuilderClass,
-                            fieldFunctionName,
-                            fullName,
-                            builderTypeName,
-                            objBuilderClassName,
-                            internalBuilderVarName,
-                            isFlattened,
-                            isFieldMandatory,
-                            isSubfield,
-                            validatorSubFieldName);
-
+                            // Add entity type property 'set' function with 'List' param
+                            AddBuilderListParamSetterMethod(
+                                objectBuilderClassBuilder,
+                                isEntityTypeObjectBuilderClass,
+                                fieldFunctionName,
+                                fullName,
+                                builderTypeName,
+                                objBuilderClassName,
+                                internalBuilderVarName,
+                                isFlattened,
+                                isFieldMandatory,
+                                isSubfield,
+                                validatorSubFieldName);
+                        }
                         // Add 'clear' field method body
                         clearFieldMethodBuilder.Statements.Add(new CodeSnippetExpression(
                                 new StringBuilder("_schemaObjectBuilder.ClearField(")
@@ -498,22 +502,24 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                             internalBuilderVarName,
                             isFlattened);
 
-                        // Add entity type property 'set' function with 'array' param
-                        AddBuilderArrayParamSetterMethod(
+                        if (isFieldMultiValued)
+                        {
+                            // Add entity type property 'set' function with 'array' param
+                            AddBuilderArrayParamSetterMethod(
                             objectBuilderClassBuilder,
                             fieldFunctionName,
                             builderTypeName);
 
-                        // Add entity type property 'set' function with 'List' param
-                        AddNestedObjectBuilderListParamSetterMethod(
-                            objectBuilderClassBuilder,
-                            fieldFunctionName,
-                            internalVarName,
-                            builderTypeName,
-                            objBuilderClassName,
-                            internalBuilderVarName,
-                            isFlattened);
-
+                            // Add entity type property 'set' function with 'List' param
+                            AddNestedObjectBuilderListParamSetterMethod(
+                                objectBuilderClassBuilder,
+                                fieldFunctionName,
+                                internalVarName,
+                                builderTypeName,
+                                objBuilderClassName,
+                                internalBuilderVarName,
+                                isFlattened);
+                        }
                         // Add 'clear' field method body
                         clearFieldMethodBuilder.Statements.Add(new CodeSnippetExpression(internalVarName + " = null"));
                     }
@@ -1755,20 +1761,29 @@ namespace MicroFocus.FAS.AdapterSdkSchema
             }
             else
             {
-                string fieldTypeMethodName = PROPERTY_TYPES_METHOD_LOOKUP[fieldTypeValue];
-                var subFieldValue = SchemaGeneratorHelper.IsPrimitiveNullableType(fieldTypeValue)
-                    ? subFieldName + ".Value"
-                    : subFieldName;
-                statements.Add(
-                    new CodeSnippetStatement(
-                        new StringBuilder("jsonBuilder.Write")
-                        .Append(fieldTypeMethodName)
-                        .Append("(")
-                        .Append(subFieldValue)
-                        .Append(");")
-                        .ToString()
-                    )
-                );
+                if (objBuilderClassName == null)
+                {
+                    string fieldTypeMethodName = PROPERTY_TYPES_METHOD_LOOKUP[fieldTypeValue];
+                    var subFieldValue = SchemaGeneratorHelper.IsPrimitiveNullableType(fieldTypeValue)
+                        ? subFieldName + ".Value"
+                        : subFieldName;
+                    statements.Add(
+                        new CodeSnippetStatement(
+                            new StringBuilder("jsonBuilder.Write")
+                            .Append(fieldTypeMethodName)
+                            .Append("(")
+                            .Append(subFieldValue)
+                            .Append(");")
+                            .ToString()
+                        )
+                    );
+                }
+                else
+                {
+                    statements.Add(new CodeSnippetStatement(new StringBuilder(subFieldName)
+                        .Append("value.Build(jsonBuilder);")
+                        .ToString()));
+                }
             }
             return statements;
         }

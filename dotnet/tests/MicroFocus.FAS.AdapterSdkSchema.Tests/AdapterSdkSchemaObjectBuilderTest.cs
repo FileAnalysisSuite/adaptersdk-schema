@@ -43,6 +43,14 @@ namespace MicroFocus.FAS.AdapterSdkSchema.Tests
             // Multi-valued string
             documentBuilder.SetAddressTo("person1@gmail.com", "person2@there.com");
 
+            // Single-valued Nested object, Json encoded
+            documentBuilder.SetTableMetadata(
+                    builder=> {
+                        builder.SetIsShuffled(false);
+                        builder.SetSampleRowCount(100);
+                    }
+            );
+
             // Multi-valued Nested object, Json encoded
             documentBuilder.SetAccounts(
                 new List<Action<AdapterSdkSchemaObjectBuilder.AccountsObjectBuilder>> {
@@ -153,6 +161,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema.Tests
 
             PrintDocument(document);
 
+            Assert.True(document.ContainsKey("TABLE_METADATA"));
             Assert.True(document.ContainsKey("ACCOUNTS"));
             Assert.True(document.ContainsKey("COLUMNS"));
             Assert.True(document.ContainsKey("METADATA_FILES_0_CONTENT"));
