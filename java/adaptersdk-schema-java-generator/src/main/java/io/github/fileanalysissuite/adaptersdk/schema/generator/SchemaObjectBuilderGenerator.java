@@ -345,26 +345,27 @@ final class SchemaObjectBuilderGenerator
                     isSubfield,
                     validatorSubFieldName);
 
-                // Add entity type field 'set' function with 'Stream' param
-                addBuilderStreamParamSetterMethod(
-                    objectBuilderClassBuilder,
-                    isEntityTypeObjectBuilderClass,
-                    fieldFunctionName,
-                    fullName,
-                    builderTypeName,
-                    objBuilderClassName,
-                    internalBuilderVarName,
-                    isFlattened,
-                    isFieldMandatory,
-                    isSubfield,
-                    validatorSubFieldName);
+                if (numberOfDimensions > 0) {
+                    // Add entity type field 'set' function with 'Stream' param
+                    addBuilderStreamParamSetterMethod(
+                        objectBuilderClassBuilder,
+                        isEntityTypeObjectBuilderClass,
+                        fieldFunctionName,
+                        fullName,
+                        builderTypeName,
+                        objBuilderClassName,
+                        internalBuilderVarName,
+                        isFlattened,
+                        isFieldMandatory,
+                        isSubfield,
+                        validatorSubFieldName);
 
-                // Add 'set' function with 'List' param
-                addBuilderListParamSetterMethod(
-                    objectBuilderClassBuilder,
-                    fieldFunctionName,
-                    builderTypeName);
-
+                    // Add 'set' function with 'List' param
+                    addBuilderListParamSetterMethod(
+                        objectBuilderClassBuilder,
+                        fieldFunctionName,
+                        builderTypeName);
+                }
                 // Add 'clear' field method body
                 clearFieldMethodBuilder
                     .addStatement("schemaObjectBuilder.clearField($L.$L)", SchemaGeneratorHelper.CLASS_NAME, fullName);
@@ -405,21 +406,21 @@ final class SchemaObjectBuilderGenerator
                         isFieldMandatory,
                         isSubfield,
                         validatorSubFieldName);
-
-                    // Add entity type property 'set' function with 'Stream' param
-                    addBuilderStreamParamSetterMethod(
-                        objectBuilderClassBuilder,
-                        isEntityTypeObjectBuilderClass,
-                        fieldFunctionName,
-                        fullName,
-                        builderTypeName,
-                        objBuilderClassName,
-                        internalBuilderVarName,
-                        isFlattened,
-                        isFieldMandatory,
-                        isSubfield,
-                        validatorSubFieldName);
-
+                    if (isFieldMultiValued) {
+                        // Add entity type property 'set' function with 'Stream' param
+                        addBuilderStreamParamSetterMethod(
+                            objectBuilderClassBuilder,
+                            isEntityTypeObjectBuilderClass,
+                            fieldFunctionName,
+                            fullName,
+                            builderTypeName,
+                            objBuilderClassName,
+                            internalBuilderVarName,
+                            isFlattened,
+                            isFieldMandatory,
+                            isSubfield,
+                            validatorSubFieldName);
+                    }
                     // Add 'clear' field method body
                     clearFieldMethodBuilder
                         .addStatement("schemaObjectBuilder.clearField($L.$L)", SchemaGeneratorHelper.CLASS_NAME, fullName);
@@ -446,16 +447,17 @@ final class SchemaObjectBuilderGenerator
                         internalBuilderVarName,
                         isFlattened);
 
-                    // Add entity type property 'set' function with 'Stream' param
-                    addNestedObjectBuilderStreamParamSetterMethod(
-                        objectBuilderClassBuilder,
-                        fieldFunctionName,
-                        internalVarName,
-                        builderTypeName,
-                        objBuilderClassName,
-                        internalBuilderVarName,
-                        isFlattened);
-
+                    if (isFieldMultiValued) {
+                        // Add entity type property 'set' function with 'Stream' param
+                        addNestedObjectBuilderStreamParamSetterMethod(
+                            objectBuilderClassBuilder,
+                            fieldFunctionName,
+                            internalVarName,
+                            builderTypeName,
+                            objBuilderClassName,
+                            internalBuilderVarName,
+                            isFlattened);
+                    }
                     // Add 'clear' field method body
                     clearFieldMethodBuilder.addStatement("$L = null", internalVarName);
                 }
@@ -471,11 +473,13 @@ final class SchemaObjectBuilderGenerator
                     internalVarName,
                     objBuilderClassName);
 
-                // Add set function with List param
-                addBuilderListParamSetterMethod(
-                    objectBuilderClassBuilder,
-                    fieldFunctionName,
-                    builderTypeName);
+                if (isFieldMultiValued) {
+                    // Add set function with List param
+                    addBuilderListParamSetterMethod(
+                        objectBuilderClassBuilder,
+                        fieldFunctionName,
+                        builderTypeName);
+                }
             }
         }
 
@@ -1136,8 +1140,12 @@ final class SchemaObjectBuilderGenerator
 
             buildFunctionBuilder.addStatement("jsonBuilder.writeEndArray()");
         } else {
-            buildFunctionBuilder.addStatement(
-                "jsonBuilder.write$L($L)", fieldType.getSimpleName(), subFieldName);
+            if (objBuilderClassName == null) {
+                buildFunctionBuilder.addStatement(
+                    "jsonBuilder.write$L($L)", fieldType.getSimpleName(), subFieldName);
+            } else {
+                buildFunctionBuilder.addStatement("value.build(jsonBuilder)");
+            }
         }
         buildFunctionBuilder.endControlFlow();
     }

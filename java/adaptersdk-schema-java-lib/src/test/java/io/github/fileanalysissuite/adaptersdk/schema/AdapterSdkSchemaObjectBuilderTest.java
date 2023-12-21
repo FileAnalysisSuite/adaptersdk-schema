@@ -52,6 +52,14 @@ public final class AdapterSdkSchemaObjectBuilderTest
         // Multi-valued string
         documentBuilder.setAddressTo("person1@gmail.com", "person2@there.com");
 
+         // Single-valued Nested object, Json encoded
+        documentBuilder.setTableMetadata(
+                builder -> {
+                    builder.setIsShuffled(false);
+                    builder.setSampleRowCount(100);
+                }
+        );
+
         // Multi-valued Nested object, Json encoded
         documentBuilder.setAccounts(Stream.of(
             builder -> {
@@ -154,6 +162,7 @@ public final class AdapterSdkSchemaObjectBuilderTest
         final Map<String, Object> treeMap = new TreeMap<String, Object>(document);
         treeMap.entrySet().forEach(e -> System.out.println(e.getKey() + " = " + e.getValue()));
 
+        assertTrue(document.containsKey("TABLE_METADATA"));
         assertTrue(document.containsKey("ACCOUNTS"));
         assertTrue(document.containsKey("COLUMNS"));
         assertTrue(document.containsKey("METADATA_FILES_0_CONTENT"));
