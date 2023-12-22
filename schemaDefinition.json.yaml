@@ -83,6 +83,20 @@
                 "type": "STRING"
             }
         },
+        "mip_labels": {
+            "SITE_ID": {
+                "type": "STRING"
+            },
+            "ID": {
+                "type": "STRING"
+            },
+            "SETDATE": {
+                "type": "DATETIME"
+            },
+            "NAME": {
+                "type": "STRING"
+            }
+        },
         "ocr": {
             "CONFIDENCE": {
                 "mandatory": true,
@@ -257,6 +271,10 @@
             "ignoreCase": true,
             "mandatory": true,
             "type": "STRING"
+        },
+        "MIP_LABELS": {
+            "objectEncoding": "flattened",
+            "type": "mip_label[]"
         },
         "OCR": {
             "objectEncoding": "flattened",
