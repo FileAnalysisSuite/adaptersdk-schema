@@ -274,7 +274,7 @@
         },
         "MIP_LABELS": {
             "objectEncoding": "flattened",
-            "type": "mip_label[]"
+            "type": "mip_labels[]"
         },
         "OCR": {
             "objectEncoding": "flattened",
