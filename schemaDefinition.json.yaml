@@ -261,7 +261,7 @@
             "type": "BOOLEAN"
         },
         "MESSAGE_ID": {
-            "type": "STRING"
+            "type": "STRING[]"
         },
         "METADATA_FILES": {
             "objectEncoding": "flattened",
