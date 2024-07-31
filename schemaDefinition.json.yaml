@@ -177,9 +177,6 @@
         "DATE_CREATED": {
             "type": "DATETIME"
         },
-        "DATE_DELETED": {
-            "type": "DATETIME"
-        },
         "DATE_MODIFIED": {
             "type": "DATETIME"
         },
