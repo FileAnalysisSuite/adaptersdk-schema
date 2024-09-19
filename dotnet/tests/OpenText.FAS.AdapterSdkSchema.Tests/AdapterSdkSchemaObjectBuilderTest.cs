@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 using System.Collections;
-using MicroFocus.FAS.AdapterSdkSchema.SchemaObjectBuilders;
-using MicroFocus.FAS.AdapterSdkSchema.JsonBuilders.System;
+using OpenText.FAS.AdapterSdkSchema.SchemaObjectBuilders;
+using OpenText.FAS.AdapterSdkSchema.JsonBuilders.System;
 using Xunit;
 
-namespace MicroFocus.FAS.AdapterSdkSchema.Tests
+namespace OpenText.FAS.AdapterSdkSchema.Tests
 {
     public class AdapterSdkSchemaObjectBuilderTest
     {

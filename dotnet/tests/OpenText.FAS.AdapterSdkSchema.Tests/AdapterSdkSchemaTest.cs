@@ -15,7 +15,7 @@
  */
 using Xunit;
 
-namespace MicroFocus.FAS.AdapterSdkSchema.Tests
+namespace OpenText.FAS.AdapterSdkSchema.Tests
 {
     public class AdapterSdkSchemaTest
     {

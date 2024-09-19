@@ -15,14 +15,14 @@
  */
 using Xunit;
 
-namespace MicroFocus.FAS.AdapterSdkSchema.Tests
+namespace OpenText.FAS.AdapterSdkSchema.Tests
 {
-    public class SchemaSourceCreatorTest
+    public class SchemaObjectBuilderSourceCreatorTest
     {
         [Fact]
         public void TestSourceCreation()
         {
-            Assert.NotEmpty(SchemaSourceCreator.Create());
+            Assert.NotEmpty(SchemaObjectBuilderSourceCreator.Create());
         }
     }
 }
