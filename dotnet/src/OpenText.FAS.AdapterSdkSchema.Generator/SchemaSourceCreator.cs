@@ -24,7 +24,7 @@ using System.Text;
 using System.Text.Json.Nodes;
 using Microsoft.CSharp;
 
-namespace MicroFocus.FAS.AdapterSdkSchema
+namespace OpenText.FAS.AdapterSdkSchema
 {
     public class SchemaSourceCreator
     {

@@ -22,7 +22,7 @@ using System.Reflection;
 using System.Text.Json.Nodes;
 using YamlDotNet.Serialization;
 
-namespace MicroFocus.FAS.AdapterSdkSchema
+namespace OpenText.FAS.AdapterSdkSchema
 {
     internal static class SchemaGeneratorHelper
     {

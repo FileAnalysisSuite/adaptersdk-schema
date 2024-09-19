@@ -25,7 +25,7 @@ using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using Microsoft.CSharp;
 
-namespace MicroFocus.FAS.AdapterSdkSchema
+namespace OpenText.FAS.AdapterSdkSchema
 {
     public class SchemaObjectBuilderSourceCreator
     {

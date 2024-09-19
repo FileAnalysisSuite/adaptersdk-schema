@@ -19,7 +19,7 @@ using Microsoft.CodeAnalysis.Text;
 using System.Diagnostics;
 using System.Text;
 
-namespace MicroFocus.FAS.AdapterSdkSchema
+namespace OpenText.FAS.AdapterSdkSchema
 {
     [Generator]
     public class SchemaGenerator : ISourceGenerator
