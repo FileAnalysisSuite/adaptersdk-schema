@@ -26,7 +26,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema
 {
     internal static class SchemaGeneratorHelper
     {
-        internal static readonly string NAMESPACE_NAME = "MicroFocus.FAS.AdapterSdkSchema";
+        internal static readonly string NAMESPACE_NAME = "OpenText.FAS.AdapterSdkSchema";
         internal static readonly string CLASS_NAME = "AdapterSdkSchema";
         internal static readonly HashSet<string> PROPERTY_TYPES = new() {
             "STRING", "FULLTEXT", "LONG", "DOUBLE", "INTEGER", "BOOLEAN", "DATETIME",

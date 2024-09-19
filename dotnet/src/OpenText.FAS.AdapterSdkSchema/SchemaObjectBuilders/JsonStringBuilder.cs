@@ -15,13 +15,7 @@
  */
 using System;
 
-namespace MicroFocus.FAS.AdapterSdkSchema
+namespace OpenText.FAS.AdapterSdkSchema.SchemaObjectBuilders
 {
-    public sealed class FieldNotFoundException : Exception
-    {
-        public FieldNotFoundException(string fieldName)
-            : base("Field not found: " + fieldName)
-        {
-        }
-    }
+    public delegate string JsonStringBuilder(Action<IJsonBuilder> director);
 }

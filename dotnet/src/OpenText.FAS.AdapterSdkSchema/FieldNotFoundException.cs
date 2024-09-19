@@ -13,11 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace MicroFocus.FAS.AdapterSdkSchema
+using System;
+
+namespace OpenText.FAS.AdapterSdkSchema
 {
-    public enum ObjectEncoding
+    public sealed class FieldNotFoundException : Exception
     {
-        Flattened,
-        Json
+        public FieldNotFoundException(string fieldName)
+            : base("Field not found: " + fieldName)
+        {
+        }
     }
 }

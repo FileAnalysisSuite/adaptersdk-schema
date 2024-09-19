@@ -39,8 +39,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\MicroFocus.FAS.AdapterSdkSchema\MicroFocus.FAS.AdapterSdkSchema.csproj" />
-    <ProjectReference Include="..\..\src\MicroFocus.FAS.AdapterSdkSchema.JsonBuilders.System\MicroFocus.FAS.AdapterSdkSchema.JsonBuilders.System.csproj" />
+    <ProjectReference Include="..\..\src\OpenText.FAS.AdapterSdkSchema\OpenText.FAS.AdapterSdkSchema.csproj" />
+    <ProjectReference Include="..\..\src\OpenText.FAS.AdapterSdkSchema.JsonBuilders.System\OpenText.FAS.AdapterSdkSchema.JsonBuilders.System.csproj" />
   </ItemGroup>
 
 </Project>

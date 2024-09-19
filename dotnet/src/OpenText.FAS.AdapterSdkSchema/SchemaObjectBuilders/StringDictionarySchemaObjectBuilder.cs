@@ -13,24 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace MicroFocus.FAS.AdapterSdkSchema
+using System.Collections.Generic;
+
+namespace OpenText.FAS.AdapterSdkSchema.SchemaObjectBuilders
 {
-    public interface IField
+    public static class StringDictionarySchemaObjectBuilder
     {
-        string FieldName { get; }
-
-        string FieldType { get; }
-
-        ObjectEncoding? ObjectEncoding { get; }
-
-        IField ParentField { get; }
-
-        bool IsMultivalue { get; }
-
-        bool IsMandatory { get; }
-
-        bool IsCaseInsensitive { get; }
-
-        bool IsTokenizedPath { get; }
+        public static ISchemaObjectBuilder Create(
+            IDictionary<string, IEnumerable<string>> metadata,
+            JsonStringBuilder jsonStringBuilder)
+        {
+            return new StringDictionarySchemaObjectBuilderImpl(metadata, jsonStringBuilder);
+        }
     }
 }

@@ -19,7 +19,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 
-namespace MicroFocus.FAS.AdapterSdkSchema.SchemaObjectBuilders
+namespace OpenText.FAS.AdapterSdkSchema.SchemaObjectBuilders
 {
     internal sealed class StringDictionarySchemaObjectBuilderImpl : ISchemaObjectBuilder
     {

@@ -13,17 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System;
-using System.Globalization;
-
-namespace MicroFocus.FAS.AdapterSdkSchema.SchemaObjectBuilders
+namespace OpenText.FAS.AdapterSdkSchema
 {
-    internal static class DateTimeFunctions
+    public interface IStructuredField : IField
     {
-        internal static string ToEpochSecondsString(DateTime value)
-        {
-            return new DateTimeOffset(value).ToUnixTimeSeconds()
-                .ToString(NumberFormatInfo.InvariantInfo);
-        }
     }
 }

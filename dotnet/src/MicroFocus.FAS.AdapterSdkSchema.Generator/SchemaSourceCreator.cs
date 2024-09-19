@@ -186,8 +186,8 @@ namespace MicroFocus.FAS.AdapterSdkSchema
                                 + "\"" + propertyName + "\", "
                                 + "\"" + fieldTypeValue + "\", "
                                 + (fldEncoding.Equals("json")
-                                    ? "MicroFocus.FAS.AdapterSdkSchema.ObjectEncoding.Json"
-                                    : "MicroFocus.FAS.AdapterSdkSchema.ObjectEncoding.Flattened")
+                                    ? "OpenText.FAS.AdapterSdkSchema.ObjectEncoding.Json"
+                                    : "OpenText.FAS.AdapterSdkSchema.ObjectEncoding.Flattened")
                                 + ", "
                                 + fldIsMultiValued.ToString().ToLower() + ", "
                                 + fldIsMandatory.ToString().ToLower() + ", "

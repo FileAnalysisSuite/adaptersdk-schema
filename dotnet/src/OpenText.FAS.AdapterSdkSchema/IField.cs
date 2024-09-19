@@ -13,26 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace MicroFocus.FAS.AdapterSdkSchema
+namespace OpenText.FAS.AdapterSdkSchema
 {
-    public interface IJsonBuilder
+    public interface IField
     {
-        void WriteStartArray();
+        string FieldName { get; }
 
-        void WriteStartObject();
+        string FieldType { get; }
 
-        void WriteFieldName(string key);
+        ObjectEncoding? ObjectEncoding { get; }
 
-        void WriteBoolean(bool value);
+        IField ParentField { get; }
 
-        void WriteDouble(double value);
+        bool IsMultivalue { get; }
 
-        void WriteInteger(int value);
+        bool IsMandatory { get; }
 
-        void WriteString(string value);
+        bool IsCaseInsensitive { get; }
 
-        void WriteEndArray();
-
-        void WriteEndObject();
+        bool IsTokenizedPath { get; }
     }
 }

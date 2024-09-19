@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace MicroFocus.FAS.AdapterSdkSchema.SchemaObjectBuilders
+namespace OpenText.FAS.AdapterSdkSchema
 {
-    internal static class BooleanExtension
+    public enum ObjectEncoding
     {
-        public static string ToLowerCaseString(this bool that)
-        {
-            return that ? "true" : "false";
-        }
+        Flattened,
+        Json
     }
 }

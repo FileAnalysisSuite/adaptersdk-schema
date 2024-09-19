@@ -16,7 +16,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MicroFocus.FAS.AdapterSdkSchema
+namespace OpenText.FAS.AdapterSdkSchema
 {
     public interface ISchemaObjectBuilder
     {

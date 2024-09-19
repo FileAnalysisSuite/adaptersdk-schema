@@ -13,17 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System.Collections.Generic;
-
-namespace MicroFocus.FAS.AdapterSdkSchema.SchemaObjectBuilders
+namespace OpenText.FAS.AdapterSdkSchema
 {
-    public static class StringDictionarySchemaObjectBuilder
+    public interface ISubfield : IField
     {
-        public static ISchemaObjectBuilder Create(
-            IDictionary<string, IEnumerable<string>> metadata,
-            JsonStringBuilder jsonStringBuilder)
-        {
-            return new StringDictionarySchemaObjectBuilderImpl(metadata, jsonStringBuilder);
-        }
     }
 }

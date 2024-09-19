@@ -13,9 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System;
-
-namespace MicroFocus.FAS.AdapterSdkSchema.SchemaObjectBuilders
+namespace OpenText.FAS.AdapterSdkSchema
 {
-    public delegate string JsonStringBuilder(Action<IJsonBuilder> director);
+    public interface IJsonBuilder
+    {
+        void WriteStartArray();
+
+        void WriteStartObject();
+
+        void WriteFieldName(string key);
+
+        void WriteBoolean(bool value);
+
+        void WriteDouble(double value);
+
+        void WriteInteger(int value);
+
+        void WriteString(string value);
+
+        void WriteEndArray();
+
+        void WriteEndObject();
+    }
 }
