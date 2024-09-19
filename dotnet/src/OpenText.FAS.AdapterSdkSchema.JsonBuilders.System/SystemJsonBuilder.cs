@@ -15,7 +15,7 @@
  */
 using System.Text.Json;
 
-namespace MicroFocus.FAS.AdapterSdkSchema.JsonBuilders.System
+namespace OpenText.FAS.AdapterSdkSchema.JsonBuilders.System
 {
     internal sealed class SystemJsonBuilder : IJsonBuilder
     {

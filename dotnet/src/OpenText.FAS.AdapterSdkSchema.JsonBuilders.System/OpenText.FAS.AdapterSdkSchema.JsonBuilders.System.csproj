@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MicroFocus.FAS.AdapterSdkSchema\MicroFocus.FAS.AdapterSdkSchema.csproj" />
+    <ProjectReference Include="..\OpenText.FAS.AdapterSdkSchema\OpenText.FAS.AdapterSdkSchema.csproj" />
   </ItemGroup>
 
 </Project>

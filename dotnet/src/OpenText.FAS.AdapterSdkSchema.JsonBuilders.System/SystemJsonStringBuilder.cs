@@ -18,7 +18,7 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 
-namespace MicroFocus.FAS.AdapterSdkSchema.JsonBuilders.System
+namespace OpenText.FAS.AdapterSdkSchema.JsonBuilders.System
 {
     public static class SystemJsonStringBuilder
     {
