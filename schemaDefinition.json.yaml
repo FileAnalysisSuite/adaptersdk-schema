@@ -254,7 +254,6 @@
             "type": "BOOLEAN"
         },
         "HASH": {
-            "mandatory": true,
             "type": "STRING"
         },
         "IS_OLE": {
