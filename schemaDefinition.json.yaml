@@ -368,6 +368,9 @@
         },
         "UNIQUE_ID": {
             "type": "STRING"
+        },
+        "UNIQUE_VERSION_ID": {
+            "type": "STRING"
         }
     }
 }
