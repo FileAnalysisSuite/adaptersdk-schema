@@ -171,10 +171,16 @@
             "ignoreCase": true,
             "type": "FULLTEXT"
         },
+        "CREATED_BY": {
+            "type": "STRING"
+        },
         "DATE_ARCHIVED": {
             "type": "DATETIME"
         },
         "DATE_CREATED": {
+            "type": "DATETIME"
+        },
+        "DATE_LAST_ACCESSED": {
             "type": "DATETIME"
         },
         "DATE_MODIFIED": {
@@ -259,6 +265,9 @@
         "IS_OLE": {
             "type": "BOOLEAN"
         },
+        "LAST_MODIFIED_BY": {
+            "type": "STRING"
+        },
         "MESSAGE_ID": {
             "type": "STRING[]"
         },
@@ -278,6 +287,9 @@
         "OCR": {
             "objectEncoding": "flattened",
             "type": "ocr[][]"
+        },
+        "OWNED_BY": {
+            "type": "STRING"
         },
         "PARENT_REFERENCE": {
             "type": "STRING"
