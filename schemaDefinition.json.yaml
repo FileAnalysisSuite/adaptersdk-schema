@@ -172,6 +172,7 @@
             "type": "FULLTEXT"
         },
         "CREATED_BY": {
+            "ignoreCase": true,
             "type": "STRING"
         },
         "DATE_ARCHIVED": {
@@ -266,6 +267,7 @@
             "type": "BOOLEAN"
         },
         "LAST_MODIFIED_BY": {
+            "ignoreCase": true,
             "type": "STRING"
         },
         "MESSAGE_ID": {
@@ -289,6 +291,7 @@
             "type": "ocr[][]"
         },
         "OWNED_BY": {
+            "ignoreCase": true,
             "type": "STRING"
         },
         "PARENT_REFERENCE": {
