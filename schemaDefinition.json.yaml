@@ -173,7 +173,7 @@
         },
         "CREATED_BY": {
             "ignoreCase": true,
-            "type": "STRING"
+            "type": "STRING[]"
         },
         "DATE_ARCHIVED": {
             "type": "DATETIME"
@@ -292,7 +292,7 @@
         },
         "OWNED_BY": {
             "ignoreCase": true,
-            "type": "STRING"
+            "type": "STRING[]"
         },
         "PARENT_REFERENCE": {
             "type": "STRING"
