@@ -1,5 +1,5 @@
 #
-# Copyright 2022-2024 Open Text.
+# Copyright 2022-2025 Open Text.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -171,10 +171,17 @@
             "ignoreCase": true,
             "type": "FULLTEXT"
         },
+        "CREATED_BY": {
+            "ignoreCase": true,
+            "type": "STRING[]"
+        },
         "DATE_ARCHIVED": {
             "type": "DATETIME"
         },
         "DATE_CREATED": {
+            "type": "DATETIME"
+        },
+        "DATE_LAST_ACCESSED": {
             "type": "DATETIME"
         },
         "DATE_MODIFIED": {
@@ -254,11 +261,14 @@
             "type": "BOOLEAN"
         },
         "HASH": {
-            "mandatory": true,
             "type": "STRING"
         },
         "IS_OLE": {
             "type": "BOOLEAN"
+        },
+        "LAST_MODIFIED_BY": {
+            "ignoreCase": true,
+            "type": "STRING"
         },
         "MESSAGE_ID": {
             "type": "STRING[]"
@@ -279,6 +289,10 @@
         "OCR": {
             "objectEncoding": "flattened",
             "type": "ocr[][]"
+        },
+        "OWNED_BY": {
+            "ignoreCase": true,
+            "type": "STRING[]"
         },
         "PARENT_REFERENCE": {
             "type": "STRING"
@@ -368,6 +382,9 @@
             "type": "STRING"
         },
         "UNIQUE_ID": {
+            "type": "STRING"
+        },
+        "UNIQUE_VERSION_ID": {
             "type": "STRING"
         }
     }
