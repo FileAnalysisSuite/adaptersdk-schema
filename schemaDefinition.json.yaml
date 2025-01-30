@@ -386,6 +386,12 @@
         },
         "UNIQUE_VERSION_ID": {
             "type": "STRING"
+        },
+        "URL_PATH": {
+            "type": "STRING"
+        },
+        "URL_PATH_IDS": {
+            "type": "STRING"
         }
     }
 }
