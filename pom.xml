@@ -29,7 +29,7 @@
 
     <groupId>io.github.fileanalysissuite.adaptersdk.schema</groupId>
     <artifactId>adaptersdk-schema-aggregator</artifactId>
-    <version>1.5.0-SNAPSHOT</version>
+    <version>1.4.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <description>FAS Custom Adapter SDK Schema Libraries</description>
@@ -162,12 +162,12 @@
             <dependency>
                 <groupId>io.github.fileanalysissuite.adaptersdk.schema</groupId>
                 <artifactId>adaptersdk-schema-java-interfaces</artifactId>
-                <version>1.5.0-SNAPSHOT</version>
+                <version>1.4.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>io.github.fileanalysissuite.adaptersdk.schema</groupId>
                 <artifactId>adaptersdk-schema-java-jsonbuilder-jackson</artifactId>
-                <version>1.5.0-SNAPSHOT</version>
+                <version>1.4.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.apiguardian</groupId>
