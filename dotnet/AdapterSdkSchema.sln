@@ -12,15 +12,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sepg", "sepg", "{C2BEB224-7
 		pom.xml = pom.xml
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroFocus.FAS.AdapterSdkSchema", "src\MicroFocus.FAS.AdapterSdkSchema\MicroFocus.FAS.AdapterSdkSchema.csproj", "{F88720DC-490A-42D3-9FF7-FFD05CB4529A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenText.CDDRI.AdapterSdkSchema", "src\OpenText.CDDRI.AdapterSdkSchema\OpenText.CDDRI.AdapterSdkSchema.csproj", "{F88720DC-490A-42D3-9FF7-FFD05CB4529A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroFocus.FAS.AdapterSdkSchema.Tests", "tests\MicroFocus.FAS.AdapterSdkSchema.Tests\MicroFocus.FAS.AdapterSdkSchema.Tests.csproj", "{B4F57D4F-B5B9-431A-8AF5-3927D9068C67}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenText.CDDRI.AdapterSdkSchema.Tests", "tests\OpenText.CDDRI.AdapterSdkSchema.Tests\OpenText.CDDRI.AdapterSdkSchema.Tests.csproj", "{B4F57D4F-B5B9-431A-8AF5-3927D9068C67}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroFocus.FAS.AdapterSdkSchema.Generator", "src\MicroFocus.FAS.AdapterSdkSchema.Generator\MicroFocus.FAS.AdapterSdkSchema.Generator.csproj", "{9F484E11-38C6-4765-9D92-F32BBC27E9A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenText.CDDRI.AdapterSdkSchema.Generator", "src\OpenText.CDDRI.AdapterSdkSchema.Generator\OpenText.CDDRI.AdapterSdkSchema.Generator.csproj", "{9F484E11-38C6-4765-9D92-F32BBC27E9A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroFocus.FAS.AdapterSdkSchema.Generator.Tests", "tests\MicroFocus.FAS.AdapterSdkSchema.Generator.Tests\MicroFocus.FAS.AdapterSdkSchema.Generator.Tests.csproj", "{348DFA4B-7117-4534-967A-F4D58E3AEDC5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenText.CDDRI.AdapterSdkSchema.Generator.Tests", "tests\OpenText.CDDRI.AdapterSdkSchema.Generator.Tests\OpenText.CDDRI.AdapterSdkSchema.Generator.Tests.csproj", "{348DFA4B-7117-4534-967A-F4D58E3AEDC5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroFocus.FAS.AdapterSdkSchema.JsonBuilders.System", "src\MicroFocus.FAS.AdapterSdkSchema.JsonBuilders.System\MicroFocus.FAS.AdapterSdkSchema.JsonBuilders.System.csproj", "{15CFB8B2-B957-4CBD-B084-FDCB73023893}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenText.CDDRI.AdapterSdkSchema.JsonBuilders.System", "src\OpenText.CDDRI.AdapterSdkSchema.JsonBuilders.System\OpenText.CDDRI.AdapterSdkSchema.JsonBuilders.System.csproj", "{15CFB8B2-B957-4CBD-B084-FDCB73023893}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
