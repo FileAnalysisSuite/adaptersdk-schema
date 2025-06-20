@@ -28,6 +28,7 @@
     </parent>
 
     <artifactId>adaptersdk-schema-java-lib</artifactId>
+    <name>adaptersdk-schema-java-lib</name>
 
     <dependencies>
         <dependency>

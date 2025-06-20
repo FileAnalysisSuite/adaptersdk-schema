@@ -28,6 +28,7 @@
     </parent>
 
     <artifactId>adaptersdk-schema-java-jsonbuilder-jackson</artifactId>
+    <name>adaptersdk-schema-java-jsonbuilder-jackson</name>
 
     <dependencies>
         <dependency>

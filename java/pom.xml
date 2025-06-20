@@ -28,6 +28,7 @@
     </parent>
 
     <artifactId>adaptersdk-schema-java</artifactId>
+    <name>adaptersdk-schema-java</name>
     <packaging>pom</packaging>
 
     <modules>
