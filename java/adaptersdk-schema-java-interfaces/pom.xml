@@ -28,6 +28,7 @@
     </parent>
 
     <artifactId>adaptersdk-schema-java-interfaces</artifactId>
+    <name>adaptersdk-schema-java-interfaces</name>
 
     <dependencies>
         <dependency>

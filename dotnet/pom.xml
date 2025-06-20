@@ -28,6 +28,7 @@
     </parent>
 
     <artifactId>adaptersdk-schema-dotnet</artifactId>
+    <name>adaptersdk-schema-dotnet</name>
     <packaging>pom</packaging>
 
     <properties>

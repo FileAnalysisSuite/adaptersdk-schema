@@ -28,6 +28,7 @@
     </parent>
 
     <artifactId>adaptersdk-schema-java-generator</artifactId>
+    <name>adaptersdk-schema-java-generator</name>
 
     <dependencies>
         <dependency>

@@ -29,6 +29,7 @@
 
     <groupId>io.github.fileanalysissuite.adaptersdk.schema</groupId>
     <artifactId>adaptersdk-schema-aggregator</artifactId>
+    <name>adaptersdk-schema-aggregator</name>
     <version>1.4.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
