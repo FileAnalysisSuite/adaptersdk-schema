@@ -116,6 +116,11 @@
                 "type": "FULLTEXT"
             }
         },
+        "security_attributes": {
+            "ALLOWED_GROUPS": {
+                "type": "STRING[]"
+            }
+        },
         "table_metadata": {
             "IS_SHUFFLED": {
                 "mandatory": true,
@@ -356,6 +361,10 @@
         },
         "SCAN_REFERENCE": {
             "type": "STRING"
+        },
+        "SECURITY_ATTRIBUTES": {
+            "objectEncoding": "flattened",
+            "type": "security_attributes"
         },
         "SOURCE_REFERENCE": {
             "type": "STRING"

@@ -261,7 +261,7 @@ final class StringMapSchemaObjectBuilderImpl implements SchemaObjectBuilder
     {
         final String nextLevelPrefix = (field == null)
             ? prefix + "0_"
-            : prefix + field.getFieldName() + "_0_";
+            : prefix + field.getFieldName() + (field.isMultivalue() ? "_0_" : "__");
 
         director.accept(new StringMapSchemaObjectBuilderImpl(metadata, jsonStringBuilder, nextLevelPrefix));
     }

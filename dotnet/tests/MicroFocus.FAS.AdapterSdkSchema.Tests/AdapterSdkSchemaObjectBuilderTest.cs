@@ -105,6 +105,14 @@ namespace MicroFocus.FAS.AdapterSdkSchema.Tests
                 }
             );
 
+            // Single-valued Nested object, Json encoded
+            documentBuilder.SetSecurityAttributes(
+                builder =>
+                {
+                    builder.SetAllowedGroups("group1", "group2");
+                }
+            );
+
             // multi-values Nested object, single-dimension - flattened
             //Setting multiple values for single-dimension multi-valued Nested object
             documentBuilder.SetMetadataFiles(
@@ -164,6 +172,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema.Tests
             Assert.True(document.ContainsKey("TABLE_METADATA"));
             Assert.True(document.ContainsKey("ACCOUNTS"));
             Assert.True(document.ContainsKey("COLUMNS"));
+            Assert.True(document.ContainsKey("SECURITY_ATTRIBUTES__ALLOWED_GROUPS"));
             Assert.True(document.ContainsKey("METADATA_FILES_0_CONTENT"));
             Assert.True(document.ContainsKey("METADATA_FILES_1_EXTENSION"));
             Assert.True(document.ContainsKey("OCR_0_0_CONFIDENCE"));
