@@ -52,7 +52,7 @@ public final class AdapterSdkSchemaObjectBuilderTest
         // Multi-valued string
         documentBuilder.setAddressTo("person1@gmail.com", "person2@there.com");
 
-         // Single-valued Nested object, Json encoded
+        // Single-valued Nested object, Json encoded
         documentBuilder.setTableMetadata(
                 builder -> {
                     builder.setIsShuffled(false);
@@ -104,6 +104,13 @@ public final class AdapterSdkSchemaObjectBuilderTest
                     }
                 ));
             })
+        );
+
+        // Single-valued Nested object, flattened
+        documentBuilder.setSecurityAttributes(
+            builder -> {
+                builder.setAllowedGroups("group1", "group2");
+            }
         );
 
         // multi-values Nested object, single-dimension - flattened
@@ -165,6 +172,7 @@ public final class AdapterSdkSchemaObjectBuilderTest
         assertTrue(document.containsKey("TABLE_METADATA"));
         assertTrue(document.containsKey("ACCOUNTS"));
         assertTrue(document.containsKey("COLUMNS"));
+        assertTrue(document.containsKey("SECURITY_ATTRIBUTES__ALLOWED_GROUPS"));
         assertTrue(document.containsKey("METADATA_FILES_0_CONTENT"));
         assertTrue(document.containsKey("METADATA_FILES_1_EXTENSION"));
         assertTrue(document.containsKey("OCR_0_0_CONFIDENCE"));

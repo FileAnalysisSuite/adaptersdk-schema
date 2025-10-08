@@ -193,7 +193,7 @@ namespace MicroFocus.FAS.AdapterSdkSchema.SchemaObjectBuilders
         {
             string nextLevelPrefix = (field == null)
                 ? _prefix + "0_"
-                : _prefix + field.FieldName + "_0_";
+                : _prefix + field.FieldName + (field.IsMultivalue ? "_0_" : "__");
 
             director.Invoke(new StringDictionarySchemaObjectBuilderImpl(_metadata, _jsonStringBuilder, nextLevelPrefix));
         }
